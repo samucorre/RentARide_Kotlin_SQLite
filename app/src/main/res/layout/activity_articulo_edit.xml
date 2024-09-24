@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:hint="Nombre" />
 
+
     <EditText
         android:id="@+id/categoriaEditText"
         android:layout_width="match_parent"

@@ -1,15 +1,53 @@
+# Archivos de IntelliJ/Android Studio
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+.idea/
+*.ipr
+*.iws
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+
+# Sistema operativo
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+
+# Archivos generados por Gradle
+.gradle/
+build/
+captures/
+
+# Archivos específicos de compilación
+*.apk
+*.ap_
+*.dex
+
+# Archivos generados por el compilador Java
+*.class
+
+# Archivos del NDK y C++
+.externalNativeBuild/
+.cxx/
+
+# Archivos locales y de configuración
 local.properties
+/.idea/
+.env
+.vscode/
+
+# Archivos de Gradle Wrapper
+.gradle/
+gradle-wrapper.jar
+gradle-wrapper.properties
+
+# Otros archivos temporales o generados
+tmp/
+logs/
+*.log
+*.lock
+
+# Directorios de empaquetado de aplicaciones
+outputs/
+generated/
+intermediates/
