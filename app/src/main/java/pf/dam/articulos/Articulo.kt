@@ -9,4 +9,5 @@ open class Articulo (
     val nombre: String,
     val descripcion: String,
     val estado : String,
+    val rutaImagen: String? = null
     ): Serializable
