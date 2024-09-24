@@ -28,28 +28,20 @@ class ArticulosActivity : AppCompatActivity() {
         dbHelper = ArticulosSQLite(this)
         recyclerView = findViewById(R.id.articulosRecyclerView)
         addArticuloButton = findViewById(R.id.addArticuloButton)
-        deleteArticuloButton = findViewById(R.id.deleteArticuloButton)
+       // deleteArticuloButton = findViewById(R.id.deleteArticuloButton)
         backButton = findViewById(R.id.backButton)
 
         articulosAdapter = ArticulosAdapter(dbHelper.obtenerArticulos())
         recyclerView.adapter = articulosAdapter
-        recyclerView.layoutManager = GridLayoutManager(this, 2)
+        recyclerView.layoutManager = GridLayoutManager(this, 1)
 
         addArticuloButton.setOnClickListener {
             val intent = Intent(this, ArticuloAddActivity::class.java)
             startActivity(intent)
-           /* val nuevoArticulo = Articulo("Categoría", "Tipo", "Nombre", "Descripción", "Estado")
-            val nuevoId = dbHelper.insertarArticulo(nuevoArticulo)
-            if (nuevoId != -1L) {
-                articulosAdapter.articulos = dbHelper.obtenerArticulos()
-                articulosAdapter.notifyDataSetChanged()
-                Toast.makeText(this, "Artículo añadido correctamente", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Error al añadir el artículo", Toast.LENGTH_SHORT).show()
-            }*/
+          
         }
 
-        deleteArticuloButton.setOnClickListener {
+       /* deleteArticuloButton.setOnClickListener {
            //COMENTADO,PUEDE BORRAR TODOS LOS ARTICULOS
             // val dbHelper = ArticulosSQLite(this) // Obtener instancia de ArticulosSQLite
             //dbHelper.borrarTodosLosArticulos() // Llamar al método para borrar todos los artículos
@@ -58,7 +50,7 @@ class ArticulosActivity : AppCompatActivity() {
             //articulosAdapter.notifyDataSetChanged()
             //Toast.makeText(this, "Todos los artículos han sido eliminados", Toast.LENGTH_SHORT).show()
 
-        }
+        }*/
 
         backButton.setOnClickListener {
             finish()

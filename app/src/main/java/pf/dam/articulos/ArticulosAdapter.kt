@@ -1,9 +1,11 @@
 package pf.dam.articulos
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import db.ArticulosSQLite
@@ -24,6 +26,8 @@ class ArticulosAdapter(articulos: List<Articulo>) :
         val tipoTextView: TextView = itemView.findViewById(R.id.tipoTextView)
         val descripcionTextView: TextView = itemView.findViewById(R.id.descripcionTextView)
         val estadoTextView: TextView = itemView.findViewById(R.id.estadoTextView)
+        val imagenImageView: ImageView = itemView.findViewById(R.id.imagenImageView)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticuloViewHolder {
@@ -39,6 +43,10 @@ class ArticulosAdapter(articulos: List<Articulo>) :
         holder.tipoTextView.text = articulo.tipo
         holder.descripcionTextView.text = articulo.descripcion
         holder.estadoTextView.text = articulo.estado
+        if (articulo.rutaImagen != null) {
+            val imagenBitmap = BitmapFactory.decodeFile(articulo.rutaImagen)
+            holder.imagenImageView.setImageBitmap(imagenBitmap)
+        }
 
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context

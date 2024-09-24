@@ -1,7 +1,9 @@
 package pf.dam.articulos
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +23,8 @@ class ArticuloDetalleActivity : AppCompatActivity() {
     private lateinit var tipoTextView: TextView
     private lateinit var descripcionTextView: TextView
     private lateinit var estadoTextView: TextView
+    private lateinit var imagenImageView: ImageView
+
 
     private var articuloId: Int = -1
 
@@ -51,6 +55,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
         tipoTextView = findViewById(R.id.tipoTextView)
         descripcionTextView = findViewById(R.id.descripcionTextView)
         estadoTextView = findViewById(R.id.estadoTextView)
+        imagenImageView = findViewById(R.id.imagenImageView)
 
         articuloId = intent.getIntExtra("idArticulo", -1)
         val articulo = dbHelper.obtenerArticuloPorId(articuloId)
@@ -94,5 +99,9 @@ class ArticuloDetalleActivity : AppCompatActivity() {
         tipoTextView.text = articulo.tipo
         descripcionTextView.text = articulo.descripcion
         estadoTextView.text = articulo.estado
+        if (articulo.rutaImagen != null) {
+            val imagenBitmap = BitmapFactory.decodeFile(articulo.rutaImagen)
+            imagenImageView.setImageBitmap(imagenBitmap)
+        }
     }
 }

@@ -23,7 +23,8 @@ SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
                 tipo TEXT NOT NULL,
                 nombre TEXT NOT NULL,
                 descripcion TEXT NOT NULL,
-                estado TEXT NOT NULL
+                estado TEXT NOT NULL,
+                rutaImagen TEXT
             )
         """.trimIndent()
 
@@ -36,7 +37,7 @@ SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
         db?.execSQL("DROP TABLE IF EXISTS articulos")
         onCreate(db)
     }
-
+/*COMENTADO PARA PROBAR IMAGEN
     fun obtenerArticulos(): List<Articulo> {
         val db = readableDatabase // Accedemos a la BBDD en modo lectura
         val listaArticulos = mutableListOf<Articulo>()
@@ -71,7 +72,42 @@ SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
             db.close()
         }
         return listaArticulos
+    }*/
+fun obtenerArticulos(): List<Articulo> {
+    val db = readableDatabase
+    val listaArticulos = mutableListOf<Articulo>()
+
+    try {
+        val selectedQuery = "SELECT * FROM articulos"
+        db.rawQuery(selectedQuery, null).use { cursor ->
+            if (cursor.moveToFirst()) {
+                do {
+                    val categoria = cursor.getString(cursor.getColumnIndexOrThrow("categoria"))
+                    val tipo = cursor.getString(cursor.getColumnIndexOrThrow("tipo"))
+                    val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+                    val descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion"))
+                    val estado = cursor.getString(cursor.getColumnIndexOrThrow("estado"))
+                    val rutaImagen = cursor.getString(cursor.getColumnIndexOrThrow("rutaImagen"))
+
+                    val articulo = Articulo(
+                        categoria,
+                        tipo,
+                        nombre,
+                        descripcion,
+                        estado,
+                        rutaImagen
+                    )
+                    listaArticulos.add(articulo)
+                } while (cursor.moveToNext())
+            }
+        }
+    } catch (e: Exception) {
+        throw RuntimeException("Error obteniendo artículos: ${e.message}", e)
+    } finally {
+        db.close()
     }
+    return listaArticulos
+}
 
     fun obtenerArticuloPorId(idArticulo: Int): Articulo? { //Obtiene un Articulo por su idArticulo
         val db = readableDatabase
@@ -92,8 +128,9 @@ try{
             val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
             val descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion"))
             val estado = cursor.getString(cursor.getColumnIndexOrThrow("estado"))
+            val rutaImagen = cursor.getString(cursor.getColumnIndexOrThrow("rutaImagen"))
 
-            Articulo(categoria, tipo, nombre, descripcion, estado)
+            Articulo(categoria, tipo, nombre, descripcion, estado, rutaImagen)
         } else {
             null
         }
@@ -110,13 +147,14 @@ try{
 
         try {
             val selectQuery =
-                "SELECT idArticulo FROM articulos WHERE nombre = ? AND categoria = ? AND tipo = ? AND descripcion = ? AND estado  = ?"
+                "SELECT idArticulo FROM articulos WHERE nombre = ? AND categoria = ? AND tipo = ? AND descripcion = ? AND estado  = ? AND rutaImagen = ?"
             val parametros = arrayOf(
                 articulo.nombre,
                         articulo.categoria,
                 articulo.tipo,
                 articulo.descripcion,
-                articulo.estado
+                articulo.estado,
+                articulo.rutaImagen
             )
 
             db.rawQuery(selectQuery, parametros).use { cursor ->
@@ -142,6 +180,7 @@ try{
         values.put("nombre", articulo.nombre)
         values.put("descripcion", articulo.descripcion)
         values.put("estado", articulo.estado)
+        values.put("rutaImagen", articulo.rutaImagen)
 
         val idArticulo = db.insert("articulos", null, values)
         db.close()

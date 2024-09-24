@@ -3,6 +3,7 @@ package pf.dam
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import db.ArticulosSQLite
 import db.PrestamosSQLite
@@ -37,8 +38,16 @@ class MainActivity : AppCompatActivity() {
         verArticulosButton = findViewById(R.id.verArticulosButton)
         verSociosButton = findViewById(R.id.verSociosButton)
         verPrestamosButton = findViewById(R.id.verPrestamosButton)
-
-        // Insertar datos
+        if (dbHelperArticulos.obtenerArticulos().isEmpty()) {
+            Toast.makeText(this, "No hay artículos", Toast.LENGTH_SHORT).show()
+        }
+        if (dbHelperSocios.obtenerSocios().isEmpty()) {
+            Toast.makeText(this, "No hay socios", Toast.LENGTH_SHORT).show()
+        }
+        if (dbHelperPrestamos.obtenerPrestamos().isEmpty()) {
+            Toast.makeText(this, "No hay préstamos", Toast.LENGTH_SHORT).show()
+        }
+      /*  // Insertar datos
         if (dbHelperArticulos.obtenerArticulos().isEmpty()) {
             insertarArticulos(dbHelperArticulos)
         }
@@ -48,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         if (dbHelperPrestamos.obtenerPrestamos().isEmpty()) {
             insertarPrestamos(dbHelperPrestamos)
         }
-
+*/
         // Configurar listeners de botones
         verArticulosButton.setOnClickListener {
             val intent = Intent(this, ArticulosActivity::class.java)
@@ -65,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
+/*
     private fun insertarArticulos(dbHelperArticulos: ArticulosSQLite) {
         val articulos = listOf(
             Articulo("Ropa", "Camiseta", "Camiseta de algodón", "Nueva", "Talla M"),
@@ -100,5 +109,5 @@ class MainActivity : AppCompatActivity() {
         for (prestamo in prestamos) {
             dbHelperPrestamos.insertarPrestamo(prestamo)
         }
-    }
+    }*/
 }

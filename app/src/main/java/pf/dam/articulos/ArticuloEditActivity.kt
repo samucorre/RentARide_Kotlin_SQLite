@@ -1,8 +1,10 @@
 package pf.dam.articulos
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import db.ArticulosSQLite
@@ -16,6 +18,8 @@ class ArticuloEditActivity : AppCompatActivity() {
     private lateinit var tipoEditText: EditText
     private lateinit var descripcionEditText: EditText
     private lateinit var estadoEditText: EditText
+    private lateinit var imagenImageView: ImageView
+
     private lateinit var guardarButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +32,7 @@ class ArticuloEditActivity : AppCompatActivity() {
         tipoEditText = findViewById(R.id.tipoEditText)
         descripcionEditText = findViewById(R.id.descripcionEditText)
         estadoEditText = findViewById(R.id.estadoEditText)
+        imagenImageView = findViewById(R.id.imagenImageView)
         guardarButton = findViewById(R.id.guardarButton)
 
         val articuloId = intent.getIntExtra("articuloId", -1)
@@ -39,6 +44,10 @@ class ArticuloEditActivity : AppCompatActivity() {
             tipoEditText.setText(articulo.tipo)
             descripcionEditText.setText(articulo.descripcion)
             estadoEditText.setText(articulo.estado)
+            if (articulo.rutaImagen != null) {
+                val imagenBitmap = BitmapFactory.decodeFile(articulo.rutaImagen)
+                imagenImageView.setImageBitmap(imagenBitmap)
+            }
 
             guardarButton.setOnClickListener {
                 val articuloActualizado = Articulo(
