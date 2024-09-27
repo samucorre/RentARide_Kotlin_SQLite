@@ -38,6 +38,19 @@ class MainActivity : AppCompatActivity() {
         verArticulosButton = findViewById(R.id.verArticulosButton)
         verSociosButton = findViewById(R.id.verSociosButton)
         verPrestamosButton = findViewById(R.id.verPrestamosButton)
+
+       // Insertar datos
+        /*if (dbHelperArticulos.obtenerArticulos().isEmpty()) {
+            insertarArticulos(dbHelperArticulos)
+        }*/
+
+        if (dbHelperSocios.obtenerSocios().isEmpty()) {
+            insertarSocios(dbHelperSocios)
+        }
+        /*if (dbHelperPrestamos.obtenerPrestamos().isEmpty()) {
+            insertarPrestamos(dbHelperPrestamos)
+        }
+*/
         if (dbHelperArticulos.obtenerArticulos().isEmpty()) {
             Toast.makeText(this, "No hay artículos", Toast.LENGTH_SHORT).show()
         }
@@ -47,18 +60,6 @@ class MainActivity : AppCompatActivity() {
         if (dbHelperPrestamos.obtenerPrestamos().isEmpty()) {
             Toast.makeText(this, "No hay préstamos", Toast.LENGTH_SHORT).show()
         }
-       // Insertar datos
-        if (dbHelperArticulos.obtenerArticulos().isEmpty()) {
-            insertarArticulos(dbHelperArticulos)
-        }
-
-        if (dbHelperSocios.obtenerSocios().isEmpty()) {
-            insertarSocios(dbHelperSocios)
-        }
-        /*if (dbHelperPrestamos.obtenerPrestamos().isEmpty()) {
-            insertarPrestamos(dbHelperPrestamos)
-        }
-*/
         // Configurar listeners de botones
         verArticulosButton.setOnClickListener {
             val intent = Intent(this, ArticulosActivity::class.java)
@@ -76,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun insertarArticulos(dbHelperArticulos: ArticulosSQLite) {
+   /* private fun insertarArticulos(dbHelperArticulos: ArticulosSQLite) {
         val articulos = listOf(
             Articulo(
                 "Kayak",
@@ -85,6 +86,9 @@ class MainActivity : AppCompatActivity() {
                 "Kayak de pesca para dos personas",
                 "Disponible",
 
+                //"/storage/emulated/0/Download/kayak.jpeg"
+                        // /storage/emulated/0/Android/data/pf.dam/files/Pictures/articulo_060418ba-2f69-46cb-9e20-2ac019f7f5ca.jpg
+
 
             )
         )
@@ -92,7 +96,8 @@ class MainActivity : AppCompatActivity() {
         for (articulo in articulos) {
             dbHelperArticulos.insertarArticulo(articulo)
         }
-    }
+    }*/
+
 
     private fun insertarSocios(dbHelperSocios: SociosSQLite) {
         val socios = listOf(
