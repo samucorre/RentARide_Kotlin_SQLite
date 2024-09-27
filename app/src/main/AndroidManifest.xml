@@ -29,6 +29,9 @@
         <activity android:name=".articulos.ArticuloAddActivity" />
 
         <activity android:name=".socios.SociosActivity" />
+        <activity android:name=".socios.SocioDetalleActivity" />
+        <activity android:name=".socios.SocioEditActivity" />
+        <activity android:name=".socios.SocioAddActivity" />
 
         <activity android:name=".prestamos.PrestamosActivity" />
     </application>

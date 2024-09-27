@@ -30,7 +30,7 @@ class ArticuloAddActivity : AppCompatActivity() {
     private lateinit var volverButton: Button
     private lateinit var botonCamara: Button
     private lateinit var botonGaleria: Button
-    private lateinit var imagenArticulo: Bitmap
+    private var imagenArticulo: Bitmap? = null
     private lateinit var imageView: ImageView
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_IMAGE_GALLERY = 2
@@ -61,9 +61,12 @@ class ArticuloAddActivity : AppCompatActivity() {
             openGallery()
         }
 
-        guardarButton.setOnClickListener {
-            val nombreArchivo = "articulo_${UUID.randomUUID()}"
-            val rutaImagen = guardarImagenEnAlmacenamiento(imagenArticulo, nombreArchivo)
+       /* guardarButton.setOnClickListener {
+        //    val nombreArchivo = "articulo_${UUID.randomUUID()}"
+            val rutaImagen = imagenArticulo?.let {
+                val nombreArchivo = "articulo_${UUID.randomUUID()}"
+                guardarImagenEnAlmacenamiento(it, nombreArchivo)
+            }
 
             val nuevoArticulo = Articulo(
                 categoriaEditText.text.toString(),
@@ -71,7 +74,7 @@ class ArticuloAddActivity : AppCompatActivity() {
                 nombreEditText.text.toString(),
                 descripcionEditText.text.toString(),
                 estadoEditText.text.toString(),
-                rutaImagen
+                rutaImagen // Ahora puede ser nulo
             )
             val idNuevoArticulo = dbHelper.insertarArticulo(nuevoArticulo)
             if (idNuevoArticulo != -1L) {
@@ -79,6 +82,28 @@ class ArticuloAddActivity : AppCompatActivity() {
                 finish()
             } else {
                 Toast.makeText(this, "Error al añadir el artículo", Toast.LENGTH_SHORT).show()
+            }
+        }*/
+        guardarButton.setOnClickListener {
+            val categoria = categoriaEditText.text.toString()
+            val tipo = tipoEditText.text.toString()
+            val nombre = nombreEditText.text.toString()
+            val descripcion = descripcionEditText.text.toString()
+            val estado = estadoEditText.text.toString()
+
+            val rutaImagen = imagenArticulo?.let {
+                val nombreArchivo = "articulo_${UUID.randomUUID()}"
+                guardarImagenEnAlmacenamiento(it, nombreArchivo)
+            }
+
+            if (categoria.isBlank() || tipo.isBlank() || nombre.isBlank() || descripcion.isBlank() || estado.isBlank()) {
+                Toast.makeText(this, "Por favor, rellena todos los campos", Toast.LENGTH_SHORT).show()
+            } else {
+                val nuevoArticulo = Articulo(categoria, tipo, nombre, descripcion, estado, rutaImagen)
+                dbHelper.insertarArticulo(nuevoArticulo)
+
+                Toast.makeText(this, "Artículo añadido", Toast.LENGTH_SHORT).show()
+                finish()
             }
         }
     }

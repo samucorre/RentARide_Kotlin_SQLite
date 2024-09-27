@@ -3,7 +3,6 @@ package pf.dam.articulos
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,7 +27,6 @@ class ArticulosActivity : AppCompatActivity() {
         dbHelper = ArticulosSQLite(this)
         recyclerView = findViewById(R.id.articulosRecyclerView)
         addArticuloButton = findViewById(R.id.addArticuloButton)
-       // deleteArticuloButton = findViewById(R.id.deleteArticuloButton)
         backButton = findViewById(R.id.backButton)
 
         articulosAdapter = ArticulosAdapter(dbHelper.obtenerArticulos())

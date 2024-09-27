@@ -3,11 +3,13 @@ package pf.dam.articulos
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.semantics.text
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import pf.dam.R
@@ -25,15 +27,14 @@ class ArticuloDetalleActivity : AppCompatActivity() {
     private lateinit var estadoTextView: TextView
     private lateinit var imagenImageView: ImageView
 
-
     private var articuloId: Int = -1
 
     private val editArticuloLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            val dbHelper = ArticulosSQLite(this) // Inicializar dbHelper aquí
-            val articuloActualizado = dbHelper.obtenerArticuloPorId(articuloId)
+            val dbHelper = ArticulosSQLite(this)
+            val articuloActualizado= dbHelper.obtenerArticuloPorId(articuloId)
             if (articuloActualizado != null) {
                 mostrarArticulo(articuloActualizado)
             }
@@ -59,6 +60,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
 
         articuloId = intent.getIntExtra("idArticulo", -1)
         val articulo = dbHelper.obtenerArticuloPorId(articuloId)
+        Log.e("ArticuloDetalleActivity", "ArticuloId: $articuloId")
 
         if (articulo != null) {
             mostrarArticulo(articulo)
@@ -68,8 +70,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
                 intent.putExtra("articuloId", articuloId)
                 editArticuloLauncher.launch(intent)
             }
-
-            val editArticuloLauncher = registerForActivityResult(
+            val editArticuloLauncher =registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()
             ) { result ->
                 if (result.resultCode == RESULT_OK) {
@@ -77,11 +78,21 @@ class ArticuloDetalleActivity : AppCompatActivity() {
                     finish()
                 }
             }
+
             deleteArticuloButton.setOnClickListener {
-                dbHelper.borrarArticulo(articuloId)
-                Toast.makeText(this, "Artículo eliminado", Toast.LENGTH_SHORT).show()
-                setResult(RESULT_OK)
-                finish()
+                val idArticulo = dbHelper.obtenerIdArticuloBD(articulo)
+                if (idArticulo != -1) {
+                    val resultado = dbHelper.borrarArticulo(idArticulo)
+                    if (resultado > 0) {
+                        Toast.makeText(this, "Artículo eliminado", Toast.LENGTH_SHORT).show()
+                        setResult(RESULT_OK)
+                        finish()
+                    } else {
+                        Toast.makeText(this, "Error al eliminar el artículo", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this, "Artículo no encontrado", Toast.LENGTH_SHORT).show()
+                }
             }
 
             backButton.setOnClickListener {
@@ -94,14 +105,22 @@ class ArticuloDetalleActivity : AppCompatActivity() {
     }
 
     private fun mostrarArticulo(articulo: Articulo) {
-        nombreTextView.text = articulo.nombre
-        categoriaTextView.text = articulo.categoria
-        tipoTextView.text = articulo.tipo
-        descripcionTextView.text = articulo.descripcion
-        estadoTextView.text = articulo.estado
-        if (articulo.rutaImagen != null) {
-            val imagenBitmap = BitmapFactory.decodeFile(articulo.rutaImagen)
-            imagenImageView.setImageBitmap(imagenBitmap)
+        nombreTextView.text = articulo.nombre ?: ""
+        categoriaTextView.text = articulo.categoria ?: ""
+        tipoTextView.text = articulo.tipo ?: ""
+        descripcionTextView.text = articulo.descripcion ?: ""
+        estadoTextView.text = articulo.estado ?: ""
+
+        if (articulo.rutaImagen != null && articulo.rutaImagen.isNotEmpty()) {
+            try {
+                val imagenBitmap = BitmapFactory.decodeFile(articulo.rutaImagen)
+                imagenImageView.setImageBitmap(imagenBitmap)
+            } catch (e: Exception) {
+                Log.e("Error", "Error al cargar la imagen: ${e.message}")
+                imagenImageView.setImageResource(R.drawable.ico_imagen)
+            }
+        } else {
+            imagenImageView.setImageResource(R.drawable.ico_imagen)
         }
     }
 }

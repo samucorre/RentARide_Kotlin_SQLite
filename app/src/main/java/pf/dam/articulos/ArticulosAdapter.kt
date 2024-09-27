@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import db.ArticulosSQLite
+import db.SociosSQLite
 import pf.dam.R
 
 class ArticulosAdapter(articulos: List<Articulo>) :
@@ -38,11 +40,11 @@ class ArticulosAdapter(articulos: List<Articulo>) :
 
     override fun onBindViewHolder(holder: ArticuloViewHolder, position: Int) {
         val articulo = articulos[position]
-        holder.nombreTextView.text = articulo.nombre
-        holder.categoriaTextView.text = articulo.categoria
-        holder.tipoTextView.text = articulo.tipo
-        holder.descripcionTextView.text = articulo.descripcion
-        holder.estadoTextView.text = articulo.estado
+        holder.nombreTextView.text = articulo.nombre ?: ""
+        holder.categoriaTextView.text = articulo.categoria ?: ""
+        holder.tipoTextView.text = articulo.tipo ?: ""
+        holder.descripcionTextView.text = articulo.descripcion ?: ""
+        holder.estadoTextView.text = articulo.estado ?: ""
         if (articulo.rutaImagen != null) {
             val imagenBitmap = BitmapFactory.decodeFile(articulo.rutaImagen)
             holder.imagenImageView.setImageBitmap(imagenBitmap)
@@ -50,14 +52,13 @@ class ArticulosAdapter(articulos: List<Articulo>) :
 
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context
-            val dbHelper = ArticulosSQLite(context) // Obtener una instancia de tu helper de base de datos
-            val idArticulo = dbHelper.obtenerIdArticuloBD(articulo)  // Obtener el ID del artículo por su nombre
+            val dbHelper = ArticulosSQLite(context)
+            val idArticulo = dbHelper.obtenerIdArticuloBD(articulo)
             val intent = Intent(context, ArticuloDetalleActivity::class.java)
             intent.putExtra("idArticulo", idArticulo)
             context.startActivity(intent)
         }
     }
-
     override fun getItemCount(): Int {
         return articulos.size
     }

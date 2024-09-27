@@ -1,4 +1,4 @@
-package pf.dam.articulos
+/*package pf.dam.articulos
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -56,7 +56,8 @@ class ArticuloEditActivity : AppCompatActivity() {
                     tipoEditText.text.toString(),
                     nombreEditText.text.toString(),
                     descripcionEditText.text.toString(),
-                    estadoEditText.text.toString()
+                    estadoEditText.text.toString(),
+                    articulo.rutaImagen
                 )
                 dbHelper.actualizarArticulo(articuloId, articuloActualizado)
                 Toast.makeText(this, "Artículo actualizado", Toast.LENGTH_SHORT).show()
@@ -66,6 +67,160 @@ class ArticuloEditActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "Artículo no encontrado", Toast.LENGTH_SHORT).show()
             finish()
+        }
+    }
+}*/
+
+package pf.dam.articulos
+
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.semantics.text
+import db.ArticulosSQLite
+import pf.dam.R
+import java.io.File
+import java.io.FileOutputStream
+import java.util.UUID
+
+class ArticuloEditActivity : AppCompatActivity() {
+
+    private lateinit var dbHelper: ArticulosSQLite
+    private lateinit var nombreEditText: EditText
+    private lateinit var categoriaEditText: EditText
+    private lateinit var tipoEditText: EditText
+    private lateinit var descripcionEditText: EditText
+    private lateinit var estadoEditText: EditText
+    private lateinit var imagenImageView: ImageView
+    private lateinit var guardarButton: Button
+    private lateinit var botonCamara: Button
+    private lateinit var botonGaleria: Button
+
+    private var articuloId: Int = -1
+    private lateinit var articulo: Articulo
+    private var imagenArticulo: Bitmap? = null
+    private val REQUEST_IMAGE_CAPTURE = 1
+    private val REQUEST_IMAGE_GALLERY = 2
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_articulo_edit)
+
+        dbHelper = ArticulosSQLite(this)
+        nombreEditText = findViewById(R.id.nombreEditText)
+        categoriaEditText = findViewById(R.id.categoriaEditText)
+        tipoEditText = findViewById(R.id.tipoEditText)
+        descripcionEditText = findViewById(R.id.descripcionEditText)
+        estadoEditText = findViewById(R.id.estadoEditText)
+        imagenImageView = findViewById(R.id.imagenImageView)
+        guardarButton = findViewById(R.id.guardarButton)
+        botonCamara = findViewById(R.id.botonCamara)
+        botonGaleria = findViewById(R.id.botonGaleria)
+
+        articuloId = intent.getIntExtra("articuloId", -1)
+        articulo = dbHelper.obtenerArticuloPorId(articuloId)!!
+
+        if (articulo.rutaImagen != null) {
+            try {
+                val imagenBitmap = BitmapFactory.decodeFile(articulo.rutaImagen)
+                imagenImageView.setImageBitmap(imagenBitmap)
+            } catch (e: Exception) {
+                Log.e("ArticuloEditActivity", "Error al cargar la imagen", e)
+                // Mostrar una imagen por defecto si hay un error
+            }
+        }
+
+        nombreEditText.setText(articulo.nombre)
+        categoriaEditText.setText(articulo.categoria)
+        tipoEditText.setText(articulo.tipo)
+        descripcionEditText.setText(articulo.descripcion)
+        estadoEditText.setText(articulo.estado)
+
+        guardarButton.setOnClickListener {
+            val nuevaRutaImagen = imagenArticulo?.let {
+                val nombreArchivo = "articulo_${UUID.randomUUID()}"
+                guardarImagenEnAlmacenamiento(it, nombreArchivo)
+            } ?: articulo.rutaImagen // Mantener la imagen anterior si no se selecciona una nueva
+
+            val articuloActualizado = Articulo(
+                categoriaEditText.text.toString(),
+                tipoEditText.text.toString(),
+                nombreEditText.text.toString(),
+                descripcionEditText.text.toString(),
+                estadoEditText.text.toString(),
+                nuevaRutaImagen
+            )
+            dbHelper.actualizarArticulo(articuloId, articuloActualizado)
+            Toast.makeText(this, "Artículo actualizado", Toast.LENGTH_SHORT).show()
+            setResult(RESULT_OK)
+            finish()
+        }
+
+        botonCamara.setOnClickListener {
+            dispatchTakePictureIntent()
+        }
+
+        botonGaleria.setOnClickListener {
+            openGallery()
+        }
+    }
+
+    private fun dispatchTakePictureIntent() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        try {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        } catch (e: ActivityNotFoundException) {
+            Log.e("ArticuloEditActivity", "No se encontró la aplicación de cámara", e)
+            Toast.makeText(this, "No se encontró la aplicación de cámara", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun openGallery() {
+        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(galleryIntent, REQUEST_IMAGE_GALLERY)
+    }
+
+    private fun guardarImagenEnAlmacenamiento(imagen: Bitmap, nombreArchivo: String): String? {
+        val directorio = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val archivo = File(directorio, "$nombreArchivo.jpg")
+
+        return try {
+            val outputStream = FileOutputStream(archivo)
+            imagen.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            outputStream.flush()
+            outputStream.close()
+            archivo.absolutePath
+        } catch (e: Exception) {
+            Log.e("ArticuloEditActivity", "Error al guardar la imagen", e)
+            Toast.makeText(this, "Error al guardar la imagen", Toast.LENGTH_SHORT).show()
+            null
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                REQUEST_IMAGE_CAPTURE -> {
+                    imagenArticulo = data?.extras?.get("data") as Bitmap
+                    imagenImageView.setImageBitmap(imagenArticulo)
+                }
+                REQUEST_IMAGE_GALLERY -> {
+                    val imageUri = data?.data
+                    imagenArticulo = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
+                    imagenImageView.setImageBitmap(imagenArticulo)
+                }
+            }
         }
     }
 }

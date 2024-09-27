@@ -47,14 +47,15 @@ class MainActivity : AppCompatActivity() {
         if (dbHelperPrestamos.obtenerPrestamos().isEmpty()) {
             Toast.makeText(this, "No hay préstamos", Toast.LENGTH_SHORT).show()
         }
-      /*  // Insertar datos
+       // Insertar datos
         if (dbHelperArticulos.obtenerArticulos().isEmpty()) {
             insertarArticulos(dbHelperArticulos)
         }
+
         if (dbHelperSocios.obtenerSocios().isEmpty()) {
             insertarSocios(dbHelperSocios)
         }
-        if (dbHelperPrestamos.obtenerPrestamos().isEmpty()) {
+        /*if (dbHelperPrestamos.obtenerPrestamos().isEmpty()) {
             insertarPrestamos(dbHelperPrestamos)
         }
 */
@@ -74,12 +75,18 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-/*
+
     private fun insertarArticulos(dbHelperArticulos: ArticulosSQLite) {
         val articulos = listOf(
-            Articulo("Ropa", "Camiseta", "Camiseta de algodón", "Nueva", "Talla M"),
-            Articulo("Kayak", "Pesca", "Fisherman", "Kayak de pesca para dos personas", "Disponible"),
+            Articulo(
+                "Kayak",
+                "Pesca",
+                "Fisherman",
+                "Kayak de pesca para dos personas",
+                "Disponible",
 
+
+            )
         )
 
         for (articulo in articulos) {
@@ -98,7 +105,7 @@ class MainActivity : AppCompatActivity() {
             dbHelperSocios.insertarSocio(socio)
         }
     }
-
+/*
     private fun insertarPrestamos(dbHelperPrestamos: PrestamosSQLite) {
         val prestamos = listOf(
             Prestamo(1, 1234, Date(), Date(), "Préstamo de camiseta"),

@@ -19,11 +19,11 @@ SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
         val crearTablaArticulos = """
             CREATE TABLE articulos(
                 idArticulo INTEGER PRIMARY KEY AUTOINCREMENT,
-                categoria TEXT NOT NULL,
-                tipo TEXT NOT NULL,
-                nombre TEXT NOT NULL,
-                descripcion TEXT NOT NULL,
-                estado TEXT NOT NULL,
+                categoria TEXT ,
+                tipo TEXT ,
+                nombre TEXT ,
+                descripcion TEXT ,
+                estado TEXT ,
                 rutaImagen TEXT
             )
         """.trimIndent()
@@ -73,7 +73,7 @@ SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
         }
         return listaArticulos
     }*/
-fun obtenerArticulos(): List<Articulo> {
+    fun obtenerArticulos(): List<Articulo> {
     val db = readableDatabase
     val listaArticulos = mutableListOf<Articulo>()
 
@@ -108,7 +108,6 @@ fun obtenerArticulos(): List<Articulo> {
     }
     return listaArticulos
 }
-
     fun obtenerArticuloPorId(idArticulo: Int): Articulo? { //Obtiene un Articulo por su idArticulo
         val db = readableDatabase
         val cursor = db.query(
@@ -140,17 +139,23 @@ try{
         db.close()
     }
     }
-
-    fun obtenerIdArticuloBD(articulo: Articulo): Int { //Obtener el idArticulo de un artículo a partir de todos sus demás campos. Recycler View
+   /* fun obtenerIdArticuloBD(articulo: Articulo): Int {
         val db = readableDatabase
-        var articuloId = -1 // Valor por defecto si no se encuentra el habitante
+        var articuloId = -1
 
         try {
-            val selectQuery =
-                "SELECT idArticulo FROM articulos WHERE nombre = ? AND categoria = ? AND tipo = ? AND descripcion = ? AND estado  = ? AND rutaImagen = ?"
+            val selectQuery = """
+            SELECT idArticulo FROM articulos WHERE 
+            (nombre = ? OR nombre IS NULL) AND 
+            (categoria = ? OR categoria IS NULL) AND 
+            (tipo = ? OR tipo IS NULL) AND 
+            (descripcion = ? OR descripcion IS NULL) AND 
+            (estado = ? OR estado IS NULL) AND 
+            (rutaImagen = ? OR rutaImagen IS NULL)
+        """
             val parametros = arrayOf(
                 articulo.nombre,
-                        articulo.categoria,
+                articulo.categoria,
                 articulo.tipo,
                 articulo.descripcion,
                 articulo.estado,
@@ -163,24 +168,55 @@ try{
                 }
             }
         } catch (e: Exception) {
-            // Manejar cualquier error aquí
             Log.e("ArticulosSQLite", "Error al obtener el ID del articulo: ${e.message}")
         } finally {
             db.close()
         }
-         return articuloId  //+1
-    }
+        return articuloId
+    }*/
+   fun obtenerIdArticuloBD(articulo: Articulo): Int {
+       val db = readableDatabase
+       var articuloId = -1
 
+       try {
+           val selectQuery = """
+            SELECT idArticulo FROM articulos WHERE 
+            (nombre = ? OR nombre IS NULL) AND 
+            (categoria = ? OR categoria IS NULL) AND 
+            (tipo = ? OR tipo IS NULL) AND 
+            (descripcion = ? OR descripcion IS NULL) AND 
+            (estado = ? OR estado IS NULL) 
+        """
+           val parametros = arrayOf(
+               articulo.nombre,
+               articulo.categoria,
+               articulo.tipo,
+               articulo.descripcion,
+               articulo.estado
+           )
+
+           db.rawQuery(selectQuery, parametros).use { cursor ->
+               if (cursor.moveToFirst()) {
+                   articuloId = cursor.getInt(cursor.getColumnIndexOrThrow("idArticulo"))
+               }
+           }
+       } catch (e: Exception) {
+           Log.e("ArticulosSQLite", "Error al obtener el ID del articulo: ${e.message}")
+       } finally {
+           db.close()
+       }
+       return articuloId
+   }
     fun insertarArticulo(articulo: Articulo): Long {
         val db = writableDatabase
         val values = ContentValues()
 
-        values.put("categoria", articulo.categoria)
-        values.put("tipo", articulo.tipo)
-        values.put("nombre", articulo.nombre)
-        values.put("descripcion", articulo.descripcion)
-        values.put("estado", articulo.estado)
-        values.put("rutaImagen", articulo.rutaImagen)
+        values.put("categoria", articulo.categoria ?: null)
+        values.put("tipo", articulo.tipo ?: null)
+        values.put("nombre", articulo.nombre ?: null)
+        values.put("descripcion", articulo.descripcion ?: null)
+        values.put("estado", articulo.estado ?: null)
+        values.put("rutaImagen", articulo.rutaImagen ?: "")
 
         val idArticulo = db.insert("articulos", null, values)
         db.close()
@@ -191,27 +227,32 @@ try{
         return idArticulo
 
     }
-
-   fun actualizarArticulo(idArticulo: Int, articulo: Articulo) {
+    fun actualizarArticulo(idArticulo: Int, articulo: Articulo) {
         val db = writableDatabase
 
         val values = ContentValues().apply {
-            put("categoria", articulo.categoria)
-            put("tipo", articulo.tipo)
-            put("nombre", articulo.nombre)
-            put("descripcion", articulo.descripcion)
-            put("estado", articulo.estado)
+            put("categoria", articulo.categoria ?: null)
+            put("tipo", articulo.tipo ?: null)
+            put("nombre", articulo.nombre ?: null)
+            put("descripcion", articulo.descripcion ?: null)
+            put("estado", articulo.estado ?: null)
+            put("rutaImagen", articulo.rutaImagen ?: null)
         }
 
-        db.update("articulos", values, "idArticulo = ?", arrayOf(idArticulo.toString()))
-        Log.d(
-            "CRUD UPDATE", "Artculo Id: ${idArticulo} correctamente actualizado " +
-                    "\n${values}"
-        )
+      //  val idArticulo = obtenerIdArticuloBD(articulo)
+
+      //  if (idArticulo != -1) {
+            db.update("articulos", values, "idArticulo = ?", arrayOf(idArticulo.toString()))
+            Log.d(
+                "CRUD UPDATE", "Artculo Id: ${idArticulo} correctamente actualizado " +
+                        "\n${values}"
+            )
+      //  } else {
+       //     Log.e("CRUD UPDATE", "Error al actualizar el artículo: no se encontró el ID")
+       // }
+
         db.close()
     }
-
-
     fun borrarArticulo(idArticulo: Int): Int {
         val db = writableDatabase
         val rowsAffected = db.delete("articulos", "idArticulo = ?", arrayOf(idArticulo.toString()))
@@ -219,7 +260,6 @@ try{
         db.close()
         return rowsAffected
     }
-
     fun borrarTodosLosArticulos() {
         val db = writableDatabase
         db.delete("articulos", null, null)

@@ -4,10 +4,10 @@ import java.io.Serializable
 
 open class Articulo (
 
-    val categoria: String,
-    val tipo: String,
-    val nombre: String,
-    val descripcion: String,
-    val estado : String,
+    val categoria: String? = null,
+    val tipo: String? = null,
+    val nombre: String? = null,
+    val descripcion: String? = null,
+    val estado : String? = null,
     val rutaImagen: String? = null
     ): Serializable
