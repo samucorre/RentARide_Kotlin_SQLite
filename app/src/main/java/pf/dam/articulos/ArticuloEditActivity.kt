@@ -73,25 +73,26 @@ class ArticuloEditActivity : AppCompatActivity() {
 
 package pf.dam.articulos
 
+import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.semantics.text
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import db.ArticulosSQLite
 import pf.dam.R
 import java.io.File
 import java.io.FileOutputStream
-import java.util.UUID
+import java.util.*
 
 class ArticuloEditActivity : AppCompatActivity() {
 
@@ -100,17 +101,20 @@ class ArticuloEditActivity : AppCompatActivity() {
     private lateinit var categoriaEditText: EditText
     private lateinit var tipoEditText: EditText
     private lateinit var descripcionEditText: EditText
-    private lateinit var estadoEditText: EditText
     private lateinit var imagenImageView: ImageView
     private lateinit var guardarButton: Button
+    private lateinit var volverButton: Button
+
     private lateinit var botonCamara: Button
     private lateinit var botonGaleria: Button
+    private lateinit var estadoSpinner: Spinner
 
     private var articuloId: Int = -1
     private lateinit var articulo: Articulo
     private var imagenArticulo: Bitmap? = null
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_IMAGE_GALLERY = 2
+    private val REQUEST_PERMISSION_CAMERA = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,11 +125,12 @@ class ArticuloEditActivity : AppCompatActivity() {
         categoriaEditText = findViewById(R.id.categoriaEditText)
         tipoEditText = findViewById(R.id.tipoEditText)
         descripcionEditText = findViewById(R.id.descripcionEditText)
-        estadoEditText = findViewById(R.id.estadoEditText)
         imagenImageView = findViewById(R.id.imagenImageView)
         guardarButton = findViewById(R.id.guardarButton)
+        volverButton = findViewById(R.id.volverButton)
         botonCamara = findViewById(R.id.botonCamara)
         botonGaleria = findViewById(R.id.botonGaleria)
+        estadoSpinner = findViewById(R.id.estadoSpinner)
 
         articuloId = intent.getIntExtra("articuloId", -1)
         articulo = dbHelper.obtenerArticuloPorId(articuloId)!!
@@ -144,20 +149,30 @@ class ArticuloEditActivity : AppCompatActivity() {
         categoriaEditText.setText(articulo.categoria)
         tipoEditText.setText(articulo.tipo)
         descripcionEditText.setText(articulo.descripcion)
-        estadoEditText.setText(articulo.estado)
+
+        // Configurar el adaptador del Spinner
+        val estados = arrayOf(EstadoArticulo.DISPONIBLE, EstadoArticulo.PRESTADO)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, estados)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        estadoSpinner.adapter = adapter
+
+        // Establecer la selección inicial del Spinner
+        val estadoIndex = estados.indexOf(articulo.estado)
+        estadoSpinner.setSelection(if (estadoIndex >= 0) estadoIndex else 0)
 
         guardarButton.setOnClickListener {
             val nuevaRutaImagen = imagenArticulo?.let {
                 val nombreArchivo = "articulo_${UUID.randomUUID()}"
                 guardarImagenEnAlmacenamiento(it, nombreArchivo)
-            } ?: articulo.rutaImagen // Mantener la imagen anterior si no se selecciona una nueva
+            } ?: articulo.rutaImagen
 
+            val estadoSeleccionado = estadoSpinner.selectedItem as EstadoArticulo
             val articuloActualizado = Articulo(
                 categoriaEditText.text.toString(),
                 tipoEditText.text.toString(),
                 nombreEditText.text.toString(),
                 descripcionEditText.text.toString(),
-                estadoEditText.text.toString(),
+                estadoSeleccionado,
                 nuevaRutaImagen
             )
             dbHelper.actualizarArticulo(articuloId, articuloActualizado)
@@ -165,9 +180,19 @@ class ArticuloEditActivity : AppCompatActivity() {
             setResult(RESULT_OK)
             finish()
         }
-
+        volverButton.setOnClickListener { finish() }
         botonCamara.setOnClickListener {
-            dispatchTakePictureIntent()
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.CAMERA),
+                    REQUEST_PERMISSION_CAMERA
+                )
+            } else {
+                dispatchTakePictureIntent()
+            }
         }
 
         botonGaleria.setOnClickListener {

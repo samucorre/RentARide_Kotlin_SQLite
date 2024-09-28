@@ -1,5 +1,6 @@
 package pf.dam.articulos
 
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Bitmap
@@ -7,9 +8,11 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.semantics.text
@@ -25,7 +28,6 @@ class ArticuloAddActivity : AppCompatActivity() {
     private lateinit var categoriaEditText: EditText
     private lateinit var tipoEditText: EditText
     private lateinit var descripcionEditText: EditText
-    private lateinit var estadoEditText: EditText
     private lateinit var guardarButton: Button
     private lateinit var volverButton: Button
     private lateinit var botonCamara: Button
@@ -34,7 +36,10 @@ class ArticuloAddActivity : AppCompatActivity() {
     private lateinit var imageView: ImageView
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_IMAGE_GALLERY = 2
+    private val REQUEST_PERMISSION_CAMERA = 100
+    private lateinit var estadoSpinner: Spinner
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_articulo_add)
@@ -44,12 +49,18 @@ class ArticuloAddActivity : AppCompatActivity() {
         categoriaEditText = findViewById(R.id.categoriaEditText)
         tipoEditText = findViewById(R.id.tipoEditText)
         descripcionEditText = findViewById(R.id.descripcionEditText)
-        estadoEditText = findViewById(R.id.estadoEditText)
+
         guardarButton = findViewById(R.id.guardarButton)
         volverButton = findViewById(R.id.volverButton)
         botonCamara = findViewById(R.id.botonCamara)
         botonGaleria = findViewById(R.id.botonGaleria)
         imageView = findViewById(R.id.imageView)
+        estadoSpinner = findViewById(R.id.estadoSpinner)
+
+        val estados = arrayOf(EstadoArticulo.DISPONIBLE, EstadoArticulo.PRESTADO)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, estados)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        estadoSpinner.adapter = adapter
 
         volverButton.setOnClickListener { finish() }
 
@@ -61,45 +72,22 @@ class ArticuloAddActivity : AppCompatActivity() {
             openGallery()
         }
 
-       /* guardarButton.setOnClickListener {
-        //    val nombreArchivo = "articulo_${UUID.randomUUID()}"
-            val rutaImagen = imagenArticulo?.let {
-                val nombreArchivo = "articulo_${UUID.randomUUID()}"
-                guardarImagenEnAlmacenamiento(it, nombreArchivo)
-            }
-
-            val nuevoArticulo = Articulo(
-                categoriaEditText.text.toString(),
-                tipoEditText.text.toString(),
-                nombreEditText.text.toString(),
-                descripcionEditText.text.toString(),
-                estadoEditText.text.toString(),
-                rutaImagen // Ahora puede ser nulo
-            )
-            val idNuevoArticulo = dbHelper.insertarArticulo(nuevoArticulo)
-            if (idNuevoArticulo != -1L) {
-                Toast.makeText(this, "Artículo añadido correctamente", Toast.LENGTH_SHORT).show()
-                finish()
-            } else {
-                Toast.makeText(this, "Error al añadir el artículo", Toast.LENGTH_SHORT).show()
-            }
-        }*/
         guardarButton.setOnClickListener {
             val categoria = categoriaEditText.text.toString()
             val tipo = tipoEditText.text.toString()
             val nombre = nombreEditText.text.toString()
             val descripcion = descripcionEditText.text.toString()
-            val estado = estadoEditText.text.toString()
+            val estadoSeleccionado = estadoSpinner.selectedItem as EstadoArticulo
 
             val rutaImagen = imagenArticulo?.let {
                 val nombreArchivo = "articulo_${UUID.randomUUID()}"
                 guardarImagenEnAlmacenamiento(it, nombreArchivo)
             }
 
-            if (categoria.isBlank() || tipo.isBlank() || nombre.isBlank() || descripcion.isBlank() || estado.isBlank()) {
+            if (categoria.isBlank() || tipo.isBlank() || nombre.isBlank() || descripcion.isBlank() ) {
                 Toast.makeText(this, "Por favor, rellena todos los campos", Toast.LENGTH_SHORT).show()
             } else {
-                val nuevoArticulo = Articulo(categoria, tipo, nombre, descripcion, estado, rutaImagen)
+                val nuevoArticulo = Articulo(categoria, tipo, nombre, descripcion, estadoSeleccionado, rutaImagen)
                 dbHelper.insertarArticulo(nuevoArticulo)
 
                 Toast.makeText(this, "Artículo añadido", Toast.LENGTH_SHORT).show()

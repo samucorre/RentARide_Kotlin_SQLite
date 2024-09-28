@@ -44,7 +44,7 @@ class ArticulosAdapter(articulos: List<Articulo>) :
         holder.categoriaTextView.text = articulo.categoria ?: ""
         holder.tipoTextView.text = articulo.tipo ?: ""
         holder.descripcionTextView.text = articulo.descripcion ?: ""
-        holder.estadoTextView.text = articulo.estado ?: ""
+        holder.estadoTextView.text = articulo.estado?.name ?: ""
         if (articulo.rutaImagen != null) {
             val imagenBitmap = BitmapFactory.decodeFile(articulo.rutaImagen)
             holder.imagenImageView.setImageBitmap(imagenBitmap)

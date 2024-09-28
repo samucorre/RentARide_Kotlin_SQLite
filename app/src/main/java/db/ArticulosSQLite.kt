@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import pf.dam.articulos.EstadoArticulo
 
 class ArticulosSQLite (context: Context):
 SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -86,7 +87,11 @@ SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
                     val tipo = cursor.getString(cursor.getColumnIndexOrThrow("tipo"))
                     val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
                     val descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion"))
-                    val estado = cursor.getString(cursor.getColumnIndexOrThrow("estado"))
+                    val estado = if (cursor.getString(cursor.getColumnIndexOrThrow("estado")) != null) {
+                        EstadoArticulo.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("estado")))
+                    } else {
+                        null
+                    }
                     val rutaImagen = cursor.getString(cursor.getColumnIndexOrThrow("rutaImagen"))
 
                     val articulo = Articulo(
@@ -95,6 +100,7 @@ SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
                         nombre,
                         descripcion,
                         estado,
+
                         rutaImagen
                     )
                     listaArticulos.add(articulo)
@@ -126,7 +132,11 @@ try{
             val tipo = cursor.getString(cursor.getColumnIndexOrThrow("tipo"))
             val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
             val descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion"))
-            val estado = cursor.getString(cursor.getColumnIndexOrThrow("estado"))
+            val estado = if (cursor.getString(cursor.getColumnIndexOrThrow("estado")) != null) {
+                EstadoArticulo.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("estado")))
+            } else {
+                null
+            }
             val rutaImagen = cursor.getString(cursor.getColumnIndexOrThrow("rutaImagen"))
 
             Articulo(categoria, tipo, nombre, descripcion, estado, rutaImagen)
@@ -192,7 +202,7 @@ try{
                articulo.categoria,
                articulo.tipo,
                articulo.descripcion,
-               articulo.estado
+               articulo.estado?.name
            )
 
            db.rawQuery(selectQuery, parametros).use { cursor ->
@@ -215,7 +225,7 @@ try{
         values.put("tipo", articulo.tipo ?: null)
         values.put("nombre", articulo.nombre ?: null)
         values.put("descripcion", articulo.descripcion ?: null)
-        values.put("estado", articulo.estado ?: null)
+        values.put("estado", articulo.estado?.name ?: null)
         values.put("rutaImagen", articulo.rutaImagen ?: "")
 
         val idArticulo = db.insert("articulos", null, values)
@@ -235,7 +245,7 @@ try{
             put("tipo", articulo.tipo ?: null)
             put("nombre", articulo.nombre ?: null)
             put("descripcion", articulo.descripcion ?: null)
-            put("estado", articulo.estado ?: null)
+            put("estado", articulo.estado?.name ?: null)
             put("rutaImagen", articulo.rutaImagen ?: null)
         }
 
@@ -264,5 +274,31 @@ try{
         val db = writableDatabase
         db.delete("articulos", null, null)
         db.close()
+    }
+    fun obtenerEstadoArticulo(idArticulo: Int): EstadoArticulo? {
+        val db = readableDatabase
+        val cursor = db.query(
+            "articulos",
+            arrayOf("estado"), // Solo necesitamos la columna "estado"
+            "idArticulo = ?",
+            arrayOf(idArticulo.toString()),
+            null,
+            null,
+            null
+        )
+        try {
+            return if (cursor.moveToFirst()) {
+                if (cursor.getString(cursor.getColumnIndexOrThrow("estado")) != null) {
+                    EstadoArticulo.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("estado")))
+                } else {
+                    null
+                }
+            } else {
+                null
+            }
+        } finally {
+            cursor.close()
+            db.close()
+        }
     }
 }

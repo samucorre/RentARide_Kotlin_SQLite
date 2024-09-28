@@ -109,7 +109,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
         categoriaTextView.text = articulo.categoria ?: ""
         tipoTextView.text = articulo.tipo ?: ""
         descripcionTextView.text = articulo.descripcion ?: ""
-        estadoTextView.text = articulo.estado ?: ""
+        estadoTextView.text = articulo.estado?.name ?: ""
 
         if (articulo.rutaImagen != null && articulo.rutaImagen.isNotEmpty()) {
             try {
