@@ -286,6 +286,7 @@ class SociosSQLite(context: Context) :
             db.rawQuery(selectQuery, parametros).use { cursor ->
                 if (cursor.moveToFirst()) {
                     socioId = cursor.getInt(cursor.getColumnIndexOrThrow("idSocio"))
+                    Log.d("SociosSQLite", "ID del socio obtenido: $socioId")
                 }
             }
         } catch (e: Exception) {

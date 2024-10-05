@@ -294,14 +294,40 @@ try{
             db.close()
         }
     }
-    fun obtenerArticulosDisponibles(): List<Articulo> {
-        val articulos = mutableListOf<Articulo>()
+
+    fun obtenerArticulosDisponibles(): List<Articulo> {    val articulos = mutableListOf<Articulo>()
         val db = this.readableDatabase
         val cursor = db.rawQuery("SELECT * FROM articulos WHERE estado = 'DISPONIBLE'", null)
-        // ... (código para convertir el cursor a una lista de Articulo)
-        cursor.close()
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    val categoria = cursor.getString(cursor.getColumnIndexOrThrow("categoria"))
+                    val tipo = cursor.getString(cursor.getColumnIndexOrThrow("tipo"))
+                    val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+                    val descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion"))
+                    val estado = EstadoArticulo.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("estado")))
+                    val rutaImagen = cursor.getString(cursor.getColumnIndexOrThrow("rutaImagen"))
+
+                    val articulo = Articulo(
+                        categoria,
+                        tipo,
+                        nombre,
+                        descripcion,
+                        estado,
+                        rutaImagen
+                    )
+                    articulos.add(articulo)
+                } while (cursor.moveToNext())
+            }
+        } catch (e: Exception) {
+            throw RuntimeException("Error obteniendo artículos disponibles: ${e.message}", e)
+        } finally {
+            cursor.close()
+            db.close()
+        }
         return articulos
     }
+
     fun obtenerIdsArticulosDisponibles(): List<Int> {
         val idsArticulos = mutableListOf<Int>()
         val db = this.readableDatabase
@@ -313,6 +339,7 @@ try{
         cursor.close()
         return idsArticulos
     }
+
     fun obtenerIdArticuloDisponibleBD(articulo: Articulo): Int {
         val db = readableDatabase
         var articuloId = -1
@@ -336,6 +363,7 @@ try{
             db.rawQuery(selectQuery, parametros).use { cursor ->
                 if (cursor.moveToFirst()) {
                     articuloId = cursor.getInt(cursor.getColumnIndexOrThrow("idArticulo"))
+                    Log.d("ArticulosSQLite", "ID del artículo obtenido: $articuloId")
                 }
             }
         } catch (e: Exception) {
@@ -345,6 +373,7 @@ try{
         }
         return articuloId
     }
+
     fun actualizarEstadoArticulo(idArticulo: Int, nuevoEstado: EstadoArticulo): Int {
         val db = this.writableDatabase
         val values = ContentValues().apply {
