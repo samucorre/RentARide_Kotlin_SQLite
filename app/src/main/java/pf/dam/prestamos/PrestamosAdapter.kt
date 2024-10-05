@@ -4,14 +4,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.compose.ui.semantics.text
 import androidx.recyclerview.widget.RecyclerView
 import pf.dam.prestamos.Prestamo
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
-class PrestamosAdapter(private var prestamos: List<Prestamo>) :
+class PrestamosAdapter(prestamos: List<Prestamo>) :
     RecyclerView.Adapter<PrestamosAdapter.PrestamoViewHolder>() {
+    var prestamos: List<Prestamo> = prestamos
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 

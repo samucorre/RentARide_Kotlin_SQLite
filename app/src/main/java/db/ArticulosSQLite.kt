@@ -249,18 +249,11 @@ try{
             put("rutaImagen", articulo.rutaImagen ?: null)
         }
 
-      //  val idArticulo = obtenerIdArticuloBD(articulo)
-
-      //  if (idArticulo != -1) {
             db.update("articulos", values, "idArticulo = ?", arrayOf(idArticulo.toString()))
             Log.d(
                 "CRUD UPDATE", "Artculo Id: ${idArticulo} correctamente actualizado " +
                         "\n${values}"
             )
-      //  } else {
-       //     Log.e("CRUD UPDATE", "Error al actualizar el artículo: no se encontró el ID")
-       // }
-
         db.close()
     }
     fun borrarArticulo(idArticulo: Int): Int {
@@ -300,5 +293,65 @@ try{
             cursor.close()
             db.close()
         }
+    }
+    fun obtenerArticulosDisponibles(): List<Articulo> {
+        val articulos = mutableListOf<Articulo>()
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM articulos WHERE estado = 'DISPONIBLE'", null)
+        // ... (código para convertir el cursor a una lista de Articulo)
+        cursor.close()
+        return articulos
+    }
+    fun obtenerIdsArticulosDisponibles(): List<Int> {
+        val idsArticulos = mutableListOf<Int>()
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT idArticulo FROM articulos WHERE estado = 'DISPONIBLE'", null)
+        while (cursor.moveToNext()) {
+            val idArticulo = cursor.getInt(cursor.getColumnIndexOrThrow("idArticulo"))
+            idsArticulos.add(idArticulo)
+        }
+        cursor.close()
+        return idsArticulos
+    }
+    fun obtenerIdArticuloDisponibleBD(articulo: Articulo): Int {
+        val db = readableDatabase
+        var articuloId = -1
+
+        try {
+            val selectQuery = """
+            SELECT idArticulo FROM articulos WHERE 
+            (nombre = ? OR nombre IS NULL) AND 
+            (categoria = ? OR categoria IS NULL) AND 
+            (tipo = ? OR tipo IS NULL) AND 
+            (descripcion = ? OR descripcion IS NULL) AND 
+            (estado = 'DISPONIBLE')
+        """
+            val parametros = arrayOf(
+                articulo.nombre,
+                articulo.categoria,
+                articulo.tipo,
+                articulo.descripcion
+            )
+
+            db.rawQuery(selectQuery, parametros).use { cursor ->
+                if (cursor.moveToFirst()) {
+                    articuloId = cursor.getInt(cursor.getColumnIndexOrThrow("idArticulo"))
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("ArticulosSQLite", "Error al obtener el ID del articulo: ${e.message}")
+        } finally {
+            db.close()
+        }
+        return articuloId
+    }
+    fun actualizarEstadoArticulo(idArticulo: Int, nuevoEstado: EstadoArticulo): Int {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put("estado", nuevoEstado.name)
+        }
+        val whereClause = "idArticulo = ?"
+        val whereArgs = arrayOf(idArticulo.toString())
+        return db.update("articulos", values, whereClause, whereArgs)
     }
 }

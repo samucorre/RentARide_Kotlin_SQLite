@@ -8,7 +8,6 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
         tools:targetApi="31">
@@ -33,12 +32,18 @@
         <activity android:name=".socios.SocioEditActivity" />
         <activity android:name=".socios.SocioAddActivity" />
 
-        <activity android:name=".prestamos.PrestamosActivity" />
-    </application>
+        <!-- <activity android:name=".prestamos.PrestamosActivity" />
+           <activity android:name=".prestamos.PrestamoDetalleActivity" />
+          <activity android:name=".prestamos.PrestamoEditActivity" />
+           <activity android:name=".prestamos.PrestamoAddActivity" />
+           -->
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
+       </application>
+
+       <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+       <uses-permission android:name="android.permission.CAMERA" />
+       <uses-feature android:name="android.hardware.camera" android:required="false" />
 
 
-</manifest>
+   </manifest>
