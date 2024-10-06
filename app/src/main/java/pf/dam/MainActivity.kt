@@ -11,11 +11,9 @@ import db.SociosSQLite
 import pf.dam.articulos.Articulo
 import pf.dam.articulos.ArticulosActivity
 import pf.dam.articulos.EstadoArticulo
-import pf.dam.prestamos.Prestamo
 import pf.dam.prestamos.PrestamosActivity
 import pf.dam.socios.Socio
 import pf.dam.socios.SociosActivity
-import java.util.Date
 
 class MainActivity : AppCompatActivity() {
 
@@ -79,8 +77,9 @@ class MainActivity : AppCompatActivity() {
     }
     private fun insertarArticulos(dbHelperArticulos: ArticulosSQLite) {
         val articulos = listOf(
-            Articulo(1, "Electrónica", "Teléfono", "Samsung Galaxy S23", "Teléfono inteligente de gama alta", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
-            Articulo(2, "Libros", "Novela", "Cien años de soledad", "Obra maestra de Gabriel García Márquez", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg")
+            Articulo(1, "Bicicleta", "MTB", "Bicicleta infantil", "Rueda 20", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
+            Articulo(2, "Kayak", "Hinchable", "Ocean", "Individual", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
+            Articulo(3, "Kayak", "Rigido", "River", "Dos plazas", EstadoArticulo.DISPONIBLE, "ruta/imagen3.jpg")
             // ... más artículos
         )
 

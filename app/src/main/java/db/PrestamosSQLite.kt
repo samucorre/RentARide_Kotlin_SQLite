@@ -15,7 +15,7 @@ class PrestamosSQLite(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
         private const val DATABASE_NAME = "prestamos.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2 // Incrementa la versión de la base de datos
         private const val TAG = "PrestamosSQLite"
     }
 
@@ -40,10 +40,13 @@ class PrestamosSQLite(context: Context) :
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS prestamos")
-        Log.d(TAG, "Tabla prestamos eliminada")
-        onCreate(db)
+        if (oldVersion < 2) { // Verifica si la versión anterior es menor que 2
+            db.execSQL("DROP TABLE IF EXISTS prestamos")
+            Log.d(TAG, "Tabla prestamos eliminada")
+            onCreate(db)
+        }
     }
+
 
     fun obtenerPrestamos(): List<Prestamo> {
         val db = readableDatabase
@@ -239,5 +242,29 @@ class PrestamosSQLite(context: Context) :
         } else {
             Log.d(TAG, "No se pudo actualizar el estado del préstamo con ID: $idPrestamo")
         }
+    }
+
+    fun estaArticuloEnPrestamo(idArticulo: Int): Boolean {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT * FROM prestamos WHERE idArticulo = ? AND estado = ?",
+            arrayOf(idArticulo.toString(), EstadoPrestamo.ACTIVO.toString())
+        )
+        val estaEnPrestamo = cursor.count > 0
+        cursor.close()
+        db.close()
+        return estaEnPrestamo
+    }
+
+    fun estaSocioEnPrestamo(idSocio: Int): Boolean {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT * FROM prestamos WHERE idSocio = ? AND estado = ?",
+            arrayOf(idSocio.toString(), EstadoPrestamo.ACTIVO.toString())
+        )
+        val estaEnPrestamo = cursor.count > 0
+        cursor.close()
+        db.close()
+        return estaEnPrestamo
     }
 }

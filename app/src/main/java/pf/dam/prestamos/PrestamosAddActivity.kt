@@ -48,7 +48,7 @@ class PrestamoAddActivity : AppCompatActivity() {
         articuloSpinner = findViewById(R.id.articuloSpinner)
         socioSpinner = findViewById(R.id.socioSpinner)
         fechaInicioEditText = findViewById(R.id.fechaInicioEditText)
-        fechaFinEditText = findViewById(R.id.fechaFinEditText)
+
         infoEditText = findViewById(R.id.infoEditText)
         guardarButton = findViewById(R.id.guardarButton)
         volverButton = findViewById(R.id.volverButton)
@@ -59,9 +59,6 @@ class PrestamoAddActivity : AppCompatActivity() {
             mostrarDatePicker(fechaInicioEditText)
         }
 
-        fechaFinEditText.setOnClickListener {
-            mostrarDatePicker(fechaFinEditText)
-        }
 
         // Rellenar Spinners
         val articulos = articulosDbHelper.obtenerArticulosDisponibles()
@@ -127,11 +124,7 @@ class PrestamoAddActivity : AppCompatActivity() {
             val posicionArticulo = articuloSpinner.selectedItemPosition
             val posicionSocio = socioSpinner.selectedItemPosition
             val fechaInicio = dateFormat.parse(fechaInicioEditText.text.toString())
-            val fechaFin = if (fechaFinEditText.text.toString().isNotBlank()) {
-                dateFormat.parse(fechaFinEditText.text.toString())
-            } else {
-                null
-            }
+
             val info = infoEditText.text.toString()
 
             if (posicionArticulo == -1 || posicionSocio == -1 || fechaInicio == null) {
@@ -145,14 +138,20 @@ class PrestamoAddActivity : AppCompatActivity() {
                 val idSocio = socios.getOrNull(posicionSocio)?.idSocio
 
                 if (idArticulo != null && idSocio != null) {
-                    val nuevoPrestamo = fechaFin?.let {
-                        Prestamo(null, idArticulo, idSocio, fechaInicio, it, info)
-                    } ?: Prestamo(null, idArticulo, idSocio, fechaInicio, fechaInicio, info) // Si fechaFin es null, se usa fechaInicio
+                    val nuevoPrestamo =
+                        Prestamo(null,
+                            idArticulo,
+                            idSocio,
+                            fechaInicio,
+                            fechaInicio,
+                            info,
+                            EstadoPrestamo.ACTIVO
+                        )
 
                     dbHelper.insertarPrestamo(nuevoPrestamo)
 
                     // Actualizar el estado del artículo a PRESTADO
-                    articulosDbHelper.actualizarEstadoArticulo(idArticulo, EstadoArticulo.PRESTADO)
+                    articulosDbHelper.actualizarEstadoArticulo(idArticulo, EstadoArticulo.NO_DISPONIBLE)
 
                     Toast.makeText(this, "Préstamo añadido", Toast.LENGTH_SHORT).show()
                     finish()

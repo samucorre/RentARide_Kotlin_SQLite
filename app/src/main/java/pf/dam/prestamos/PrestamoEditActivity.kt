@@ -36,7 +36,7 @@ class PrestamoEditActivity : AppCompatActivity() {
         dbHelper = PrestamosSQLite(this)
         articulosDbHelper = ArticulosSQLite(this)
         fechaInicioEditText = findViewById(R.id.fechaInicioEditText)
-        fechaFinEditText = findViewById(R.id.fechaFinEditText)
+
         infoEditText = findViewById(R.id.infoEditText)
         estadoSpinner = findViewById(R.id.estadoSpinner)
         guardarButton = findViewById(R.id.guardarButton)
@@ -46,7 +46,7 @@ class PrestamoEditActivity : AppCompatActivity() {
         prestamo = dbHelper.obtenerPrestamoPorId(prestamoId)!!
 
         fechaInicioEditText.setText(dateFormat.format(prestamo.fechaInicio))
-        fechaFinEditText.setText(dateFormat.format(prestamo.fechaFin))
+
         infoEditText.setText(prestamo.info)
 
         // Configurar el adaptador del Spinner
@@ -63,13 +63,15 @@ class PrestamoEditActivity : AppCompatActivity() {
             mostrarDatePicker(fechaInicioEditText)
         }
 
-        fechaFinEditText.setOnClickListener {
-            mostrarDatePicker(fechaFinEditText)
-        }
 
         guardarButton.setOnClickListener {
             val fechaInicio = dateFormat.parse(fechaInicioEditText.text.toString())
-            val fechaFin = dateFormat.parse(fechaFinEditText.text.toString())
+            //val fechaFin = dateFormat.parse(fechaFinEditText.text.toString())
+            val fechaFin = if (prestamo.estado == EstadoPrestamo.CERRADO) {
+                Date() // Fecha actual
+            } else {
+                prestamo.fechaFin // Mantener la fecha de fin original si el estado no es CERRADO
+            }
             val info = infoEditText.text.toString()
             val estadoSeleccionado = estadoSpinner.selectedItem as EstadoPrestamo
 

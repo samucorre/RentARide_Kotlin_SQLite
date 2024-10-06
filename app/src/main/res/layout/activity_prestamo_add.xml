@@ -35,17 +35,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/socioSpinner" />
 
-    <EditText
-        android:id="@+id/fechaFinEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Fecha de fin (opcional)"
-        android:focusable="false"
-        android:clickable="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fechaInicioEditText" />
+
 
     <EditText
         android:id="@+id/infoEditText"
@@ -55,7 +45,7 @@
         android:hint="Información adicional"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fechaFinEditText" />
+        app:layout_constraintTop_toBottomOf="@id/fechaInicioEditText" />
 
     <Button
         android:id="@+id/guardarButton"

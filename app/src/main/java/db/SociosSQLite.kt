@@ -304,4 +304,15 @@ class SociosSQLite(context: Context) :
         db.close()
         return rowsAffected
     }
+   /* fun estaSocioEnPrestamo(idSocio: Int): Boolean {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT * FROM prestamos WHERE idSocio = ? AND estado = ?",
+            arrayOf(idSocio.toString(), EstadoPrestamo.ACTIVO.toString())
+        )
+        val estaEnPrestamo = cursor.count > 0
+        cursor.close()
+        db.close()
+        return estaEnPrestamo
+    }*/
 }

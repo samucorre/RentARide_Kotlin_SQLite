@@ -5,7 +5,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.semantics.text
 import db.SociosSQLite
 import pf.dam.R
 
@@ -61,7 +60,7 @@ class SocioAddActivity : AppCompatActivity() {
             if (nombre.isBlank() || apellido.isBlank() || numeroSocio == null || telefono == null || email.isBlank()) {
                 Toast.makeText(this, "Por favor, rellena todos los campos", Toast.LENGTH_SHORT).show()
             } else {
-                val nuevoSocio = Socio(nombre=nombre, apellido=apellido, numeroSocio=numeroSocio, telefono=telefono, email=email)
+                val nuevoSocio = Socio(nombre =nombre, apellido =apellido, numeroSocio =numeroSocio, telefono =telefono, email =email)
                 dbHelper.insertarSocio(nuevoSocio)
 
                 Toast.makeText(this, "Socio añadido", Toast.LENGTH_SHORT).show()

@@ -17,17 +17,6 @@
         android:focusable="false"
         android:inputType="date" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Fecha de fin:" />
-
-    <EditText
-        android:id="@+id/fechaFinEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="false"
-        android:inputType="date" />
 
     <TextView
         android:layout_width="wrap_content"

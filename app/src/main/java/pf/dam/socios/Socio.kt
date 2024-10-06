@@ -2,7 +2,7 @@ package pf.dam.socios
 
 import java.io.Serializable
 
-open class Socio (
+open class Socio(
 
     var idSocio: Int? = null, // Nueva propiedad id
     val nombre: String,
@@ -11,4 +11,4 @@ open class Socio (
     val telefono: Int,
     val email: String,
 
-): Serializable
+    ): Serializable
