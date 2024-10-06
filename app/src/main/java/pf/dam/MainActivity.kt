@@ -77,28 +77,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-   /* private fun insertarArticulos(dbHelperArticulos: ArticulosSQLite) {
-        val articulos = listOf(
-            Articulo(
-                "Kayak",
-                "Pesca",
-                "Fisherman",
-                "Kayak de pesca para dos personas",
-                "Disponible",
-
-                //"/storage/emulated/0/Download/kayak.jpeg"
-                        // /storage/emulated/0/Android/data/pf.dam/files/Pictures/articulo_060418ba-2f69-46cb-9e20-2ac019f7f5ca.jpg
-
-
-            )
-        )
-
-        for (articulo in articulos) {
-            dbHelperArticulos.insertarArticulo(articulo)
-        }
-    }*/
-
-
     private fun insertarSocios(dbHelperSocios: SociosSQLite) {
         val socios = listOf(
             Socio(1,"Juan", "Pérez", 1234, 654321098, "juan.perez@example.com"),

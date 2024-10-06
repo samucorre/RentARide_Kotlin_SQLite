@@ -1,11 +1,14 @@
 package pf.dam
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import pf.dam.prestamos.Prestamo
+import pf.dam.prestamos.PrestamoDetalleActivity
+import pf.dam.socios.SocioDetalleActivity
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -41,7 +44,14 @@ class PrestamosAdapter(prestamos: List<Prestamo>) :
         holder.fechaInicioTextView.text = "Fecha Inicio: ${dateFormat.format(prestamo.fechaInicio)}"
         holder.fechaFinTextView.text = "Fecha Fin: ${dateFormat.format(prestamo.fechaFin)}"
         holder.infoTextView.text = "Info: ${prestamo.info}"
-        // ... configura otros TextViews o Views
+
+        holder.itemView.setOnClickListener {
+            val context = holder.itemView.context
+            val intent = Intent(context, PrestamoDetalleActivity::class.java)
+
+            intent.putExtra("idPrestamo", prestamo.idPrestamo)
+            holder.itemView.context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int = prestamos.size

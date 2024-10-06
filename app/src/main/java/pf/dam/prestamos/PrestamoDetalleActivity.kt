@@ -67,9 +67,9 @@ class PrestamoDetalleActivity : AppCompatActivity() {
             mostrarPrestamo(prestamo)
 
             editPrestamoButton.setOnClickListener {
-                /*val intent = Intent(this, PrestamoEditActivity::class.java)
+                val intent = Intent(this, PrestamoEditActivity::class.java)
                 intent.putExtra("prestamoId", prestamoId)
-                editPrestamoLauncher.launch(intent)*/
+                editPrestamoLauncher.launch(intent)
             }
             val editPrestamoLauncher = registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()
@@ -80,7 +80,7 @@ class PrestamoDetalleActivity : AppCompatActivity() {
                 }
             }
 
-        /*    deletePrestamoButton.setOnClickListener {
+            deletePrestamoButton.setOnClickListener {
                 // Actualizar el estado del artículo a DISPONIBLE
                 articulosDbHelper.actualizarEstadoArticulo(
                     prestamo.idArticulo,
@@ -91,7 +91,7 @@ class PrestamoDetalleActivity : AppCompatActivity() {
                 Toast.makeText(this, "Préstamo eliminado", Toast.LENGTH_SHORT).show()
                 setResult(RESULT_OK)
                 finish()
-            }*/
+            }
 
             backButton.setOnClickListener {
                 finish()

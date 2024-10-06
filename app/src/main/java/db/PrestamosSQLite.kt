@@ -5,6 +5,8 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import androidx.compose.foundation.layout.size
+import pf.dam.prestamos.EstadoPrestamo
 import pf.dam.prestamos.Prestamo
 import java.text.SimpleDateFormat
 import java.util.*
@@ -16,6 +18,7 @@ class PrestamosSQLite(context: Context) :
         private const val DATABASE_VERSION = 1
         private const val TAG = "PrestamosSQLite"
     }
+
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -27,6 +30,7 @@ class PrestamosSQLite(context: Context) :
                 fechaInicio TEXT,
                 fechaFin TEXT,
                 info TEXT,
+                estado TEXT NOT NULL,
                 FOREIGN KEY (idSocio) REFERENCES socios (idSocio),
                 FOREIGN KEY (idArticulo) REFERENCES articulos (idArticulo)
             )
@@ -53,9 +57,13 @@ class PrestamosSQLite(context: Context) :
                         val idPrestamo = cursor.getInt(cursor.getColumnIndexOrThrow("idPrestamo"))
                         val idArticulo = cursor.getInt(cursor.getColumnIndexOrThrow("idArticulo"))
                         val idSocio = cursor.getInt(cursor.getColumnIndexOrThrow("idSocio"))
-                        val fechaInicio = dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow("fechaInicio")))
-                        val fechaFin = dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow("fechaFin")))
+                        val fechaInicio =
+                            dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow("fechaInicio")))
+                        val fechaFin =
+                            dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow("fechaFin")))
                         val info = cursor.getString(cursor.getColumnIndexOrThrow("info"))
+                        val estado =
+                            EstadoPrestamo.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("estado")))
 
                         val prestamo = Prestamo(
                             idPrestamo,
@@ -63,7 +71,8 @@ class PrestamosSQLite(context: Context) :
                             idSocio,
                             fechaInicio,
                             fechaFin,
-                            info
+                            info,
+                            estado
                         )
                         listaPrestamos.add(prestamo)
                     } while (cursor.moveToNext())
@@ -100,8 +109,11 @@ class PrestamosSQLite(context: Context) :
                 val fechaFin =
                     dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow("fechaFin")))
                 val info = cursor.getString(cursor.getColumnIndexOrThrow("info"))
+                val estado =
+                    EstadoPrestamo.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("estado")))
 
-                val prestamo = Prestamo(idPrestamo, idArticulo, idSocio, fechaInicio, fechaFin, info)
+                val prestamo =
+                    Prestamo(idPrestamo, idArticulo, idSocio, fechaInicio, fechaFin, info, estado)
                 Log.d(TAG, "Préstamo obtenido con ID: $idPrestamo")
                 prestamo
             } else {
@@ -122,6 +134,7 @@ class PrestamosSQLite(context: Context) :
             put("fechaInicio", dateFormat.format(prestamo.fechaInicio))
             put("fechaFin", dateFormat.format(prestamo.fechaFin))
             put("info", prestamo.info)
+            put("estado", prestamo.estado.toString())
         }
 
         val idPrestamo = db.insert("prestamos", null, values)
@@ -139,9 +152,15 @@ class PrestamosSQLite(context: Context) :
             put("fechaInicio", dateFormat.format(prestamo.fechaInicio))
             put("fechaFin", dateFormat.format(prestamo.fechaFin))
             put("info", prestamo.info)
+            put("estado", prestamo.estado.toString())
         }
 
-        val affectedRows = db.update("prestamos", values, "idPrestamo = ?", arrayOf(prestamo.idPrestamo.toString()))
+        val affectedRows = db.update(
+            "prestamos",
+            values,
+            "idPrestamo = ?",
+            arrayOf(prestamo.idPrestamo.toString())
+        )
         db.close()
         if (affectedRows > 0) {
             Log.d(TAG, "Préstamo actualizado con ID: ${prestamo.idPrestamo}")
@@ -160,5 +179,65 @@ class PrestamosSQLite(context: Context) :
             Log.d(TAG, "No se pudo eliminar el préstamo con ID: $idPrestamo")
         }
         return affectedRows
+    }
+
+    fun obtenerPrestamosPorArticulo(idArticulo: Int): List<Prestamo> {
+        val db = readableDatabase
+        val listaPrestamos = mutableListOf<Prestamo>()
+        try {
+            val selectQuery = "SELECT * FROM prestamos WHERE idArticulo = ?"
+            db.rawQuery(selectQuery, arrayOf(idArticulo.toString())).use { cursor ->
+                if (cursor.moveToFirst()) {
+                    do {
+                        val idPrestamo = cursor.getInt(cursor.getColumnIndexOrThrow("idPrestamo"))
+                        val idArticulo = cursor.getInt(cursor.getColumnIndexOrThrow("idArticulo"))
+                        val idSocio = cursor.getInt(cursor.getColumnIndexOrThrow("idSocio"))
+                        val fechaInicio =
+                            dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow("fechaInicio")))
+                        val fechaFin =
+                            dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow("fechaFin")))
+                        val info = cursor.getString(cursor.getColumnIndexOrThrow("info"))
+                        val estado =
+                            EstadoPrestamo.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("estado")))
+
+                        val prestamo = Prestamo(
+                            idPrestamo,
+                            idArticulo,
+                            idSocio,
+                            fechaInicio,
+                            fechaFin,
+                            info,
+                            estado
+                        )
+                        listaPrestamos.add(prestamo)
+                    } while (cursor.moveToNext())
+                }
+            }
+            Log.d(
+                TAG,
+                "Se obtuvieron ${listaPrestamos.size} préstamos para el artículo con ID: $idArticulo"
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Error al obtener préstamos por artículo: ${e.message}")
+            throw RuntimeException("Error obteniendo préstamos por artículo: ${e.message}", e)
+        } finally {
+            db.close()
+        }
+        return listaPrestamos
+    }
+
+    fun actualizarEstadoPrestamo(idPrestamo: Int, nuevoEstado: EstadoPrestamo) {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("estado", nuevoEstado.toString())
+        }
+        val affectedRows =
+            db.update("prestamos", values, "idPrestamo = ?", arrayOf(idPrestamo.toString()))
+        db.close()
+        if (affectedRows > 0) {
+            Log.d(TAG, "Estado del préstamo actualizado con ID: $idPrestamo a $nuevoEstado")
+        } else {
+            Log.d(TAG, "No se pudo actualizar el estado del préstamo con ID: $idPrestamo")
+        }
     }
 }
