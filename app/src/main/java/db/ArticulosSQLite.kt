@@ -2,6 +2,7 @@ package db
 
 import pf.dam.articulos.Articulo
 import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -266,5 +267,19 @@ class ArticulosSQLite (context: Context):
             db.close()
         }
         return articulos
+    }
+
+    fun actualizarEstadoArticulo(idArticulo: Int, nuevoEstado: EstadoArticulo) {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("estado", nuevoEstado.toString())
+        }
+        val affectedRows = db.update("articulos", values, "idArticulo = ?", arrayOf(idArticulo.toString()))
+        db.close()
+        if (affectedRows > 0) {
+            Log.d(TAG, "Estado del artículo actualizado con ID: $idArticulo")
+        } else {
+            Log.d(TAG, "No se pudo actualizar el estado del artículo con ID: $idArticulo")
+        }
     }
 }

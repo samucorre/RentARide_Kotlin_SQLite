@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.semantics.text
 import db.ArticulosSQLite
 import db.PrestamosSQLite
 import db.SociosSQLite
@@ -121,6 +122,47 @@ class PrestamoAddActivity : AppCompatActivity() {
                 }
             }
         }*/
+
+        guardarButton.setOnClickListener {
+            val posicionArticulo = articuloSpinner.selectedItemPosition
+            val posicionSocio = socioSpinner.selectedItemPosition
+            val fechaInicio = dateFormat.parse(fechaInicioEditText.text.toString())
+            val fechaFin = if (fechaFinEditText.text.toString().isNotBlank()) {
+                dateFormat.parse(fechaFinEditText.text.toString())
+            } else {
+                null
+            }
+            val info = infoEditText.text.toString()
+
+            if (posicionArticulo == -1 || posicionSocio == -1 || fechaInicio == null) {
+                Toast.makeText(
+                    this,
+                    "Por favor, selecciona un artículo y un socio, e introduce la fecha de inicio",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                val idArticulo = articulos.getOrNull(posicionArticulo)?.idArticulo
+                val idSocio = socios.getOrNull(posicionSocio)?.idSocio
+
+                if (idArticulo != null && idSocio != null) {
+                    val nuevoPrestamo = fechaFin?.let {
+                        Prestamo(null, idArticulo, idSocio, fechaInicio, it, info)
+                    } ?: Prestamo(null, idArticulo, idSocio, fechaInicio, fechaInicio, info) // Si fechaFin es null, se usa fechaInicio
+
+                    dbHelper.insertarPrestamo(nuevoPrestamo)
+
+                    // Actualizar el estado del artículo a PRESTADO
+                    articulosDbHelper.actualizarEstadoArticulo(idArticulo, EstadoArticulo.PRESTADO)
+
+                    Toast.makeText(this, "Préstamo añadido", Toast.LENGTH_SHORT).show()
+                    finish()
+                } else {
+                    Toast.makeText(this, "Artículo o socio no encontrado", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+
     }
 
     private fun mostrarDatePicker(editText: EditText) {

@@ -14,6 +14,7 @@ class PrestamosSQLite(context: Context) :
     companion object {
         private const val DATABASE_NAME = "prestamos.db"
         private const val DATABASE_VERSION = 1
+        private const val TAG = "PrestamosSQLite"
     }
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
@@ -31,10 +32,12 @@ class PrestamosSQLite(context: Context) :
             )
         """.trimIndent()
         db.execSQL(createTablePrestamos)
+        Log.d(TAG, "Tabla prestamos creada")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS prestamos")
+        Log.d(TAG, "Tabla prestamos eliminada")
         onCreate(db)
     }
 
@@ -47,6 +50,7 @@ class PrestamosSQLite(context: Context) :
             db.rawQuery(selectQuery, null).use { cursor ->
                 if (cursor.moveToFirst()) {
                     do {
+                        val idPrestamo = cursor.getInt(cursor.getColumnIndexOrThrow("idPrestamo"))
                         val idArticulo = cursor.getInt(cursor.getColumnIndexOrThrow("idArticulo"))
                         val idSocio = cursor.getInt(cursor.getColumnIndexOrThrow("idSocio"))
                         val fechaInicio = dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow("fechaInicio")))
@@ -54,6 +58,7 @@ class PrestamosSQLite(context: Context) :
                         val info = cursor.getString(cursor.getColumnIndexOrThrow("info"))
 
                         val prestamo = Prestamo(
+                            idPrestamo,
                             idArticulo,
                             idSocio,
                             fechaInicio,
@@ -64,13 +69,16 @@ class PrestamosSQLite(context: Context) :
                     } while (cursor.moveToNext())
                 }
             }
+            Log.d(TAG, "Se obtuvieron ${listaPrestamos.size} préstamos")
         } catch (e: Exception) {
+            Log.e(TAG, "Error al obtener préstamos: ${e.message}")
             throw RuntimeException("Error obteniendo préstamos: ${e.message}", e)
         } finally {
             db.close()
         }
         return listaPrestamos
     }
+
     fun obtenerPrestamoPorId(idPrestamo: Int): Prestamo? {
         val db = readableDatabase
         val cursor = db.query(
@@ -84,6 +92,7 @@ class PrestamosSQLite(context: Context) :
         )
         try {
             return if (cursor.moveToFirst()) {
+                val idPrestamo = cursor.getInt(cursor.getColumnIndexOrThrow("idPrestamo"))
                 val idArticulo = cursor.getInt(cursor.getColumnIndexOrThrow("idArticulo"))
                 val idSocio = cursor.getInt(cursor.getColumnIndexOrThrow("idSocio"))
                 val fechaInicio =
@@ -92,48 +101,17 @@ class PrestamosSQLite(context: Context) :
                     dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow("fechaFin")))
                 val info = cursor.getString(cursor.getColumnIndexOrThrow("info"))
 
-                Prestamo(idArticulo, idSocio, fechaInicio, fechaFin, info)
+                val prestamo = Prestamo(idPrestamo, idArticulo, idSocio, fechaInicio, fechaFin, info)
+                Log.d(TAG, "Préstamo obtenido con ID: $idPrestamo")
+                prestamo
             } else {
+                Log.d(TAG, "No se encontró préstamo con ID: $idPrestamo")
                 null
             }
         } finally {
             cursor.close()
             db.close()
         }
-    }
-
-    fun obtenerIdPrestamoBD(prestamo: Prestamo): Int {
-        val db = readableDatabase
-        var prestamoId = -1
-
-        try {
-            val selectQuery = """
-            SELECT idPrestamo FROM prestamos WHERE 
-            (idArticulo = ? OR idArticulo IS NULL) AND 
-            (idSocio = ? OR idSocio IS NULL) AND 
-            (fechaInicio = ? OR fechaInicio IS NULL) AND 
-            (fechaFin = ? OR fechaFin IS NULL) AND 
-            (info = ? OR info IS NULL)
-        """
-            val parametros = arrayOf(
-                prestamo.idArticulo.toString(),
-                prestamo.idSocio.toString(),
-                dateFormat.format(prestamo.fechaInicio),
-                dateFormat.format(prestamo.fechaFin),
-                prestamo.info
-            )
-
-            db.rawQuery(selectQuery, parametros).use { cursor ->
-                if (cursor.moveToFirst()) {
-                    prestamoId = cursor.getInt(cursor.getColumnIndexOrThrow("idPrestamo"))
-                }
-            }
-        } catch (e: Exception) {
-            Log.e("PrestamosSQLite", "Error al obtener el ID del prestamo: ${e.message}")
-        } finally {
-            db.close()
-        }
-        return prestamoId
     }
 
     fun insertarPrestamo(prestamo: Prestamo): Long {
@@ -147,12 +125,13 @@ class PrestamosSQLite(context: Context) :
         }
 
         val idPrestamo = db.insert("prestamos", null, values)
+        prestamo.idPrestamo = idPrestamo.toInt()
         db.close()
-        Log.d("PrestamosSQLite", "Prestamo insertado: ${values} con ID: $idPrestamo")
+        Log.d(TAG, "Préstamo insertado con ID: $idPrestamo")
         return idPrestamo
     }
 
-    fun actualizarPrestamo(idPrestamo: Int, prestamo: Prestamo) {
+    fun actualizarPrestamo(prestamo: Prestamo) {
         val db = writableDatabase
         val values = ContentValues().apply {
             put("idArticulo", prestamo.idArticulo)
@@ -161,17 +140,25 @@ class PrestamosSQLite(context: Context) :
             put("fechaFin", dateFormat.format(prestamo.fechaFin))
             put("info", prestamo.info)
         }
-        db.update("prestamos", values, "idPrestamo = ?", arrayOf(idPrestamo.toString()))
-        Log.d(
-            "CRUD UPDATE", "Prestamo Id: ${idPrestamo} correctamente actualizado \n${values}"
-        )
+
+        val affectedRows = db.update("prestamos", values, "idPrestamo = ?", arrayOf(prestamo.idPrestamo.toString()))
         db.close()
+        if (affectedRows > 0) {
+            Log.d(TAG, "Préstamo actualizado con ID: ${prestamo.idPrestamo}")
+        } else {
+            Log.d(TAG, "No se pudo actualizar el préstamo con ID: ${prestamo.idPrestamo}")
+        }
     }
 
     fun borrarPrestamo(idPrestamo: Int): Int {
         val db = writableDatabase
-        val rowsAffected = db.delete("prestamos", "idPrestamo = ?", arrayOf(idPrestamo.toString()))
-        Log.d("CRUD DELETE", "Prestamo id: ${idPrestamo} correctamente eliminado")
+        val affectedRows = db.delete("prestamos", "idPrestamo = ?", arrayOf(idPrestamo.toString()))
         db.close()
-        return rowsAffected
-    }}
+        if (affectedRows > 0) {
+            Log.d(TAG, "Préstamo eliminado con ID: $idPrestamo")
+        } else {
+            Log.d(TAG, "No se pudo eliminar el préstamo con ID: $idPrestamo")
+        }
+        return affectedRows
+    }
+}
