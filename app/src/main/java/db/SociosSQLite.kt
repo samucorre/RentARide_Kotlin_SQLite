@@ -210,18 +210,20 @@ class SociosSQLite(context: Context) :
             db.rawQuery(selectQuery, null).use { cursor ->
                 if (cursor.moveToFirst()) {
                     do {
+                        val idSocio = cursor.getInt(cursor.getColumnIndexOrThrow("idSocio"))
                         val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
                         val apellido = cursor.getString(cursor.getColumnIndexOrThrow("apellido"))
                         val numeroSocio = cursor.getInt(cursor.getColumnIndexOrThrow("numeroSocio"))
                         val telefono = cursor.getInt(cursor.getColumnIndexOrThrow("telefono"))
-                        val email = cursor.getString(cursor.getColumnIndexOrThrow("email")) // Asegúrate de que se pueda convertir a Email
+                        val email = cursor.getString(cursor.getColumnIndexOrThrow("email"))
 
                         val socio = Socio(
+                            idSocio,
                             nombre,
                             apellido,
                             numeroSocio,
                             telefono,
-                            email,
+                            email
                         )
                         listaSocios.add(socio)
                     } while (cursor.moveToNext())
@@ -234,6 +236,7 @@ class SociosSQLite(context: Context) :
         }
         return listaSocios
     }
+
     fun obtenerSocioPorId(idSocio: Int): Socio? {
         val db = readableDatabase
         val cursor = db.query(
@@ -247,13 +250,14 @@ class SociosSQLite(context: Context) :
         )
         try {
             return if (cursor.moveToFirst()) {
+                val idSocio = cursor.getInt(cursor.getColumnIndexOrThrow("idSocio"))
                 val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
                 val apellido = cursor.getString(cursor.getColumnIndexOrThrow("apellido"))
                 val numeroSocio = cursor.getInt(cursor.getColumnIndexOrThrow("numeroSocio"))
                 val telefono = cursor.getInt(cursor.getColumnIndexOrThrow("telefono"))
                 val email = cursor.getString(cursor.getColumnIndexOrThrow("email"))
 
-                Socio(nombre, apellido, numeroSocio, telefono, email)
+                Socio(idSocio, nombre, apellido, numeroSocio, telefono, email)
             } else {
                 null
             }
@@ -262,79 +266,41 @@ class SociosSQLite(context: Context) :
             db.close()
         }
     }
-    fun obtenerIdSocioBD(socio: Socio): Int {
-        val db = readableDatabase
-        var socioId = -1
 
-        try {
-            val selectQuery = """
-                SELECT idSocio FROM socios WHERE 
-                (nombre = ? OR nombre IS NULL) AND 
-                (apellido = ? OR apellido IS NULL) AND 
-                (numeroSocio = ? OR numeroSocio IS NULL) AND 
-                (telefono = ? OR telefono IS NULL) AND 
-                (email = ? OR email IS NULL)
-            """
-            val parametros = arrayOf(
-                socio.nombre,
-                socio.apellido,
-                socio.numeroSocio?.toString(), // Manejo de nulos para Int
-                socio.telefono?.toString(), // Manejo de nulos para Int
-                socio.email
-            )
-
-            db.rawQuery(selectQuery, parametros).use { cursor ->
-                if (cursor.moveToFirst()) {
-                    socioId = cursor.getInt(cursor.getColumnIndexOrThrow("idSocio"))
-                    Log.d("SociosSQLite", "ID del socio obtenido: $socioId")
-                }
-            }
-        } catch (e: Exception) {
-            Log.e("SociosSQLite", "Error al obtener el ID del socio: ${e.message}")
-        } finally {
-            db.close()
-        }
-        return socioId
-    }
     fun insertarSocio(socio: Socio): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
-            put("nombre", socio.nombre ?: null)
-            put("apellido", socio.apellido ?: null)
-            put("numeroSocio", socio.numeroSocio ?: null)
-            put("telefono", socio.telefono ?: null)
-            put("email", socio.email ?: null)
+            put("nombre", socio.nombre)
+            put("apellido", socio.apellido)
+            put("numeroSocio", socio.numeroSocio)
+            put("telefono", socio.telefono)
+            put("email", socio.email)
         }
 
         val idSocio = db.insert("socios", null, values)
+        socio.idSocio = idSocio.toInt()
         db.close()
-        Log.d("SociosSQLite", "Socio insertado: ${values} con ID: $idSocio")
+        Log.d("SociosSQLite", "Socio insertado con ID: $idSocio")
         return idSocio
     }
-    fun actualizarSocio(idSocio: Int, socio: Socio) {
+
+    fun actualizarSocio(socio: Socio) {
         val db = writableDatabase
         val values = ContentValues().apply {
-            put("nombre", socio.nombre ?: null)
-            put("apellido", socio.apellido ?: null)
-            put("numeroSocio", socio.numeroSocio ?: null)
-            put("telefono", socio.telefono ?: null)
-            put("email", socio.email ?: null)
+            put("nombre", socio.nombre)
+            put("apellido", socio.apellido)
+            put("numeroSocio", socio.numeroSocio)
+            put("telefono", socio.telefono)
+            put("email", socio.email)
         }
-       // val idSocio = obtenerIdSocioBD(socio)
-      //  if (idSocio != -1) {
-            db.update("socios", values, "idSocio = ?", arrayOf(idSocio.toString()))
-            Log.d(
-                "CRUD UPDATE", "Socio Id: ${idSocio} correctamente actualizado \n${values}"
-            )//
-       // } else {
-        //    Log.e("CRUD UPDATE", "Error al actualizar el socio: no se encontró el ID")
-       // }
+
+        db.update("socios", values, "idSocio = ?", arrayOf(socio.idSocio.toString()))
         db.close()
     }
+
     fun borrarSocio(idSocio: Int): Int {
         val db = writableDatabase
         val rowsAffected = db.delete("socios", "idSocio = ?", arrayOf(idSocio.toString()))
-        Log.d("CRUD DELETE", "Socio id: ${idSocio} correctamente eliminado")
         db.close()
         return rowsAffected
     }

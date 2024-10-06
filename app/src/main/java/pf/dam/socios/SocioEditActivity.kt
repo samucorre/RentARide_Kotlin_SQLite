@@ -44,13 +44,15 @@ class SocioEditActivity : AppCompatActivity() {
 
             guardarButton.setOnClickListener {
                 val socioActualizado = Socio(
+                    socio.idSocio, // Incluir el idSocio
+
                     nombreEditText.text.toString(),
                     apellidoEditText.text.toString(),
                     numeroSocioEditText.text.toString().toInt(),
                     telefonoEditText.text.toString().toInt(),
                     emailEditText.text.toString()
                 )
-                dbHelper.actualizarSocio(socioId, socioActualizado)
+                dbHelper.actualizarSocio(socioActualizado)
                // dbHelper.actualizarSocio(socioActualizado)
                 Toast.makeText(this, "Socio actualizado", Toast.LENGTH_SHORT).show()
                 setResult(RESULT_OK)

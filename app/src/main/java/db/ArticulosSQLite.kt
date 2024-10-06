@@ -152,6 +152,7 @@ class ArticulosSQLite (context: Context):
             db.close()
         }
         return articuloId
+        Log.d("CRUDSQLite", "Articulo obtenido: ${articulo} con ID: $articuloId")
     }
 
     fun insertarArticulo(articulo: Articulo): Long {

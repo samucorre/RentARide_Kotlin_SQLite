@@ -87,7 +87,7 @@ class ArticuloAddActivity : AppCompatActivity() {
             if (categoria.isBlank() || tipo.isBlank() || nombre.isBlank() || descripcion.isBlank() ) {
                 Toast.makeText(this, "Por favor, rellena todos los campos", Toast.LENGTH_SHORT).show()
             } else {
-                val nuevoArticulo = Articulo(categoria, tipo, nombre, descripcion, estadoSeleccionado, rutaImagen)
+                val nuevoArticulo = Articulo(categoria = categoria, tipo = tipo, nombre = nombre, descripcion = descripcion, estado = estadoSeleccionado, rutaImagen = rutaImagen)
                 dbHelper.insertarArticulo(nuevoArticulo)
 
                 Toast.makeText(this, "Artículo añadido", Toast.LENGTH_SHORT).show()

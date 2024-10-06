@@ -101,8 +101,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun insertarSocios(dbHelperSocios: SociosSQLite) {
         val socios = listOf(
-            Socio("Juan", "Pérez", 1234, 654321098, "juan.perez@example.com"),
-            Socio("María", "García", 5678, 612345678, "maria.garcia@example.com")
+            Socio(1,"Juan", "Pérez", 1234, 654321098, "juan.perez@example.com"),
+            Socio(2,"María", "García", 5678, 612345678, "maria.garcia@example.com")
             // ... más socios
         )
 

@@ -46,10 +46,8 @@ class SociosAdapter(socios: List<Socio>) :
 
     holder.itemView.setOnClickListener {
         val context = holder.itemView.context
-        val dbHelper = SociosSQLite(context) // Obtener una instancia de tu helper de base de datos
-        val idSocio = dbHelper.obtenerIdSocioBD(socio)  // Obtener el ID del socio por su nombre
-        val intent = Intent(context, SocioDetalleActivity::class.java)
-        intent.putExtra("idSocio", idSocio)
+                val intent = Intent(context, SocioDetalleActivity::class.java)
+        intent.putExtra("idSocio", socio.idSocio)
         context.startActivity(intent)
     }
 }
