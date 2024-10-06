@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.compose.ui.semantics.text
 import androidx.recyclerview.widget.RecyclerView
 import pf.dam.prestamos.Prestamo
 import pf.dam.prestamos.PrestamoDetalleActivity
@@ -28,6 +29,7 @@ class PrestamosAdapter(prestamos: List<Prestamo>) :
         val fechaInicioTextView: TextView = itemView.findViewById(R.id.fechaInicioTextView)
         val fechaFinTextView: TextView = itemView.findViewById(R.id.fechaFinTextView)
         val infoTextView: TextView = itemView.findViewById(R.id.infoTextView)
+        val estadoTextView: TextView = itemView.findViewById(R.id.estadoTextView)
         // ... otros TextViews o Views que necesites
     }
 
@@ -44,6 +46,7 @@ class PrestamosAdapter(prestamos: List<Prestamo>) :
         holder.fechaInicioTextView.text = "Fecha Inicio: ${dateFormat.format(prestamo.fechaInicio)}"
         holder.fechaFinTextView.text = "Fecha Fin: ${dateFormat.format(prestamo.fechaFin)}"
         holder.infoTextView.text = "Info: ${prestamo.info}"
+        holder.estadoTextView.text = "Estado: ${prestamo.estado}"
 
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context

@@ -10,6 +10,7 @@ import db.PrestamosSQLite
 import db.SociosSQLite
 import pf.dam.articulos.Articulo
 import pf.dam.articulos.ArticulosActivity
+import pf.dam.articulos.EstadoArticulo
 import pf.dam.prestamos.Prestamo
 import pf.dam.prestamos.PrestamosActivity
 import pf.dam.socios.Socio
@@ -40,9 +41,9 @@ class MainActivity : AppCompatActivity() {
         verPrestamosButton = findViewById(R.id.verPrestamosButton)
 
        // Insertar datos
-        /*if (dbHelperArticulos.obtenerArticulos().isEmpty()) {
+        if (dbHelperArticulos.obtenerArticulos().isEmpty()) {
             insertarArticulos(dbHelperArticulos)
-        }*/
+        }
 
         if (dbHelperSocios.obtenerSocios().isEmpty()) {
             insertarSocios(dbHelperSocios)
@@ -76,7 +77,17 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+    private fun insertarArticulos(dbHelperArticulos: ArticulosSQLite) {
+        val articulos = listOf(
+            Articulo(1, "Electrónica", "Teléfono", "Samsung Galaxy S23", "Teléfono inteligente de gama alta", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
+            Articulo(2, "Libros", "Novela", "Cien años de soledad", "Obra maestra de Gabriel García Márquez", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg")
+            // ... más artículos
+        )
 
+        for (articulo in articulos) {
+            dbHelperArticulos.insertarArticulo(articulo)
+        }
+    }
     private fun insertarSocios(dbHelperSocios: SociosSQLite) {
         val socios = listOf(
             Socio(1,"Juan", "Pérez", 1234, 654321098, "juan.perez@example.com"),
