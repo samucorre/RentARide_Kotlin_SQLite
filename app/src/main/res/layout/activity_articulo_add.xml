@@ -65,6 +65,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:backgroundTint="#FFC107"
         android:text="Tomar foto"
         app:layout_constraintEnd_toStartOf="@+id/botonGaleria"
         app:layout_constraintHorizontal_bias="0.5"
@@ -77,6 +78,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:backgroundTint="#FFC107"
         android:text="Seleccionar de galería"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -96,6 +98,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="#FFC107"
             android:text="Añadir" />
 
         <Button
@@ -103,6 +106,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="#FFC107"
             android:text="Volver" />
     </LinearLayout>
 
