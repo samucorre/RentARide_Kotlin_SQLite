@@ -57,7 +57,7 @@ class ArticuloAddActivity : AppCompatActivity() {
         imageView = findViewById(R.id.imageView)
         estadoSpinner = findViewById(R.id.estadoSpinner)
 
-        val estados = arrayOf(EstadoArticulo.DISPONIBLE, EstadoArticulo.NO_DISPONIBLE)
+        val estados = arrayOf(EstadoArticulo.DISPONIBLE, EstadoArticulo.NO_DISPONIBLE, EstadoArticulo.PRESTADO)
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, estados)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         estadoSpinner.adapter = adapter

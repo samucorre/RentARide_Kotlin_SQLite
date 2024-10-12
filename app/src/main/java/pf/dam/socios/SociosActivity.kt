@@ -4,15 +4,19 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.compose.ui.test.filter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.SociosSQLite
 import pf.dam.R
+import kotlin.text.contains
 
 class SociosActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var searchView: SearchView
     private lateinit var sociosAdapter: SociosAdapter
     private lateinit var dbHelper: SociosSQLite
     private lateinit var addSocioButton: FloatingActionButton
@@ -26,6 +30,7 @@ class SociosActivity : AppCompatActivity() {
 
         dbHelper = SociosSQLite(this)
         recyclerView = findViewById(R.id.sociosRecyclerView)
+        searchView = findViewById(R.id.searchView)
         addSocioButton = findViewById(R.id.addSocioButton)
         backButton = findViewById(R.id.backButton)
 
@@ -33,6 +38,24 @@ class SociosActivity : AppCompatActivity() {
         recyclerView.adapter = sociosAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                val sociosFiltrados = dbHelper.obtenerSocios().filter { socio -> // <-- Cambio aquí
+                    socio.nombre.contains(newText.orEmpty(), ignoreCase = true) ||
+                            socio.apellido.contains(newText.orEmpty(), ignoreCase = true) ||
+                            socio.numeroSocio.toString().contains(newText.orEmpty(), ignoreCase = true)||
+                            socio.telefono.toString().contains(newText.orEmpty(), ignoreCase = true)||
+                            socio.email.contains(newText.orEmpty(), ignoreCase = true)
+                }
+                sociosAdapter.socios = sociosFiltrados // <-- Cambio aquí
+                sociosAdapter.notifyDataSetChanged() // <-- Cambio aquí
+                return true
+            }
+        })
         addSocioButton.setOnClickListener{
             val intent = Intent(this, SocioAddActivity::class.java)
             startActivity(intent)

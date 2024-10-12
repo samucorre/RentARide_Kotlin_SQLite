@@ -19,6 +19,7 @@ import pf.dam.articulos.EstadoArticulo
 import pf.dam.socios.Socio
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class PrestamoAddActivity : AppCompatActivity() {
@@ -138,12 +139,13 @@ class PrestamoAddActivity : AppCompatActivity() {
                 val idSocio = socios.getOrNull(posicionSocio)?.idSocio
 
                 if (idArticulo != null && idSocio != null) {
+                    val fechaFin: Date? = null
                     val nuevoPrestamo =
                         Prestamo(null,
                             idArticulo,
                             idSocio,
                             fechaInicio,
-                            fechaInicio,
+                            fechaFin,
                             info,
                             EstadoPrestamo.ACTIVO
                         )
@@ -151,7 +153,7 @@ class PrestamoAddActivity : AppCompatActivity() {
                     dbHelper.insertarPrestamo(nuevoPrestamo)
 
                     // Actualizar el estado del artículo a PRESTADO
-                    articulosDbHelper.actualizarEstadoArticulo(idArticulo, EstadoArticulo.NO_DISPONIBLE)
+                    articulosDbHelper.actualizarEstadoArticulo(idArticulo, EstadoArticulo.PRESTADO)
 
                     Toast.makeText(this, "Préstamo añadido", Toast.LENGTH_SHORT).show()
                     finish()

@@ -48,7 +48,7 @@ class PrestamosSQLite(context: Context) :
     }
 
 
-    fun obtenerPrestamos(): List<Prestamo> {
+   /* fun obtenerPrestamos(): List<Prestamo> {
         val db = readableDatabase
         val listaPrestamos = mutableListOf<Prestamo>()
 
@@ -89,7 +89,53 @@ class PrestamosSQLite(context: Context) :
             db.close()
         }
         return listaPrestamos
-    }
+    }*/
+   fun obtenerPrestamos(): List<Prestamo> {
+       val db = readableDatabase
+       val listaPrestamos = mutableListOf<Prestamo>()
+
+       try {
+           val selectQuery = "SELECT * FROM prestamos"
+           db.rawQuery(selectQuery, null).use { cursor ->
+               if (cursor.moveToFirst()) {
+                   do {
+                       val idPrestamo = cursor.getInt(cursor.getColumnIndexOrThrow("idPrestamo"))
+                       val idArticulo = cursor.getInt(cursor.getColumnIndexOrThrow("idArticulo"))
+                       val idSocio = cursor.getInt(cursor.getColumnIndexOrThrow("idSocio"))
+                       val fechaInicio =
+                           dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow("fechaInicio")))
+                       val fechaFinString = cursor.getString(cursor.getColumnIndexOrThrow("fechaFin"))
+                       val fechaFinDate: Date? = if (fechaFinString != null) {
+                           dateFormat.parse(fechaFinString)
+                       } else {
+                           null
+                       }
+                       val info = cursor.getString(cursor.getColumnIndexOrThrow("info"))
+                       val estado =
+                           EstadoPrestamo.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("estado")))
+
+                       val prestamo = Prestamo(
+                           idPrestamo,
+                           idArticulo,
+                           idSocio,
+                           fechaInicio,
+                           fechaFin=fechaFinDate,
+                           info,
+                           estado
+                       )
+                       listaPrestamos.add(prestamo)
+                   } while (cursor.moveToNext())
+               }
+           }
+           Log.d(TAG, "Se obtuvieron ${listaPrestamos.size} préstamos")
+       } catch (e: Exception) {
+           Log.e(TAG, "Error al obtener préstamos: ${e.message}")
+           throw RuntimeException("Error obteniendo préstamos: ${e.message}", e)
+       } finally {
+           db.close()
+       }
+       return listaPrestamos
+   }
 
     fun obtenerPrestamoPorId(idPrestamo: Int): Prestamo? {
         val db = readableDatabase
@@ -109,14 +155,18 @@ class PrestamosSQLite(context: Context) :
                 val idSocio = cursor.getInt(cursor.getColumnIndexOrThrow("idSocio"))
                 val fechaInicio =
                     dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow("fechaInicio")))
-                val fechaFin =
-                    dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow("fechaFin")))
+                val fechaFinString = cursor.getString(cursor.getColumnIndexOrThrow("fechaFin"))
+                val fechaFinDate: Date? = if (fechaFinString != null) {
+                    dateFormat.parse(fechaFinString)
+                } else {
+                    null
+                }
                 val info = cursor.getString(cursor.getColumnIndexOrThrow("info"))
                 val estado =
                     EstadoPrestamo.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("estado")))
 
                 val prestamo =
-                    Prestamo(idPrestamo, idArticulo, idSocio, fechaInicio, fechaFin, info, estado)
+                    Prestamo(idPrestamo, idArticulo, idSocio, fechaInicio, fechaFin=fechaFinDate, info, estado)
                 Log.d(TAG, "Préstamo obtenido con ID: $idPrestamo")
                 prestamo
             } else {
@@ -129,7 +179,7 @@ class PrestamosSQLite(context: Context) :
         }
     }
 
-    fun insertarPrestamo(prestamo: Prestamo): Long {
+  /*  fun insertarPrestamo(prestamo: Prestamo): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
             put("idArticulo", prestamo.idArticulo)
@@ -145,7 +195,27 @@ class PrestamosSQLite(context: Context) :
         db.close()
         Log.d(TAG, "Préstamo insertado con ID: $idPrestamo")
         return idPrestamo
-    }
+    }*/
+  fun insertarPrestamo(prestamo: Prestamo): Long {
+      val db = writableDatabase
+      val values = ContentValues().apply {
+          put("idArticulo", prestamo.idArticulo)
+          put("idSocio", prestamo.idSocio)
+          put("fechaInicio", dateFormat.format(prestamo.fechaInicio))
+
+          // Manejar fechaFin: si es null, insertar null en la base de datos
+          put("fechaFin", if (prestamo.fechaFin != null) dateFormat.format(prestamo.fechaFin) else null)
+
+          put("info", prestamo.info)
+          put("estado", prestamo.estado.toString())
+      }
+
+      val idPrestamo = db.insert("prestamos", null, values)
+      prestamo.idPrestamo = idPrestamo.toInt()
+      db.close()
+      Log.d(TAG, "Préstamo insertado con ID: $idPrestamo")
+      return idPrestamo
+  }
 
     fun actualizarPrestamo(prestamo: Prestamo) {
         val db = writableDatabase
@@ -153,7 +223,8 @@ class PrestamosSQLite(context: Context) :
             put("idArticulo", prestamo.idArticulo)
             put("idSocio", prestamo.idSocio)
             put("fechaInicio", dateFormat.format(prestamo.fechaInicio))
-            put("fechaFin", dateFormat.format(prestamo.fechaFin))
+          //  put("fechaFin", dateFormat.format(prestamo.fechaFin))
+            put("fechaFin", if (prestamo.fechaFin != null) dateFormat.format(prestamo.fechaFin) else null)
             put("info", prestamo.info)
             put("estado", prestamo.estado.toString())
         }
@@ -197,8 +268,12 @@ class PrestamosSQLite(context: Context) :
                         val idSocio = cursor.getInt(cursor.getColumnIndexOrThrow("idSocio"))
                         val fechaInicio =
                             dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow("fechaInicio")))
-                        val fechaFin =
-                            dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow("fechaFin")))
+                        val fechaFinString = cursor.getString(cursor.getColumnIndexOrThrow("fechaFin"))
+                        val fechaFinDate: Date? = if (fechaFinString != null) {
+                            dateFormat.parse(fechaFinString)
+                        } else {
+                            null
+                        }
                         val info = cursor.getString(cursor.getColumnIndexOrThrow("info"))
                         val estado =
                             EstadoPrestamo.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("estado")))
@@ -208,7 +283,7 @@ class PrestamosSQLite(context: Context) :
                             idArticulo,
                             idSocio,
                             fechaInicio,
-                            fechaFin,
+                            fechaFin=fechaFinDate,
                             info,
                             estado
                         )

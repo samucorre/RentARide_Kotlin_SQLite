@@ -16,5 +16,6 @@ open class Articulo (
 
 enum class EstadoArticulo {
     DISPONIBLE,
-    NO_DISPONIBLE
+    NO_DISPONIBLE,
+    PRESTADO
 }

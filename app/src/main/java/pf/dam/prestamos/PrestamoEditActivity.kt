@@ -67,13 +67,14 @@ class PrestamoEditActivity : AppCompatActivity() {
         guardarButton.setOnClickListener {
             val fechaInicio = dateFormat.parse(fechaInicioEditText.text.toString())
             //val fechaFin = dateFormat.parse(fechaFinEditText.text.toString())
-            val fechaFin = if (prestamo.estado == EstadoPrestamo.CERRADO) {
+            val estadoSeleccionado = estadoSpinner.selectedItem as EstadoPrestamo
+            val fechaFin = if (estadoSeleccionado == EstadoPrestamo.CERRADO) {
                 Date() // Fecha actual
             } else {
                 prestamo.fechaFin // Mantener la fecha de fin original si el estado no es CERRADO
             }
             val info = infoEditText.text.toString()
-            val estadoSeleccionado = estadoSpinner.selectedItem as EstadoPrestamo
+
 
             val prestamoActualizado = Prestamo(
                 prestamo.idPrestamo,
