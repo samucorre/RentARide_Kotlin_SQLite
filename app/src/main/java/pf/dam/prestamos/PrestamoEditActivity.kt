@@ -1,12 +1,16 @@
 package pf.dam.prestamos
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.semantics.text
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.PrestamosSQLite
+import pf.dam.MainActivity
 import pf.dam.R
 import pf.dam.articulos.EstadoArticulo
 import java.text.SimpleDateFormat
@@ -19,9 +23,10 @@ class PrestamoEditActivity : AppCompatActivity() {
     private lateinit var fechaInicioEditText: EditText
     private lateinit var fechaFinEditText: EditText
     private lateinit var infoEditText: EditText
-    private lateinit var estadoSpinner: Spinner
-    private lateinit var guardarButton: Button
-    private lateinit var volverButton: Button
+    private lateinit var estadoSwitch: Switch
+    private lateinit var guardarButton: FloatingActionButton
+    private lateinit var volverButton: FloatingActionButton
+    private lateinit var homeButton: FloatingActionButton
 
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
     private val calendar = Calendar.getInstance()
@@ -29,6 +34,7 @@ class PrestamoEditActivity : AppCompatActivity() {
     private var prestamoId: Int = -1
     private lateinit var prestamo: Prestamo
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_prestamo_edit)
@@ -38,26 +44,23 @@ class PrestamoEditActivity : AppCompatActivity() {
         fechaInicioEditText = findViewById(R.id.fechaInicioEditText)
 
         infoEditText = findViewById(R.id.infoEditText)
-        estadoSpinner = findViewById(R.id.estadoSpinner)
+        estadoSwitch = findViewById(R.id.estadoSwitch)
         guardarButton = findViewById(R.id.guardarButton)
         volverButton = findViewById(R.id.volverButton)
+        homeButton = findViewById(R.id.homeButton)
 
         prestamoId = intent.getIntExtra("prestamoId", -1)
         prestamo = dbHelper.obtenerPrestamoPorId(prestamoId)!!
 
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
         fechaInicioEditText.setText(dateFormat.format(prestamo.fechaInicio))
 
         infoEditText.setText(prestamo.info)
 
-        // Configurar el adaptador del Spinner
-        val estados = arrayOf(EstadoPrestamo.ACTIVO, EstadoPrestamo.CERRADO)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, estados)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        estadoSpinner.adapter = adapter
-
-        // Establecer la selección inicial del Spinner
-        val estadoIndex = estados.indexOf(prestamo.estado)
-        estadoSpinner.setSelection(if (estadoIndex >= 0) estadoIndex else 0)
+        estadoSwitch.isChecked = prestamo.estado == EstadoPrestamo.ACTIVO
 
         fechaInicioEditText.setOnClickListener {
             mostrarDatePicker(fechaInicioEditText)
@@ -67,7 +70,7 @@ class PrestamoEditActivity : AppCompatActivity() {
         guardarButton.setOnClickListener {
             val fechaInicio = dateFormat.parse(fechaInicioEditText.text.toString())
             //val fechaFin = dateFormat.parse(fechaFinEditText.text.toString())
-            val estadoSeleccionado = estadoSpinner.selectedItem as EstadoPrestamo
+            val estadoSeleccionado = if (estadoSwitch.isChecked) EstadoPrestamo.ACTIVO else EstadoPrestamo.CERRADO
             val fechaFin = if (estadoSeleccionado == EstadoPrestamo.CERRADO) {
                 Date() // Fecha actual
             } else {

@@ -4,9 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="8dp">
+    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="@color/yellowRRRbackGround">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
@@ -18,15 +19,18 @@
             android:text="Nombre del socio"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/apellidoTextView"
+        <View
+            android:id="@+id/divider"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Apellido"
+            android:layout_height="2dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="#FFC107"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nombreTextView" />
@@ -35,17 +39,21 @@
             android:id="@+id/numeroSocioTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Número de socio"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="Nº socio"
+            android:drawableStart="@drawable/ico_socio"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/apellidoTextView" />
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <TextView
             android:id="@+id/telefonoTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Teléfono"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text=""
+            android:drawableStart="@drawable/ico_phone"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/numeroSocioTextView" />
 
@@ -53,8 +61,10 @@
             android:id="@+id/emailTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Email"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text=""
+            android:drawableStart="@drawable/ico_email"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/telefonoTextView" />
 

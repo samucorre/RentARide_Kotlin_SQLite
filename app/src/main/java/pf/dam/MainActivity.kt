@@ -82,12 +82,12 @@ class MainActivity : AppCompatActivity() {
 //            Articulo(3, "Kayak", "Rigido", "River", "Dos plazas", EstadoArticulo.DISPONIBLE, "ruta/imagen3.jpg")
 //            // ... más artículos
 //        )
-        val articulos = (1..50).map { i ->
-            val nombres = listOf("Bicicleta", "Kayak", "Patinete", "Raqueta", "Balón", "Pala", "Red", "Casco", "Guantes", "Gafas")
-            val categorias = listOf("MTB", "Hinchable", "Eléctrico", "Tenis", "Fútbol", "Pádel", "Voleibol", "Ciclismo", "Boxeo", "Natación")
-            val tipos = listOf("Infantil", "Adulto", "Profesional", "Principiante", "Unisex", "Hombre", "Mujer", "Interior", "Exterior", "Universal")
-            val descripciones = listOf("Descripción 1", "Descripción 2", "Descripción 3", "Descripción 4", "Descripción 5", "Descripción 6", "Descripción 7", "Descripción 8", "Descripción 9", "Descripción 10")
-            val estados = listOf(EstadoArticulo.DISPONIBLE, EstadoArticulo.NO_DISPONIBLE, EstadoArticulo.PRESTADO)
+        val articulos = (1..10).map { i ->
+            val nombres = listOf("Princess", "Ocean", "Corsario", "Aventura")
+            val categorias = listOf("Bicicleta", "Kayak", "Patinete", "Casco")
+            val tipos = listOf("Infantil", "Adulto", "Eléctrico")
+            val descripciones = listOf("Descripción 1", "Descripción 2", "Descripción 3", "Descripción 10")
+            val estados = listOf(EstadoArticulo.DISPONIBLE, EstadoArticulo.NO_DISPONIBLE)
 
             val nombre = nombres.random()
             val categoria = categorias.random()
@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
 //            Socio(2,"María", "García", 5678, 612345678, "maria.garcia@example.com")
 //            // ... más socios
 //        )
-        val socios = (1..50).map { i ->
+        val socios = (1..10).map { i ->
             val nombres = listOf(
                 "Juan",
                 "María",
@@ -123,16 +123,11 @@ class MainActivity : AppCompatActivity() {
                 "Elena"
             )
             val apellidos = listOf(
-                "Pérez",
-                "García",
-                "Rodríguez",
-                "González",
-                "Fernández",
-                "López",
-                "Martínez",
-                "Sánchez",
-                "Romero",
-                "Torres"
+                "Pérez García",
+                "García Fernández",
+                "Rodríguez Romero",
+                "González Romero",
+                "Torres Romero"
             )
 
             val nombre = nombres.random()

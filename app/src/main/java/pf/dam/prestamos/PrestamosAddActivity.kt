@@ -10,6 +10,7 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.semantics.text
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.PrestamosSQLite
 import db.SociosSQLite
@@ -32,8 +33,8 @@ class PrestamoAddActivity : AppCompatActivity() {
     private lateinit var fechaInicioEditText: EditText
     private lateinit var fechaFinEditText: EditText
     private lateinit var infoEditText: EditText
-    private lateinit var guardarButton: Button
-    private lateinit var volverButton: Button
+    private lateinit var guardarButton: FloatingActionButton
+    private lateinit var volverButton: FloatingActionButton
 
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
     private val calendar = Calendar.getInstance()

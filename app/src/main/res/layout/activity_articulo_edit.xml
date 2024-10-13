@@ -66,8 +66,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:backgroundTint="#FFC107"
-        android:text="Tomar foto"
+
+        android:drawableStart="@drawable/ico_camera"
+        android:text="CAMARA"
         app:layout_constraintEnd_toStartOf="@+id/botonGaleria"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
@@ -79,8 +80,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:backgroundTint="#FFC107"
-        android:text="Seleccionar de galería"
+             android:text="galería"
+        android:drawableStart="@drawable/ico_galeria"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/botonCamara"
@@ -90,25 +91,37 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/guardarButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="#FFC107"
-            android:text="Guardar" />
-
-        <Button
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/volverButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="#FFC107"
-            android:text="Volver" />
-    </LinearLayout>
+            android:layout_margin="16dp"
+            android:src="@drawable/ico_back"
+            app:backgroundTint="#FFC107" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/homeButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="16dp"
+            android:src="@drawable/ico_home"
+            app:backgroundTint="#FFC107" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/guardarButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="16dp"
+            android:src="@drawable/ico_guardar"
+            app:backgroundTint="#FFC107" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

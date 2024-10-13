@@ -2,19 +2,30 @@ package pf.dam.socios
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity.RESULT_OK
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.SociosSQLite
 import pf.dam.R
+import pf.dam.prestamos.PrestamoAddActivity
+import pf.dam.prestamos.PrestamoAddSocioActivity
+import pf.dam.utils.ShowDeleteConfirmationDialog
 
 class SocioDetalleActivity : AppCompatActivity() {
     private lateinit var editSocioButton: FloatingActionButton
     private lateinit var deleteSocioButton: FloatingActionButton
     private lateinit var backButton: FloatingActionButton
+    private lateinit var addPrestamoButton: Button
     private lateinit var dbHelper: SociosSQLite
 
     private lateinit var nombreTextView: TextView
@@ -44,6 +55,7 @@ class SocioDetalleActivity : AppCompatActivity() {
         dbHelper = SociosSQLite(this)
 
         editSocioButton = findViewById(R.id.editSocioButton)
+        addPrestamoButton = findViewById(R.id.addPrestamoButton)
         deleteSocioButton = findViewById(R.id.deleteSocioButton)
         backButton = findViewById(R.id.backButton)
 
@@ -55,6 +67,7 @@ class SocioDetalleActivity : AppCompatActivity() {
 
         socioId = intent.getIntExtra("idSocio", -1)
         val socio = dbHelper.obtenerSocioPorId(socioId)
+
 
         if (socio != null) {
             mostrarSocio(socio)
@@ -73,21 +86,41 @@ class SocioDetalleActivity : AppCompatActivity() {
                 }
             }
 
-            deleteSocioButton.setOnClickListener {
-                dbHelper.borrarSocio(socioId)
-                Toast.makeText(this, "Socio eliminado", Toast.LENGTH_SHORT).show()
-                setResult(RESULT_OK)
-                finish()
-            }
-
             backButton.setOnClickListener {
                 finish()
+            }
+            addPrestamoButton.setOnClickListener {
+                val intent = Intent(this, PrestamoAddSocioActivity::class.java)
+                intent.putExtra("idSocio", socioId)
+                startActivity(intent)
+            }
+            deleteSocioButton.setOnClickListener {
+                setContent {
+                    var showDialog by remember { mutableStateOf(true) }
+
+                    if (showDialog) {
+                        ShowDeleteConfirmationDialog(
+                            title = "Eliminar socio",
+                            message = "¿Estás seguro de que quieres eliminar este socio?",
+                            onPositiveButtonClick = {
+                                dbHelper.borrarSocio(socioId)
+                                Toast.makeText(this@SocioDetalleActivity, "Socio eliminado", Toast.LENGTH_SHORT).show()
+                                setResult(RESULT_OK)
+                                finish()
+                                showDialog = false
+                            },
+                            onDismissRequest = { showDialog = false
+                                finish()}
+                        )
+                    }
+                }
             }
         } else {
             Toast.makeText(this, "Socio no encontrado", Toast.LENGTH_SHORT).show()
             finish()
         }
     }
+
 
     private fun mostrarSocio(socio: Socio) {
         nombreTextView.text = "Nombre: ${socio.nombre}"
@@ -97,3 +130,4 @@ class SocioDetalleActivity : AppCompatActivity() {
         emailTextView.text = "Email: ${socio.email}"
     }
 }
+

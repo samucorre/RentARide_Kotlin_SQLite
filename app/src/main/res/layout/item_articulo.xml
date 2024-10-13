@@ -4,13 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardBackgroundColor="#47FFC107"
+    app:cardBackgroundColor="@color/yellowRRRbackGround"
     app:cardCornerRadius="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:foregroundTint="#FFC107"
         android:padding="16dp">
 
         <TextView
@@ -20,24 +19,39 @@
             android:text="Nombre del artículo"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/imagenImageView"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp"
+            android:background="#FFC107"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nombreTextView" />
 
         <TextView
             android:id="@+id/categoriaTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="Categoría"
+            android:drawableStart="@drawable/ico_cat_1"
             app:layout_constraintEnd_toStartOf="@+id/imagenImageView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nombreTextView" />
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <TextView
             android:id="@+id/tipoTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Tipo"
+            android:drawableStart="@drawable/ico_cat_2"
             app:layout_constraintEnd_toStartOf="@+id/imagenImageView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/categoriaTextView" />
@@ -47,6 +61,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Descripción"
+            android:drawableStart="@drawable/ico_descripcion"
             app:layout_constraintEnd_toStartOf="@+id/imagenImageView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tipoTextView" />
@@ -64,10 +79,11 @@
             android:id="@+id/imagenImageView"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:src="@drawable/ico_imagen"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -4,18 +4,18 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.semantics.text
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import pf.dam.R
 import java.io.File
@@ -28,8 +28,8 @@ class ArticuloAddActivity : AppCompatActivity() {
     private lateinit var categoriaEditText: EditText
     private lateinit var tipoEditText: EditText
     private lateinit var descripcionEditText: EditText
-    private lateinit var guardarButton: Button
-    private lateinit var volverButton: Button
+    private lateinit var guardarButton: FloatingActionButton
+    private lateinit var volverButton: FloatingActionButton
     private lateinit var botonCamara: Button
     private lateinit var botonGaleria: Button
     private var imagenArticulo: Bitmap? = null
@@ -37,7 +37,7 @@ class ArticuloAddActivity : AppCompatActivity() {
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_IMAGE_GALLERY = 2
     private val REQUEST_PERMISSION_CAMERA = 100
-    private lateinit var estadoSpinner: Spinner
+    private lateinit var estadoCheckBox: CheckBox
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,12 +55,11 @@ class ArticuloAddActivity : AppCompatActivity() {
         botonCamara = findViewById(R.id.botonCamara)
         botonGaleria = findViewById(R.id.botonGaleria)
         imageView = findViewById(R.id.imageView)
-        estadoSpinner = findViewById(R.id.estadoSpinner)
+        estadoCheckBox = findViewById(R.id.estadoCheckBox)
 
-        val estados = arrayOf(EstadoArticulo.DISPONIBLE, EstadoArticulo.NO_DISPONIBLE, EstadoArticulo.PRESTADO)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, estados)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        estadoSpinner.adapter = adapter
+        val estado = if (estadoCheckBox.isChecked) EstadoArticulo.DISPONIBLE else EstadoArticulo.NO_DISPONIBLE
+
+        
 
         volverButton.setOnClickListener { finish() }
 
@@ -77,7 +76,7 @@ class ArticuloAddActivity : AppCompatActivity() {
             val tipo = tipoEditText.text.toString()
             val nombre = nombreEditText.text.toString()
             val descripcion = descripcionEditText.text.toString()
-            val estadoSeleccionado = estadoSpinner.selectedItem as EstadoArticulo
+            val estado = if (estadoCheckBox.isChecked) EstadoArticulo.DISPONIBLE else EstadoArticulo.NO_DISPONIBLE
 
             val rutaImagen = imagenArticulo?.let {
                 val nombreArchivo = "articulo_${UUID.randomUUID()}"
@@ -87,7 +86,7 @@ class ArticuloAddActivity : AppCompatActivity() {
             if (categoria.isBlank() || tipo.isBlank() || nombre.isBlank() || descripcion.isBlank() ) {
                 Toast.makeText(this, "Por favor, rellena todos los campos", Toast.LENGTH_SHORT).show()
             } else {
-                val nuevoArticulo = Articulo(categoria = categoria, tipo = tipo, nombre = nombre, descripcion = descripcion, estado = estadoSeleccionado, rutaImagen = rutaImagen)
+                val nuevoArticulo = Articulo(categoria = categoria, tipo = tipo, nombre = nombre, descripcion = descripcion, estado = estado, rutaImagen = rutaImagen)
                 dbHelper.insertarArticulo(nuevoArticulo)
 
                 Toast.makeText(this, "Artículo añadido", Toast.LENGTH_SHORT).show()

@@ -2,6 +2,7 @@
 package pf.dam.articulos
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -17,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.semantics.text
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.PrestamosSQLite
 import pf.dam.R
@@ -32,8 +34,9 @@ class ArticuloEditActivity : AppCompatActivity() {
     private lateinit var tipoEditText: EditText
     private lateinit var descripcionEditText: EditText
     private lateinit var imagenImageView: ImageView
-    private lateinit var guardarButton: Button
-    private lateinit var volverButton: Button
+    private lateinit var guardarButton: FloatingActionButton
+    private lateinit var volverButton: FloatingActionButton
+    private lateinit var homeButton: FloatingActionButton
 
     private lateinit var botonCamara: Button
     private lateinit var botonGaleria: Button
@@ -47,6 +50,7 @@ class ArticuloEditActivity : AppCompatActivity() {
     private val REQUEST_PERMISSION_CAMERA = 100
     private lateinit var prestamosDbHelper: PrestamosSQLite // Instancia de PrestamosSQLite
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_articulo_edit)
@@ -62,6 +66,7 @@ class ArticuloEditActivity : AppCompatActivity() {
         botonCamara = findViewById(R.id.botonCamara)
         botonGaleria = findViewById(R.id.botonGaleria)
         estadoSpinner = findViewById(R.id.estadoSpinner)
+        homeButton = findViewById(R.id.homeButton)
 
         articuloId = intent.getIntExtra("articuloId", -1)
         articulo = dbHelper.obtenerArticuloPorId(articuloId)!!

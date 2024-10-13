@@ -41,32 +41,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tipoEditText" />
 
-    <Spinner
-        android:id="@+id/estadoSpinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descripcionEditText" />
+   <CheckBox
+       android:id="@+id/estadoCheckBox"
+       android:layout_width="0dp"
+       android:layout_height="wrap_content"
+       android:layout_marginTop="8dp"
+       android:text="Disponible"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toBottomOf="@+id/descripcionEditText" />
+
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:src="@drawable/ico_imagen"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/estadoSpinner" />
+        app:layout_constraintTop_toBottomOf="@+id/estadoCheckBox"
+        app:layout_constraintWidth_percent="0.5" />
 
     <Button
         android:id="@+id/botonCamara"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:backgroundTint="#FFC107"
-        android:text="Tomar foto"
+        android:text="CAMARA"
+        android:drawableStart="@drawable/ico_camera"
         app:layout_constraintEnd_toStartOf="@+id/botonGaleria"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
@@ -78,36 +82,31 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:backgroundTint="#FFC107"
-        android:text="Seleccionar de galería"
+        android:text="galería"
+        android:drawableStart="@drawable/ico_galeria"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/botonCamara"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-    <LinearLayout
-        android:layout_width="0dp"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/volverButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_margin="16dp"
+        android:src="@drawable/ico_back"
+        app:backgroundTint="#FFC107"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/guardarButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="#FFC107"
-            android:text="Añadir" />
-
-        <Button
-            android:id="@+id/volverButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="#FFC107"
-            android:text="Volver" />
-    </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/guardarButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/ico_add"
+        app:backgroundTint="#FFC107"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

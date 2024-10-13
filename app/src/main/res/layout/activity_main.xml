@@ -9,71 +9,79 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/zona1"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@color/white"
-            android:gravity="center"
-            android:text="Zona 1" />
+            android:padding="8dp">
 
-        <TextView
-            android:id="@+id/zona2"
+            <TextView
+                android:id="@+id/zona1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Zona 1" />
+
+            <Button
+                android:id="@+id/verArticulosButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="#FFC107"
+                android:text="Artículos" />
+        </FrameLayout>
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@color/white"
-            android:gravity="center"
-            android:text="Zona 2" />
+            android:padding="8dp">
 
-        <TextView
-            android:id="@+id/zona3"
+            <TextView
+                android:id="@+id/zona2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Zona 2" />
+
+            <Button
+                android:id="@+id/verSociosButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="#FFC107"
+                android:text="Socios" />
+        </FrameLayout>
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@color/white"
-            android:gravity="center"
-            android:text="Zona 3" />
-    </LinearLayout>
+            android:padding="8dp">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+            <TextView
+                android:id="@+id/zona3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Zona 3" />
 
-        <Button
-            android:id="@+id/verArticulosButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="#FFC107"
-            android:text="Artículos" />
-
-        <Button
-            android:id="@+id/verSociosButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="#FFC107"
-            android:text="Socios" />
-
-        <Button
-            android:id="@+id/verPrestamosButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="#FFC107"
-            android:text="Préstamos" />
+            <Button
+                android:id="@+id/verPrestamosButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="#FFC107"
+                android:text="Préstamos" />
+        </FrameLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

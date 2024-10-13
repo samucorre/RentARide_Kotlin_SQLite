@@ -36,6 +36,8 @@
            <activity android:name=".prestamos.PrestamoDetalleActivity" />
           <activity android:name=".prestamos.PrestamoEditActivity" />
            <activity android:name=".prestamos.PrestamoAddActivity" />
+        <activity android:name=".prestamos.PrestamoAddSocioActivity"/>
+        <activity android:name=".prestamos.PrestamoAddArticuloActivity"/>
 
 
 

@@ -5,29 +5,39 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.semantics.text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.PrestamosSQLite
 import db.SociosSQLite
 import pf.dam.R
 import pf.dam.articulos.EstadoArticulo
+import pf.dam.utils.ShowDeleteConfirmationDialog
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class PrestamoDetalleActivity : AppCompatActivity() {
     private lateinit var editPrestamoButton: FloatingActionButton
     private lateinit var deletePrestamoButton: FloatingActionButton
     private lateinit var backButton: FloatingActionButton
+    private lateinit var cerrarPrestamoButton: Button
     private lateinit var dbHelper: PrestamosSQLite
     private lateinit var articulosDbHelper: ArticulosSQLite
     private lateinit var sociosDbHelper: SociosSQLite
 
+   private  lateinit var prestamoIdTextView: TextView
     private lateinit var articuloTextView: TextView
     private lateinit var articuloImageView: ImageView
     private lateinit var socioTextView: TextView
@@ -61,10 +71,13 @@ class PrestamoDetalleActivity : AppCompatActivity() {
 
         editPrestamoButton = findViewById(R.id.editPrestamoButton)
         deletePrestamoButton = findViewById(R.id.deletePrestamoButton)
+        cerrarPrestamoButton = findViewById(R.id.cerrarPrestamoButton)
         backButton = findViewById(R.id.backButton)
+
 
         articuloTextView = findViewById(R.id.articuloTextView)
         socioTextView = findViewById(R.id.socioTextView)
+        prestamoIdTextView = findViewById(R.id.prestamoIdTextView)
         fechaInicioTextView = findViewById(R.id.fechaInicioTextView)
         fechaFinTextView = findViewById(R.id.fechaFinTextView)
         infoTextView = findViewById(R.id.infoTextView)
@@ -77,11 +90,6 @@ class PrestamoDetalleActivity : AppCompatActivity() {
         if (prestamo != null) {
             mostrarPrestamo(prestamo)
 
-            editPrestamoButton.setOnClickListener {
-                val intent = Intent(this, PrestamoEditActivity::class.java)
-                intent.putExtra("prestamoId", prestamoId)
-                editPrestamoLauncher.launch(intent)
-            }
             val editPrestamoLauncher = registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()
             ) { result ->
@@ -91,59 +99,99 @@ class PrestamoDetalleActivity : AppCompatActivity() {
                 }
             }
 
+            if (prestamo.estado == EstadoPrestamo.CERRADO) {
+                cerrarPrestamoButton.visibility = View.GONE // Ocultar el botón
+            } else {
+                cerrarPrestamoButton.visibility = View.VISIBLE // Mostrar el botón
+                cerrarPrestamoButton.setOnClickListener {
+                    // Actualizar el estado del préstamo a CERRADO
+                    prestamo.estado = EstadoPrestamo.CERRADO
+                    prestamo.fechaFin = Date()
+                    dbHelper.actualizarPrestamo(prestamo)
+
+                    // Actualizar el estado del artículo a DISPONIBLE
+                    articulosDbHelper.actualizarEstadoArticulo(
+                        prestamo.idArticulo,
+                        EstadoArticulo.DISPONIBLE
+                    )
+
+                    Toast.makeText(this, "Préstamo cerrado", Toast.LENGTH_SHORT).show()
+                    cerrarPrestamoButton.visibility = View.GONE
+                    mostrarPrestamo(prestamo)
+                }
+            }
+
+
+            editPrestamoButton.setOnClickListener {
+                val intent = Intent(this, PrestamoEditActivity::class.java)
+                intent.putExtra("prestamoId", prestamoId)
+                editPrestamoLauncher.launch(intent)
+            }
+
+//            deletePrestamoButton.setOnClickListener {
+//                // Actualizar el estado del artículo a DISPONIBLE
+//                articulosDbHelper.actualizarEstadoArticulo(
+//                    prestamo.idArticulo,
+//                    EstadoArticulo.DISPONIBLE
+//                )
+//
+//                dbHelper.borrarPrestamo(prestamoId)
+//                Toast.makeText(this, "Préstamo eliminado", Toast.LENGTH_SHORT).show()
+//                setResult(RESULT_OK)
+//                finish()
+//            }
             deletePrestamoButton.setOnClickListener {
-                // Actualizar el estado del artículo a DISPONIBLE
+
                 articulosDbHelper.actualizarEstadoArticulo(
                     prestamo.idArticulo,
-                    EstadoArticulo.DISPONIBLE
-                )
+                    EstadoArticulo.DISPONIBLE)
 
-                dbHelper.borrarPrestamo(prestamoId)
-                Toast.makeText(this, "Préstamo eliminado", Toast.LENGTH_SHORT).show()
-                setResult(RESULT_OK)
-                finish()
+                setContent {
+                    var showDialog by remember { mutableStateOf(true) }
+
+                    if (showDialog) {
+                        ShowDeleteConfirmationDialog(
+                            title = "Eliminar préstamo",
+                            message = "¿Estás seguro de que quieres eliminar este préstamo?",
+                            onPositiveButtonClick = {
+                                dbHelper.borrarPrestamo(prestamoId)
+                                Toast.makeText(this@PrestamoDetalleActivity, "Préstamo eliminado", Toast.LENGTH_SHORT).show()
+                                setResult(RESULT_OK)
+                                finish()
+                                showDialog = false
+                            },
+                            onDismissRequest = { showDialog = false
+                                finish()}
+                        )
+                    }
+                }
             }
 
             backButton.setOnClickListener {
                 finish()
             }
-        } else {
-            Toast.makeText(this, "Préstamo no encontrado", Toast.LENGTH_SHORT).show()
-            finish()
+
         }
     }
-
-    /*private fun mostrarPrestamo(prestamo: Prestamo) {
-        articuloTextView.text = "ID de Artículo: ${prestamo.idArticulo}"
-        socioTextView.text = "ID de Socio: ${prestamo.idSocio}"
-        fechaInicioTextView.text = "Fecha de Inicio: ${dateFormat.format(prestamo.fechaInicio)}"
-
-       // fechaFinTextView.text = "Fecha de Fin: ${dateFormat.format(prestamo.fechaFin)}"
-        val fechaFinString = if (prestamo.fechaFin != null) {
-            dateFormat.format(prestamo.fechaFin)
-        } else {
-            " - - - " // O "" para dejarlo vacío
-        }
-
-        fechaFinTextView.text = fechaFinString
-
-        infoTextView.text = "Información Adicional: ${prestamo.info}"
-        estadoTextView.text = "Estado: ${prestamo.estado}"
-    }*/
     private fun mostrarPrestamo(prestamo: Prestamo) {
         //artículo
         val articulo = articulosDbHelper.obtenerArticuloPorId(prestamo.idArticulo)
         val nombreArticulo = articulo?.nombre ?: "Artículo no encontrado"
+        val categoriaArticulo = articulo?.categoria ?: ""
         val imagenArticulo = articulo?.rutaImagen ?: ""
 
         //socio
         val socio = sociosDbHelper.obtenerSocioPorId(prestamo.idSocio)
         val nombreSocio = socio?.nombre ?: "Socio no encontrado"
-        val telefonoSocio = socio?.telefono ?: ""
+               val numeroSocio = socio?.numeroSocio ?: ""
 
         // Actualizar TextViews
-        articuloTextView.text = "Artículo: $nombreArticulo (${prestamo.idArticulo})"
-        socioTextView.text = "Socio: $nombreSocio (${prestamo.idSocio})\nTeléfono: $telefonoSocio"
+
+        prestamoIdTextView.text = "ID del préstamo: $prestamoId"
+        articuloTextView.text = "Artículo: $nombreArticulo ID:${prestamo.idArticulo}"
+
+        socioTextView.text = "Socio: $nombreSocio \nNº socio: $numeroSocio"
+
         fechaInicioTextView.text = "Fecha inicio: ${dateFormat.format(prestamo.fechaInicio)}"
         // Manejar fechaFin: si es null, mostrar un mensaje o dejar el TextView vacío
             val fechaFinString = if (prestamo.fechaFin != null) {
