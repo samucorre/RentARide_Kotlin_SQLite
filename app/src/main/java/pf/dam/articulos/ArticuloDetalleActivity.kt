@@ -5,25 +5,19 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.semantics.text
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import pf.dam.MainActivity
 import pf.dam.R
 import pf.dam.prestamos.PrestamoAddArticuloActivity
-import pf.dam.prestamos.PrestamoAddSocioActivity
-import pf.dam.utils.ShowDeleteConfirmationDialog
+
 
 class ArticuloDetalleActivity : AppCompatActivity() {
     private lateinit var editArticuloButton: FloatingActionButton
@@ -32,7 +26,6 @@ class ArticuloDetalleActivity : AppCompatActivity() {
     private lateinit var homeButton: FloatingActionButton
     private lateinit var addPrestamoButton: Button
     private lateinit var dbHelper: ArticulosSQLite
-
     private lateinit var nombreTextView: TextView
     private lateinit var categoriaTextView: TextView
     private lateinit var tipoTextView: TextView
@@ -75,7 +68,6 @@ class ArticuloDetalleActivity : AppCompatActivity() {
         deleteArticuloButton = findViewById(R.id.deleteArticuloButton)
         addPrestamoButton = findViewById(R.id.addPrestamoButton)
         homeButton = findViewById(R.id.homeButton)
-
         backButton = findViewById(R.id.backButton)
 
         nombreTextView = findViewById(R.id.nombreTextView)
@@ -87,8 +79,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
 
         articuloId = intent.getIntExtra("idArticulo", -1)
         val articulo = dbHelper.obtenerArticuloPorId(articuloId)
-        Log.e("ArticuloDetalleActivity", "ArticuloId: $articuloId")
-
+       // Log.e("ArticuloDetalleActivity", "ArticuloId: $articuloId")
         if (articulo != null) {
             mostrarArticulo(articulo)
 
@@ -105,6 +96,13 @@ class ArticuloDetalleActivity : AppCompatActivity() {
                     finish()
                 }
             }
+
+
+            if (articulo.estado == EstadoArticulo.DISPONIBLE) {
+                addPrestamoButton.visibility = View.VISIBLE // Mostrar el botón
+            } else {
+                addPrestamoButton.visibility = View.GONE // Ocultar el botón
+            }
             addPrestamoButton.setOnClickListener {
                 val intent = Intent(this, PrestamoAddArticuloActivity::class.java)
                 intent.putExtra("idArticulo", articuloId)
@@ -117,7 +115,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
             deleteArticuloButton.setOnClickListener {
                 val idArticulo = dbHelper.obtenerIdArticuloBD(articulo)
                 if (idArticulo != -1) {
-                    val resultado = dbHelper.borrarArticulo(idArticulo)
+                    val resultado = dbHelper.borrarArticulo(idArticulo, this)
                     if (resultado > 0) {
                         Toast.makeText(this, "Artículo eliminado", Toast.LENGTH_SHORT).show()
                         setResult(RESULT_OK)

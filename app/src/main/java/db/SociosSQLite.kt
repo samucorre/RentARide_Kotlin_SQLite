@@ -183,7 +183,7 @@ class SociosSQLite(context: Context) :
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        val createTableSocios = """
+        val crearTablaSocios = """
             CREATE TABLE socios (
                 idSocio INTEGER PRIMARY KEY AUTOINCREMENT,
                 nombre TEXT,
@@ -193,7 +193,7 @@ class SociosSQLite(context: Context) :
                 email TEXT
             )
         """.trimIndent()
-        db.execSQL(createTableSocios)
+        db.execSQL(crearTablaSocios)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

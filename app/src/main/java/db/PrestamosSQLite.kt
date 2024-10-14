@@ -22,7 +22,7 @@ class PrestamosSQLite(context: Context) :
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
     override fun onCreate(db: SQLiteDatabase) {
-        val createTablePrestamos = """
+        val crearTablaPrestamos = """
             CREATE TABLE prestamos (
                 idPrestamo INTEGER PRIMARY KEY AUTOINCREMENT,
                 idArticulo INTEGER,
@@ -31,12 +31,11 @@ class PrestamosSQLite(context: Context) :
                 fechaFin TEXT,
                 info TEXT,
                 estado TEXT NOT NULL,
-                FOREIGN KEY (idSocio) REFERENCES socios (idSocio),
-                FOREIGN KEY (idArticulo) REFERENCES articulos (idArticulo)
+                FOREIGN KEY (idSocio) REFERENCES socios (idSocio)ON DELETE CASCADE,
+                FOREIGN KEY (idArticulo) REFERENCES articulos (idArticulo)ON DELETE CASCADE
             )
         """.trimIndent()
-        db.execSQL(createTablePrestamos)
-        Log.d(TAG, "Tabla prestamos creada")
+        db.execSQL(crearTablaPrestamos)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

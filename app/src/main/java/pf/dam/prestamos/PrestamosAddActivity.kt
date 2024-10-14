@@ -80,47 +80,47 @@ class PrestamoAddActivity : AppCompatActivity() {
         sociosAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         socioSpinner.adapter = sociosAdapter
 
-       /* guardarButton.setOnClickListener {
-            val articuloSeleccionado = articuloSpinner.selectedItem as? Articulo
-            val socioSeleccionado = socioSpinner.selectedItem as? Socio
-            val fechaInicio = dateFormat.parse(fechaInicioEditText.text.toString())
-            val fechaFin = if (fechaFinEditText.text.toString().isNotBlank()) {
-                dateFormat.parse(fechaFinEditText.text.toString())
-            } else {
-                null
-            }
-            val info = infoEditText.text.toString()
+        /* guardarButton.setOnClickListener {
+             val articuloSeleccionado = articuloSpinner.selectedItem as? Articulo
+             val socioSeleccionado = socioSpinner.selectedItem as? Socio
+             val fechaInicio = dateFormat.parse(fechaInicioEditText.text.toString())
+             val fechaFin = if (fechaFinEditText.text.toString().isNotBlank()) {
+                 dateFormat.parse(fechaFinEditText.text.toString())
+             } else {
+                 null
+             }
+             val info = infoEditText.text.toString()
 
-            if (articuloSeleccionado == null || socioSeleccionado == null || fechaInicio == null) {
-                Toast.makeText(
-                    this,
-                    "Por favor, selecciona un artículo y un socio, e introduce la fecha de inicio",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                val articulo = articulos.find { "{it.nombre}" = articuloSeleccionado.toString() }
-                if (articulo != null) {
-                    val idArticulo =
-                        articulosDbHelper.obtenerIdArticuloDisponibleBD(articuloSeleccionado)
-                    val idSocio = sociosDbHelper.obtenerIdSocioBD(socioSeleccionado)
+             if (articuloSeleccionado == null || socioSeleccionado == null || fechaInicio == null) {
+                 Toast.makeText(
+                     this,
+                     "Por favor, selecciona un artículo y un socio, e introduce la fecha de inicio",
+                     Toast.LENGTH_SHORT
+                 ).show()
+             } else {
+                 val articulo = articulos.find { "{it.nombre}" = articuloSeleccionado.toString() }
+                 if (articulo != null) {
+                     val idArticulo =
+                         articulosDbHelper.obtenerIdArticuloDisponibleBD(articuloSeleccionado)
+                     val idSocio = sociosDbHelper.obtenerIdSocioBD(socioSeleccionado)
 
-                    val nuevoPrestamo = fechaFin?.let {
-                        Prestamo(idArticulo, idSocio, fechaInicio, it, info)
-                    }
-                    if (nuevoPrestamo != null) {
-                        dbHelper.insertarPrestamo(nuevoPrestamo)
-                    }
+                     val nuevoPrestamo = fechaFin?.let {
+                         Prestamo(idArticulo, idSocio, fechaInicio, it, info)
+                     }
+                     if (nuevoPrestamo != null) {
+                         dbHelper.insertarPrestamo(nuevoPrestamo)
+                     }
 
-                    // Actualizar el estado del artículo a PRESTADO
-                    articulosDbHelper.actualizarEstadoArticulo(idArticulo, EstadoArticulo.PRESTADO)
+                     // Actualizar el estado del artículo a PRESTADO
+                     articulosDbHelper.actualizarEstadoArticulo(idArticulo, EstadoArticulo.PRESTADO)
 
-                    Toast.makeText(this, "Préstamo añadido", Toast.LENGTH_SHORT).show()
-                    finish()
-                } else {
-                    Toast.makeText(this, "Artículo no encontrado", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }*/
+                     Toast.makeText(this, "Préstamo añadido", Toast.LENGTH_SHORT).show()
+                     finish()
+                 } else {
+                     Toast.makeText(this, "Artículo no encontrado", Toast.LENGTH_SHORT).show()
+                 }
+             }
+         }*/
 
         guardarButton.setOnClickListener {
             val posicionArticulo = articuloSpinner.selectedItemPosition
@@ -142,7 +142,8 @@ class PrestamoAddActivity : AppCompatActivity() {
                 if (idArticulo != null && idSocio != null) {
                     val fechaFin: Date? = null
                     val nuevoPrestamo =
-                        Prestamo(null,
+                        Prestamo(
+                            null,
                             idArticulo,
                             idSocio,
                             fechaInicio,
@@ -159,11 +160,11 @@ class PrestamoAddActivity : AppCompatActivity() {
                     Toast.makeText(this, "Préstamo añadido", Toast.LENGTH_SHORT).show()
                     finish()
                 } else {
-                    Toast.makeText(this, "Artículo o socio no encontrado", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Artículo o socio no encontrado", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
-
 
     }
 
