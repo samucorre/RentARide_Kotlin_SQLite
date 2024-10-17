@@ -139,7 +139,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
                     Toast.makeText(this, "Artículo no encontrado", Toast.LENGTH_SHORT).show()
                     finish()
                 }
-            }
+            }//comentario para probar git
         }
     }
     private fun mostrarArticulo(articulo: Articulo) {
