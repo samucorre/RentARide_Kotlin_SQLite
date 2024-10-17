@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
+import pf.dam.MainActivity
 import pf.dam.R
 import java.io.File
 import java.io.FileOutputStream
@@ -30,6 +31,7 @@ class ArticuloAddActivity : AppCompatActivity() {
     private lateinit var descripcionEditText: EditText
     private lateinit var guardarButton: FloatingActionButton
     private lateinit var volverButton: FloatingActionButton
+    private lateinit var homeButton: FloatingActionButton
     private lateinit var botonCamara: Button
     private lateinit var botonGaleria: Button
     private var imagenArticulo: Bitmap? = null
@@ -51,6 +53,7 @@ class ArticuloAddActivity : AppCompatActivity() {
         descripcionEditText = findViewById(R.id.descripcionEditText)
 
         guardarButton = findViewById(R.id.guardarButton)
+        homeButton = findViewById(R.id.homeButton)
         volverButton = findViewById(R.id.volverButton)
         botonCamara = findViewById(R.id.botonCamara)
         botonGaleria = findViewById(R.id.botonGaleria)
@@ -59,7 +62,11 @@ class ArticuloAddActivity : AppCompatActivity() {
 
         val estado = if (estadoCheckBox.isChecked) EstadoArticulo.DISPONIBLE else EstadoArticulo.NO_DISPONIBLE
 
-        
+
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
 
         volverButton.setOnClickListener { finish() }
 

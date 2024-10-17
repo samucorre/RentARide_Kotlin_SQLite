@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.SociosSQLite
+import pf.dam.MainActivity
 import pf.dam.R
 import pf.dam.prestamos.PrestamoAddActivity
 import pf.dam.prestamos.PrestamoAddSocioActivity
@@ -25,6 +26,7 @@ class SocioDetalleActivity : AppCompatActivity() {
     private lateinit var editSocioButton: FloatingActionButton
     private lateinit var deleteSocioButton: FloatingActionButton
     private lateinit var backButton: FloatingActionButton
+    private lateinit var homeButton: FloatingActionButton
     private lateinit var addPrestamoButton: Button
     private lateinit var dbHelper: SociosSQLite
 
@@ -58,6 +60,7 @@ class SocioDetalleActivity : AppCompatActivity() {
         addPrestamoButton = findViewById(R.id.addPrestamoButton)
         deleteSocioButton = findViewById(R.id.deleteSocioButton)
         backButton = findViewById(R.id.backButton)
+        homeButton = findViewById(R.id.homeButton)
 
         nombreTextView = findViewById(R.id.nombreTextView)
         apellidoTextView = findViewById(R.id.apellidoTextView)
@@ -68,6 +71,10 @@ class SocioDetalleActivity : AppCompatActivity() {
         socioId = intent.getIntExtra("idSocio", -1)
         val socio = dbHelper.obtenerSocioPorId(socioId)
 
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
 
         if (socio != null) {
             mostrarSocio(socio)

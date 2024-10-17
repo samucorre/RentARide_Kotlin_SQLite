@@ -1,11 +1,14 @@
 package pf.dam.socios
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.SociosSQLite
+import pf.dam.MainActivity
 import pf.dam.R
 
 class SocioAddActivity : AppCompatActivity() {
@@ -15,8 +18,9 @@ class SocioAddActivity : AppCompatActivity() {
     private lateinit var numeroSocioEditText: EditText
     private lateinit var telefonoEditText: EditText
     private lateinit var emailEditText: EditText
-    private lateinit var guardarButton: Button
-    private lateinit var volverButton: Button
+    private lateinit var guardarButton: FloatingActionButton
+    private lateinit var volverButton: FloatingActionButton
+    private lateinit var homeButton: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +34,7 @@ class SocioAddActivity : AppCompatActivity() {
         emailEditText = findViewById(R.id.emailEditText)
         guardarButton = findViewById(R.id.guardarButton)
         volverButton = findViewById(R.id.volverButton)
+        homeButton = findViewById(R.id.homeButton)
 
         volverButton.setOnClickListener { finish() }
 
@@ -50,6 +55,11 @@ class SocioAddActivity : AppCompatActivity() {
         }
     }
 }*/
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
         guardarButton.setOnClickListener {
             val nombre = nombreEditText.text.toString()
             val apellido = apellidoEditText.text.toString()

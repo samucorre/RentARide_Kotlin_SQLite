@@ -195,27 +195,13 @@ class ArticulosSQLite (context: Context):
         db.close()
     }
 
-//    fun borrarArticulo(idArticulo: Int): Int {
-//        val db = writableDatabase
-//        val rowsAffected = db.delete("articulos", "idArticulo = ?", arrayOf(idArticulo.toString()))
-//        db.close()
-//        return rowsAffected
-//    }
-fun borrarArticulo(idArticulo: Int, context: Context): Int {
-    val db = writableDatabase
-    val articulo = obtenerArticuloPorId(idArticulo) // Obtener el artículo por ID
-
-    if (articulo?.estado == EstadoArticulo.PRESTADO) {
-        // Mostrar un Toast si el estado es "prestado"
-        Toast.makeText(context, "No se puede borrar el artículo porque está prestado", Toast.LENGTH_SHORT).show()
-        return 0 // Indicar que no se borró el artículo
-    } else {
-        // Borrar el artículo si el estado no es "prestado"
+    fun borrarArticulo(idArticulo: Int): Int {
+        val db = writableDatabase
         val rowsAffected = db.delete("articulos", "idArticulo = ?", arrayOf(idArticulo.toString()))
         db.close()
         return rowsAffected
     }
-}
+
 
     fun borrarTodosLosArticulos() {
         val db = writableDatabase

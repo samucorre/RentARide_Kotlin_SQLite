@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.PrestamosSQLite
+import pf.dam.MainActivity
 import pf.dam.PrestamosAdapter
 import pf.dam.R
 
@@ -18,6 +19,8 @@ class PrestamosActivity : AppCompatActivity() {
     private lateinit var dbHelper: PrestamosSQLite
     private lateinit var addPrestamoButton: FloatingActionButton
     private lateinit var backButton: FloatingActionButton
+    private lateinit var homeButton: FloatingActionButton
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +29,8 @@ class PrestamosActivity : AppCompatActivity() {
         dbHelper = PrestamosSQLite(this)
         recyclerView = findViewById(R.id.prestamosRecyclerView)
         addPrestamoButton = findViewById(R.id.addPrestamoButton)
-        backButton = findViewById(R.id.backButton)// Asegúrate de tener este ID en tu layout
+        backButton = findViewById(R.id.backButton)
+        homeButton = findViewById(R.id.homeButton)
 
         prestamosAdapter = PrestamosAdapter(dbHelper.obtenerPrestamos())
         recyclerView.adapter = prestamosAdapter
@@ -36,7 +40,10 @@ class PrestamosActivity : AppCompatActivity() {
             val intent = Intent(this, PrestamoAddActivity::class.java)
             startActivity(intent)
         }
-
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
         backButton.setOnClickListener {
             finish()
         }

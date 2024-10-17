@@ -56,6 +56,14 @@ class PrestamoEditActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+
+        if (prestamo.estado == EstadoPrestamo.CERRADO) {
+            fechaInicioEditText.isEnabled = false
+            infoEditText.isEnabled = true
+            estadoSwitch.isEnabled = false
+            guardarButton.isEnabled = false
+        }
+
         fechaInicioEditText.setText(dateFormat.format(prestamo.fechaInicio))
 
         infoEditText.setText(prestamo.info)

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.SociosSQLite
+import pf.dam.MainActivity
 import pf.dam.R
 import kotlin.text.contains
 
@@ -21,6 +22,7 @@ class SociosActivity : AppCompatActivity() {
     private lateinit var dbHelper: SociosSQLite
     private lateinit var addSocioButton: FloatingActionButton
     private lateinit var backButton: FloatingActionButton
+    private lateinit var homeButton: FloatingActionButton
 
 
     @SuppressLint("MissingInflatedId")
@@ -33,6 +35,7 @@ class SociosActivity : AppCompatActivity() {
         searchView = findViewById(R.id.searchView)
         addSocioButton = findViewById(R.id.addSocioButton)
         backButton = findViewById(R.id.backButton)
+        homeButton = findViewById(R.id.homeButton)
 
         sociosAdapter = SociosAdapter(dbHelper.obtenerSocios())
         recyclerView.adapter = sociosAdapter
@@ -61,9 +64,14 @@ class SociosActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-    backButton.setOnClickListener {
+
+        backButton.setOnClickListener {
         finish()
     }
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
 
 }
     override fun onResume() {

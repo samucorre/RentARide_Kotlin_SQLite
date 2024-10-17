@@ -21,6 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.PrestamosSQLite
 import db.SociosSQLite
+import pf.dam.MainActivity
 import pf.dam.R
 import pf.dam.articulos.EstadoArticulo
 import pf.dam.utils.ShowDeleteConfirmationDialog
@@ -33,7 +34,8 @@ class PrestamoDetalleActivity : AppCompatActivity() {
     private lateinit var deletePrestamoButton: FloatingActionButton
     private lateinit var backButton: FloatingActionButton
     private lateinit var cerrarPrestamoButton: Button
-    private lateinit var dbHelper: PrestamosSQLite
+    private lateinit var homeButton: FloatingActionButton
+    private lateinit var prestamosDbHelper: PrestamosSQLite
     private lateinit var articulosDbHelper: ArticulosSQLite
     private lateinit var sociosDbHelper: SociosSQLite
 
@@ -53,7 +55,7 @@ class PrestamoDetalleActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            val prestamoActualizado = dbHelper.obtenerPrestamoPorId(prestamoId)
+            val prestamoActualizado = prestamosDbHelper.obtenerPrestamoPorId(prestamoId)
             if (prestamoActualizado != null) {
                 mostrarPrestamo(prestamoActualizado)
             }
@@ -65,7 +67,7 @@ class PrestamoDetalleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_prestamo_detail)
 
-        dbHelper = PrestamosSQLite(this)
+        prestamosDbHelper = PrestamosSQLite(this)
         articulosDbHelper = ArticulosSQLite(this)
         sociosDbHelper = SociosSQLite(this)
 
@@ -73,6 +75,7 @@ class PrestamoDetalleActivity : AppCompatActivity() {
         deletePrestamoButton = findViewById(R.id.deletePrestamoButton)
         cerrarPrestamoButton = findViewById(R.id.cerrarPrestamoButton)
         backButton = findViewById(R.id.backButton)
+        homeButton = findViewById(R.id.homeButton)
 
 
         articuloTextView = findViewById(R.id.articuloTextView)
@@ -85,7 +88,7 @@ class PrestamoDetalleActivity : AppCompatActivity() {
         articuloImageView = findViewById(R.id.articuloImageView)
 
         prestamoId = intent.getIntExtra("idPrestamo", -1)
-        val prestamo = dbHelper.obtenerPrestamoPorId(prestamoId)
+        val prestamo = prestamosDbHelper.obtenerPrestamoPorId(prestamoId)
 
         if (prestamo != null) {
             mostrarPrestamo(prestamo)
@@ -107,7 +110,7 @@ class PrestamoDetalleActivity : AppCompatActivity() {
                     // Actualizar el estado del préstamo a CERRADO
                     prestamo.estado = EstadoPrestamo.CERRADO
                     prestamo.fechaFin = Date()
-                    dbHelper.actualizarPrestamo(prestamo)
+                    prestamosDbHelper.actualizarPrestamo(prestamo)
 
                     // Actualizar el estado del artículo a DISPONIBLE
                     articulosDbHelper.actualizarEstadoArticulo(
@@ -121,7 +124,10 @@ class PrestamoDetalleActivity : AppCompatActivity() {
                 }
             }
 
-
+            homeButton.setOnClickListener {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
             editPrestamoButton.setOnClickListener {
                 val intent = Intent(this, PrestamoEditActivity::class.java)
                 intent.putExtra("prestamoId", prestamoId)
@@ -146,23 +152,31 @@ class PrestamoDetalleActivity : AppCompatActivity() {
                     prestamo.idArticulo,
                     EstadoArticulo.DISPONIBLE)
 
-                setContent {
-                    var showDialog by remember { mutableStateOf(true) }
+                if (prestamosDbHelper.estaSocioEnPrestamo(prestamo.idSocio)) {
+                    // Mostrar un mensaje de error al usuario
+                    Toast.makeText(this, "No se puede eliminar el préstamo porque el socio está en un préstamo activo", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Mostrar el diálogo de confirmación de eliminación
+                    setContent {
+                        var showDialog by remember { mutableStateOf(true) }
 
-                    if (showDialog) {
-                        ShowDeleteConfirmationDialog(
-                            title = "Eliminar préstamo",
-                            message = "¿Estás seguro de que quieres eliminar este préstamo?",
-                            onPositiveButtonClick = {
-                                dbHelper.borrarPrestamo(prestamoId)
-                                Toast.makeText(this@PrestamoDetalleActivity, "Préstamo eliminado", Toast.LENGTH_SHORT).show()
-                                setResult(RESULT_OK)
-                                finish()
-                                showDialog = false
-                            },
-                            onDismissRequest = { showDialog = false
-                                finish()}
-                        )
+                        if (showDialog) {
+                            ShowDeleteConfirmationDialog(
+                                title = "Eliminar préstamo",
+                                message = "¿Estás seguro de que quieres eliminar este préstamo?",
+                                onPositiveButtonClick = {
+                                    prestamosDbHelper.borrarPrestamo(prestamoId)
+                                    Toast.makeText(this@PrestamoDetalleActivity, "Préstamo eliminado", Toast.LENGTH_SHORT).show()
+                                    setResult(RESULT_OK)
+                                    finish()
+                                    showDialog = false
+                                },
+                                onDismissRequest = {
+                                    showDialog = false
+                                    finish()
+                                }
+                            )
+                        }
                     }
                 }
             }

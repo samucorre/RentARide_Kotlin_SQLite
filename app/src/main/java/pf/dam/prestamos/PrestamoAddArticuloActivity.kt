@@ -2,6 +2,7 @@ package pf.dam.prestamos
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.widget.ArrayAdapter
@@ -14,6 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.PrestamosSQLite
 import db.SociosSQLite
+import pf.dam.MainActivity
 import pf.dam.R
 import pf.dam.articulos.EstadoArticulo
 import pf.dam.socios.Socio
@@ -31,6 +33,7 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
     private lateinit var infoEditText: EditText
     private lateinit var guardarButton: FloatingActionButton
     private lateinit var volverButton: FloatingActionButton
+    private lateinit var homeButton: FloatingActionButton
 
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
     private val calendar = Calendar.getInstance()
@@ -53,6 +56,7 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
         infoEditText = findViewById(R.id.infoEditText)
         guardarButton = findViewById(R.id.guardarButton)
         volverButton = findViewById(R.id.volverButton)
+        homeButton = findViewById(R.id.homeButton)
 
         val idArticuloIntent = intent.getIntExtra("idArticulo", -1)
 
@@ -69,7 +73,10 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
             val socioSeleccionado = adapter.getItem(position)
             idSocioSeleccionado = sociosDbHelper.obtenerSocios().find { "${it.nombre} ${it.apellido}" == socioSeleccionado }?.idSocio
         }
-
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
         guardarButton.setOnClickListener {
             val fechaInicio = dateFormat.parse(fechaInicioEditText.text.toString())
             val info = infoEditText.text.toString()

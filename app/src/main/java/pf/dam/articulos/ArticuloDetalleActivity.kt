@@ -97,46 +97,51 @@ class ArticuloDetalleActivity : AppCompatActivity() {
                 }
             }
 
-
             if (articulo.estado == EstadoArticulo.DISPONIBLE) {
                 addPrestamoButton.visibility = View.VISIBLE // Mostrar el botón
             } else {
                 addPrestamoButton.visibility = View.GONE // Ocultar el botón
             }
+
+            backButton.setOnClickListener {
+                finish()
+            }
+
             addPrestamoButton.setOnClickListener {
                 val intent = Intent(this, PrestamoAddArticuloActivity::class.java)
                 intent.putExtra("idArticulo", articuloId)
                 addPrestamoLauncher.launch(intent)
             }
+
             homeButton.setOnClickListener {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
             }
+
             deleteArticuloButton.setOnClickListener {
                 val idArticulo = dbHelper.obtenerIdArticuloBD(articulo)
                 if (idArticulo != -1) {
-                    val resultado = dbHelper.borrarArticulo(idArticulo, this)
-                    if (resultado > 0) {
-                        Toast.makeText(this, "Artículo eliminado", Toast.LENGTH_SHORT).show()
-                        setResult(RESULT_OK)
-                        finish()
+                    val articulo = dbHelper.obtenerArticuloPorId(idArticulo) // Obtener el artículo por ID
+
+                    if (articulo?.estado == EstadoArticulo.PRESTADO) {
+                        Toast.makeText(this, "No se puede borrar el artículo porque está prestado", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(this, "Error al eliminar el artículo", Toast.LENGTH_SHORT).show()
+                        val resultado = dbHelper.borrarArticulo(idArticulo)
+                        if (resultado > 0) {
+                            Toast.makeText(this, "Artículo eliminado", Toast.LENGTH_SHORT).show()
+                            setResult(RESULT_OK)
+                            finish()
+                        } else {
+                            Toast.makeText(this, "Error al eliminar el artículo", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 } else {
                     Toast.makeText(this, "Artículo no encontrado", Toast.LENGTH_SHORT).show()
+                    finish()
                 }
             }
-
-            backButton.setOnClickListener {
-                finish()
-            }
-        } else {
-            Toast.makeText(this, "Artículo no encontrado", Toast.LENGTH_SHORT).show()
-            finish()
         }
     }
-
     private fun mostrarArticulo(articulo: Articulo) {
         nombreTextView.text = articulo.nombre ?: ""
         categoriaTextView.text = articulo.categoria ?: ""
