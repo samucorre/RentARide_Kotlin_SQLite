@@ -24,6 +24,7 @@ class PrestamosAdapter(prestamos: List<Prestamo>) :
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
     class PrestamoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val idPrestamoTextView: TextView = itemView.findViewById(R.id.idPrestamoTextView)
         val idArticuloTextView: TextView = itemView.findViewById(R.id.idArticuloTextView)
         val idSocioTextView: TextView = itemView.findViewById(R.id.idSocioTextView)
         val fechaInicioTextView: TextView = itemView.findViewById(R.id.fechaInicioTextView)
@@ -41,10 +42,17 @@ class PrestamosAdapter(prestamos: List<Prestamo>) :
 
     override fun onBindViewHolder(holder: PrestamoViewHolder, position: Int) {
         val prestamo = prestamos[position]
+        holder.idPrestamoTextView.text = "ID Préstamo: ${prestamo.idPrestamo}"
         holder.idArticuloTextView.text = "ID Artículo: ${prestamo.idArticulo}"
         holder.idSocioTextView.text = "ID Socio: ${prestamo.idSocio}"
         holder.fechaInicioTextView.text = "Fecha Inicio: ${dateFormat.format(prestamo.fechaInicio)}"
-        holder.fechaFinTextView.text = "Fecha Fin: ${dateFormat.format(prestamo.fechaFin)}"
+      //  holder.fechaFinTextView.text = "Fecha Fin: ${dateFormat.format(prestamo.fechaFin)}"
+        val fechaFinString = if (prestamo.fechaFin != null) {
+            dateFormat.format(prestamo.fechaFin)
+        } else {
+            "" // O "" para dejarlo vacío
+        }
+        holder.fechaFinTextView.text = "Fecha Fin: $fechaFinString"
         holder.infoTextView.text = "Info: ${prestamo.info}"
         holder.estadoTextView.text = "Estado: ${prestamo.estado}"
 

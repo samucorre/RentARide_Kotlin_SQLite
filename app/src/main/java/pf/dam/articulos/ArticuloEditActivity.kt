@@ -2,6 +2,7 @@
 package pf.dam.articulos
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -17,8 +18,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.semantics.text
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.PrestamosSQLite
+import pf.dam.MainActivity
 import pf.dam.R
 import java.io.File
 import java.io.FileOutputStream
@@ -32,8 +35,9 @@ class ArticuloEditActivity : AppCompatActivity() {
     private lateinit var tipoEditText: EditText
     private lateinit var descripcionEditText: EditText
     private lateinit var imagenImageView: ImageView
-    private lateinit var guardarButton: Button
-    private lateinit var volverButton: Button
+    private lateinit var guardarButton: FloatingActionButton
+    private lateinit var volverButton: FloatingActionButton
+    private lateinit var homeButton: FloatingActionButton
 
     private lateinit var botonCamara: Button
     private lateinit var botonGaleria: Button
@@ -47,6 +51,7 @@ class ArticuloEditActivity : AppCompatActivity() {
     private val REQUEST_PERMISSION_CAMERA = 100
     private lateinit var prestamosDbHelper: PrestamosSQLite // Instancia de PrestamosSQLite
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_articulo_edit)
@@ -62,6 +67,7 @@ class ArticuloEditActivity : AppCompatActivity() {
         botonCamara = findViewById(R.id.botonCamara)
         botonGaleria = findViewById(R.id.botonGaleria)
         estadoSpinner = findViewById(R.id.estadoSpinner)
+        homeButton = findViewById(R.id.homeButton)
 
         articuloId = intent.getIntExtra("articuloId", -1)
         articulo = dbHelper.obtenerArticuloPorId(articuloId)!!
@@ -95,7 +101,7 @@ class ArticuloEditActivity : AppCompatActivity() {
 
         prestamosDbHelper = PrestamosSQLite(this) // Inicializar la instancia de PrestamosSQLite
 
-        guardarButton.setOnClickListener {
+       /* guardarButton.setOnClickListener {
             val nuevaRutaImagen = imagenArticulo?.let {
                 val nombreArchivo = "articulo_${UUID.randomUUID()}"
                 guardarImagenEnAlmacenamiento(it, nombreArchivo)
@@ -127,8 +133,60 @@ class ArticuloEditActivity : AppCompatActivity() {
               Log.e("ArticuloEditActivity", "Error al acceder a la base de datos: ${e.message}")
               Toast.makeText(this, "Artículo en préstamo activo. No editable", Toast.LENGTH_SHORT).show()
           }
+        }*/
+        guardarButton.setOnClickListener {
+            val nuevaRutaImagen = imagenArticulo?.let {
+                val nombreArchivo = "articulo_${UUID.randomUUID()}"
+                guardarImagenEnAlmacenamiento(it, nombreArchivo)
+            } ?: articulo.rutaImagen
+
+            val estadoSeleccionado = estadoSpinner.selectedItem as EstadoArticulo
+
+            try {
+                if (articulo.idArticulo?.let { prestamosDbHelper.estaArticuloEnPrestamo(it) } ?: false) {
+                    // Mostrar un mensaje de error al usuario
+                    Toast.makeText(this, "No se puede editar el artículo. Está presente en un préstamo activo.", Toast.LENGTH_SHORT).show()
+                } else {
+                    // --- Condición agregada ---
+                    val categoria = categoriaEditText.text.toString()
+                    val tipo = tipoEditText.text.toString()
+                    val nombre = nombreEditText.text.toString()
+                    val descripcion = descripcionEditText.text.toString()
+
+                    if (categoria.isBlank() || tipo.isBlank() || nombre.isBlank() || descripcion.isBlank()) {
+                        Toast.makeText(this, "Por favor, rellena todos los campos", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener // Salir del listener si los campos están vacíos
+                    }
+                    // --- Fin de la condición agregada ---
+
+                    val articuloActualizado = Articulo(
+                        articulo.idArticulo,
+                        categoria, // Usar la variable categoria
+                        tipo, // Usar la variable tipo
+                        nombre, // Usar la variable nombre
+                        descripcion, // Usar la variable descripcion
+                        estadoSeleccionado,
+                        nuevaRutaImagen
+                    )
+                    dbHelper.actualizarArticulo(articuloActualizado)
+                    Toast.makeText(this, "Artículo actualizado", Toast.LENGTH_SHORT).show()
+                    setResult(RESULT_OK)
+                    finish()
+                }
+            } catch (e: SQLiteException) {
+                // Manejar la excepción, por ejemplo, mostrar un mensaje de error al usuario
+                Log.e("ArticuloEditActivity", "Error al acceder a la base de datos: ${e.message}")
+                Toast.makeText(this, "Artículo en préstamo activo. No editable", Toast.LENGTH_SHORT).show()
+            }
         }
+
         volverButton.setOnClickListener { finish() }
+
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
         botonCamara.setOnClickListener {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED

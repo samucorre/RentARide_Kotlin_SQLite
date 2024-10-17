@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
+import pf.dam.MainActivity
 import pf.dam.R
 
 class ArticulosActivity : AppCompatActivity() {
@@ -16,7 +17,7 @@ class ArticulosActivity : AppCompatActivity() {
     private lateinit var articulosAdapter: ArticulosAdapter
     private lateinit var dbHelper: ArticulosSQLite
     private lateinit var addArticuloButton: FloatingActionButton
-    private lateinit var deleteArticuloButton: FloatingActionButton
+    private lateinit var homeButton: FloatingActionButton
     private lateinit var backButton: FloatingActionButton
 
     @SuppressLint("MissingInflatedId")
@@ -28,6 +29,7 @@ class ArticulosActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.articulosRecyclerView)
         addArticuloButton = findViewById(R.id.addArticuloButton)
         backButton = findViewById(R.id.backButton)
+        homeButton = findViewById(R.id.homeButton)
 
         articulosAdapter = ArticulosAdapter(dbHelper.obtenerArticulos())
         recyclerView.adapter = articulosAdapter
@@ -52,6 +54,10 @@ class ArticulosActivity : AppCompatActivity() {
 
         backButton.setOnClickListener {
             finish()
+        }
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
         }
     }
 

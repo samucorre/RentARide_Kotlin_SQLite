@@ -9,7 +9,7 @@ open class Prestamo(
     val idArticulo: Int,
     val idSocio: Int,
     val fechaInicio: Date,
-    val fechaFin: Date,
+    var fechaFin: Date?=null,
     val info: String,
     var estado: EstadoPrestamo = EstadoPrestamo.ACTIVO
 ) : Serializable

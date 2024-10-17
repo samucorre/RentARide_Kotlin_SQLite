@@ -1,25 +1,31 @@
 package pf.dam.articulos
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.semantics.text
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
+import pf.dam.MainActivity
 import pf.dam.R
+import pf.dam.prestamos.PrestamoAddArticuloActivity
+
 
 class ArticuloDetalleActivity : AppCompatActivity() {
     private lateinit var editArticuloButton: FloatingActionButton
     private lateinit var deleteArticuloButton: FloatingActionButton
     private lateinit var backButton: FloatingActionButton
+    private lateinit var homeButton: FloatingActionButton
+    private lateinit var addPrestamoButton: Button
     private lateinit var dbHelper: ArticulosSQLite
-
     private lateinit var nombreTextView: TextView
     private lateinit var categoriaTextView: TextView
     private lateinit var tipoTextView: TextView
@@ -40,6 +46,17 @@ class ArticuloDetalleActivity : AppCompatActivity() {
             }
         }
     }
+    private val addPrestamoLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // Actualiza la vista del artículo
+            val articuloActualizado = dbHelper.obtenerArticuloPorId(articuloId)
+            if (articuloActualizado != null) {
+                mostrarArticulo(articuloActualizado)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +66,8 @@ class ArticuloDetalleActivity : AppCompatActivity() {
 
         editArticuloButton = findViewById(R.id.editArticuloButton)
         deleteArticuloButton = findViewById(R.id.deleteArticuloButton)
+        addPrestamoButton = findViewById(R.id.addPrestamoButton)
+        homeButton = findViewById(R.id.homeButton)
         backButton = findViewById(R.id.backButton)
 
         nombreTextView = findViewById(R.id.nombreTextView)
@@ -60,8 +79,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
 
         articuloId = intent.getIntExtra("idArticulo", -1)
         val articulo = dbHelper.obtenerArticuloPorId(articuloId)
-        Log.e("ArticuloDetalleActivity", "ArticuloId: $articuloId")
-
+       // Log.e("ArticuloDetalleActivity", "ArticuloId: $articuloId")
         if (articulo != null) {
             mostrarArticulo(articulo)
 
@@ -79,31 +97,51 @@ class ArticuloDetalleActivity : AppCompatActivity() {
                 }
             }
 
-            deleteArticuloButton.setOnClickListener {
-                val idArticulo = dbHelper.obtenerIdArticuloBD(articulo)
-                if (idArticulo != -1) {
-                    val resultado = dbHelper.borrarArticulo(idArticulo)
-                    if (resultado > 0) {
-                        Toast.makeText(this, "Artículo eliminado", Toast.LENGTH_SHORT).show()
-                        setResult(RESULT_OK)
-                        finish()
-                    } else {
-                        Toast.makeText(this, "Error al eliminar el artículo", Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    Toast.makeText(this, "Artículo no encontrado", Toast.LENGTH_SHORT).show()
-                }
+            if (articulo.estado == EstadoArticulo.DISPONIBLE) {
+                addPrestamoButton.visibility = View.VISIBLE // Mostrar el botón
+            } else {
+                addPrestamoButton.visibility = View.GONE // Ocultar el botón
             }
 
             backButton.setOnClickListener {
                 finish()
             }
-        } else {
-            Toast.makeText(this, "Artículo no encontrado", Toast.LENGTH_SHORT).show()
-            finish()
+
+            addPrestamoButton.setOnClickListener {
+                val intent = Intent(this, PrestamoAddArticuloActivity::class.java)
+                intent.putExtra("idArticulo", articuloId)
+                addPrestamoLauncher.launch(intent)
+            }
+
+            homeButton.setOnClickListener {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
+
+            deleteArticuloButton.setOnClickListener {
+                val idArticulo = dbHelper.obtenerIdArticuloBD(articulo)
+                if (idArticulo != -1) {
+                    val articulo = dbHelper.obtenerArticuloPorId(idArticulo) // Obtener el artículo por ID
+
+                    if (articulo?.estado == EstadoArticulo.PRESTADO) {
+                        Toast.makeText(this, "No se puede borrar el artículo porque está prestado", Toast.LENGTH_SHORT).show()
+                    } else {
+                        val resultado = dbHelper.borrarArticulo(idArticulo)
+                        if (resultado > 0) {
+                            Toast.makeText(this, "Artículo eliminado", Toast.LENGTH_SHORT).show()
+                            setResult(RESULT_OK)
+                            finish()
+                        } else {
+                            Toast.makeText(this, "Error al eliminar el artículo", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    Toast.makeText(this, "Artículo no encontrado", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            }
         }
     }
-
     private fun mostrarArticulo(articulo: Articulo) {
         nombreTextView.text = articulo.nombre ?: ""
         categoriaTextView.text = articulo.categoria ?: ""

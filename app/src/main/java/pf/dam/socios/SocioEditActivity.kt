@@ -1,6 +1,7 @@
 package pf.dam.socios
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.database.sqlite.SQLiteException
 import android.os.Bundle
 import android.util.Log
@@ -8,8 +9,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.PrestamosSQLite
 import db.SociosSQLite
+import pf.dam.MainActivity
 import pf.dam.R
 
 class SocioEditActivity : AppCompatActivity() {
@@ -22,8 +25,9 @@ class SocioEditActivity : AppCompatActivity() {
     private lateinit var numeroSocioEditText: EditText
     private lateinit var telefonoEditText: EditText
     private lateinit var emailEditText: EditText
-    private lateinit var guardarButton: Button
-    private lateinit var volverButton: Button
+    private lateinit var guardarButton: FloatingActionButton
+    private lateinit var volverButton: FloatingActionButton
+    private lateinit var homeButton: FloatingActionButton
 
     private var socioId: Int = -1
 
@@ -41,6 +45,7 @@ class SocioEditActivity : AppCompatActivity() {
         emailEditText = findViewById(R.id.emailEditText)
         guardarButton = findViewById(R.id.guardarButton)
         volverButton = findViewById(R.id.volverButton)
+        homeButton = findViewById(R.id.homeButton)
 
         socioId = intent.getIntExtra("socioId", -1)
         val socio = dbHelper.obtenerSocioPorId(socioId)
@@ -52,6 +57,11 @@ class SocioEditActivity : AppCompatActivity() {
             telefonoEditText.setText(socio.telefono.toString())
             emailEditText.setText(socio.email)
 
+
+            homeButton.setOnClickListener {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
             guardarButton.setOnClickListener {
                 val nombre = nombreEditText.text.toString()
                 val apellido = apellidoEditText.text.toString()

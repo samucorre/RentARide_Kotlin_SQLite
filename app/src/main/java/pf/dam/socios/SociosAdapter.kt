@@ -21,7 +21,7 @@ class SociosAdapter(socios: List<Socio>) :
 
     class SocioViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nombreTextView: TextView = itemView.findViewById(R.id.nombreTextView)
-        val apellidoTextView: TextView = itemView.findViewById(R.id.apellidoTextView)
+        //val apellidoTextView: TextView = itemView.findViewById(R.id.apellidoTextView)
         val numeroSocioTextView: TextView = itemView.findViewById(R.id.numeroSocioTextView)
         val telefonoTextView: TextView = itemView.findViewById(R.id.telefonoTextView)
         val emailTextView: TextView = itemView.findViewById(R.id.emailTextView)
@@ -37,8 +37,8 @@ class SociosAdapter(socios: List<Socio>) :
 
     override fun onBindViewHolder(holder: SocioViewHolder, position: Int) {
         val socio = socios[position]
-        holder.nombreTextView.text = "Nombre: ${socio.nombre}"
-        holder.apellidoTextView.text = "Apellido: ${socio.apellido}"
+        holder.nombreTextView.text = "${socio.nombre} ${socio.apellido}"
+        //holder.apellidoTextView.text = "Apellido: ${socio.apellido}"
         holder.numeroSocioTextView.text = "Número de socio: ${socio.numeroSocio}"
         holder.telefonoTextView.text = "Teléfono: ${socio.telefono}"
         holder.emailTextView.text = "Email: ${socio.email}" // Asegúrate de que Email se pueda convertir a String

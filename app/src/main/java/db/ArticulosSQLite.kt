@@ -7,6 +7,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import android.widget.Toast
 import pf.dam.articulos.EstadoArticulo
 import pf.dam.prestamos.EstadoPrestamo
 
@@ -30,6 +31,7 @@ class ArticulosSQLite (context: Context):
             )
         """.trimIndent()
         db?.execSQL(crearTablaArticulos)
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -200,6 +202,7 @@ class ArticulosSQLite (context: Context):
         return rowsAffected
     }
 
+
     fun borrarTodosLosArticulos() {
         val db = writableDatabase
         db.delete("articulos", null, null)
@@ -283,15 +286,15 @@ class ArticulosSQLite (context: Context):
             Log.d(TAG, "No se pudo actualizar el estado del artículo con ID: $idArticulo")
         }
     }
-   /* fun estaArticuloEnPrestamo(idArticulo: Int): Boolean {
+    fun articuloEnPrestamo(idArticulo: Int): Boolean {
         val db = readableDatabase
         val cursor = db.rawQuery(
             "SELECT * FROM prestamos WHERE idArticulo = ? AND estado = ?",
-            arrayOf(idArticulo.toString(), EstadoPrestamo.ACTIVO.toString())
+            arrayOf(idArticulo.toString(), EstadoPrestamo.ACTIVO.name)
         )
         val estaEnPrestamo = cursor.count > 0
         cursor.close()
         db.close()
         return estaEnPrestamo
-    }*/
+    }
 }
