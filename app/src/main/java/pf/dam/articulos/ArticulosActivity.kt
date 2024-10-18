@@ -3,8 +3,14 @@ package pf.dam.articulos
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.compose.ui.semantics.text
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -21,6 +27,8 @@ class ArticulosActivity : AppCompatActivity() {
     private lateinit var homeButton: FloatingActionButton
     private lateinit var backButton: FloatingActionButton
     private lateinit var searchView: SearchView
+    private lateinit var categoriasSpinner: Spinner
+    private var primeraSeleccion = true
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +41,7 @@ class ArticulosActivity : AppCompatActivity() {
         addArticuloButton = findViewById(R.id.addArticuloButton)
         backButton = findViewById(R.id.backButton)
         homeButton = findViewById(R.id.homeButton)
+        categoriasSpinner = findViewById(R.id.categoriasSpinner) // Inicializa categoriasSpinner
 
         articulosAdapter = ArticulosAdapter(dbHelper.obtenerArticulos())
         recyclerView.adapter = articulosAdapter
@@ -41,7 +50,6 @@ class ArticulosActivity : AppCompatActivity() {
         addArticuloButton.setOnClickListener {
             val intent = Intent(this, ArticuloAddActivity::class.java)
             startActivity(intent)
-
         }
         backButton.setOnClickListener {
             finish()
@@ -61,6 +69,35 @@ class ArticulosActivity : AppCompatActivity() {
                 return true
             }
         })
+
+        // Configura el Spinner de categorías
+        val categorias = dbHelper.obtenerCategorias() // Obtén las categorías de tu base de datos
+        val categoriasAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categorias)
+        categoriasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        categoriasSpinner.adapter = categoriasAdapter
+
+
+        categoriasSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (primeraSeleccion) {
+                    primeraSeleccion = false // Desactiva la primera selección
+                } else {
+                    val categoriaSeleccionada = categorias[position] // Usa la variable categorias existente
+                    if (categoriaSeleccionada != "Todos") { // Verifica si la categoría es "Todas las categorías"
+                        filtrarArticulosPorCategoria(categoriaSeleccionada)
+                    } else {
+                        // No filtres la lista de artículos si la categoría es "Todas las categorías"
+                        articulosAdapter.articulos = dbHelper.obtenerArticulos() // Muestra todos los artículos
+                        articulosAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // No se ha seleccionado ninguna categoría
+                // Puedes agregar aquí alguna acción si lo deseas, como mostrar un mensaje al usuario
+            }
+        }
     }
 
     override fun onResume() {
@@ -101,5 +138,12 @@ class ArticulosActivity : AppCompatActivity() {
         articulosAdapter.articulos = articulosFiltrados
         articulosAdapter.notifyDataSetChanged()
     }
-}
 
+    private fun filtrarArticulosPorCategoria(categoria: String) {
+        val articulosFiltrados = dbHelper.obtenerArticulos().filter { articulo ->
+            articulo.categoria == categoria
+        }
+        articulosAdapter.articulos = articulosFiltrados
+        articulosAdapter.notifyDataSetChanged()
+    }
+}

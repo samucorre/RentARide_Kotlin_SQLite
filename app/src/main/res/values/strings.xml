@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RentARide</string>
+    <string name="categorias_string">Categorías</string>
 </resources>

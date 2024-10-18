@@ -297,4 +297,28 @@ class ArticulosSQLite (context: Context):
         db.close()
         return estaEnPrestamo
     }
+    fun obtenerCategorias(): List<String> {
+        val db = readableDatabase
+        val cursor = db.query(
+            true, // distinct
+            "articulos", // nombre de la tabla
+            arrayOf("categoria"), // columnas a seleccionar
+            null, // cláusula WHERE
+            null, // argumentos para la cláusula WHERE
+            null, // cláusula GROUP BY
+            null, // cláusula HAVING
+            null, // cláusula ORDER BY
+            null // cláusula LIMIT
+        )
+
+        val categorias = mutableListOf("Todos") // Agrega "Todas las categorías" al principio de la lista
+        while (cursor.moveToNext()) {
+            categorias.add(cursor.getString(cursor.getColumnIndexOrThrow("categoria")))
+        }
+
+        cursor.close()
+        db.close()
+
+        return categorias
+    }
 }
