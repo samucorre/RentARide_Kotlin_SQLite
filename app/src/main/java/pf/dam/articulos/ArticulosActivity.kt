@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -19,6 +20,7 @@ class ArticulosActivity : AppCompatActivity() {
     private lateinit var addArticuloButton: FloatingActionButton
     private lateinit var homeButton: FloatingActionButton
     private lateinit var backButton: FloatingActionButton
+    private lateinit var searchView: SearchView
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +29,7 @@ class ArticulosActivity : AppCompatActivity() {
 
         dbHelper = ArticulosSQLite(this)
         recyclerView = findViewById(R.id.articulosRecyclerView)
+        searchView = findViewById(R.id.searchView)
         addArticuloButton = findViewById(R.id.addArticuloButton)
         backButton = findViewById(R.id.backButton)
         homeButton = findViewById(R.id.homeButton)
@@ -47,6 +50,17 @@ class ArticulosActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filtrarArticulos(newText)
+                return true
+            }
+        })
     }
 
     override fun onResume() {
@@ -73,4 +87,19 @@ class ArticulosActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun filtrarArticulos(query: String?) {
+        val articulosFiltrados = if (query.isNullOrEmpty()) {
+            dbHelper.obtenerArticulos()
+        } else {
+            dbHelper.obtenerArticulos().filter { articulo ->
+                articulo.nombre?.contains(query, ignoreCase = true) ?: false ||
+                        articulo.categoria?.contains(query, ignoreCase = true) ?: false ||
+                        articulo.tipo?.contains(query, ignoreCase = true) ?: false
+            }
+        }
+        articulosAdapter.articulos = articulosFiltrados
+        articulosAdapter.notifyDataSetChanged()
+    }
 }
+
