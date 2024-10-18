@@ -6,13 +6,17 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.RadioGroup
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
 import androidx.compose.ui.semantics.text
+import androidx.compose.ui.test.filter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import pf.dam.MainActivity
@@ -28,12 +32,20 @@ class ArticulosActivity : AppCompatActivity() {
     private lateinit var backButton: FloatingActionButton
     private lateinit var searchView: SearchView
     private lateinit var categoriasSpinner: Spinner
-    private var primeraSeleccion = true
+   // private lateinit var estadoChipGroup: ChipGroup
+  //  private lateinit var toolbar: Toolbar
+    private var primeraSeleccion = true // Variable para controlar la primera selección
+    private lateinit var estadoRadioGroup: RadioGroup
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_articulos)
+
+        // Configura el Toolbar
+       // val toolbar = findViewById<Toolbar>(R.id.toolbar)
+    //    setSupportActionBar(toolbar)
+        supportActionBar?.title = "Artículos"
 
         dbHelper = ArticulosSQLite(this)
         recyclerView = findViewById(R.id.articulosRecyclerView)
@@ -41,7 +53,9 @@ class ArticulosActivity : AppCompatActivity() {
         addArticuloButton = findViewById(R.id.addArticuloButton)
         backButton = findViewById(R.id.backButton)
         homeButton = findViewById(R.id.homeButton)
-        categoriasSpinner = findViewById(R.id.categoriasSpinner) // Inicializa categoriasSpinner
+     //   categoriasSpinner = findViewById(R.id.categoriasSpinner)
+      //  estadoChipGroup = findViewById(R.id.estadoChipGroup)
+        estadoRadioGroup = findViewById(R.id.estadoRadioGroup)
 
         articulosAdapter = ArticulosAdapter(dbHelper.obtenerArticulos())
         recyclerView.adapter = articulosAdapter
@@ -71,32 +85,54 @@ class ArticulosActivity : AppCompatActivity() {
         })
 
         // Configura el Spinner de categorías
-        val categorias = dbHelper.obtenerCategorias() // Obtén las categorías de tu base de datos
-        val categoriasAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categorias)
-        categoriasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        categoriasSpinner.adapter = categoriasAdapter
-
-
-        categoriasSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (primeraSeleccion) {
-                    primeraSeleccion = false // Desactiva la primera selección
-                } else {
-                    val categoriaSeleccionada = categorias[position] // Usa la variable categorias existente
-                    if (categoriaSeleccionada != "Todos") { // Verifica si la categoría es "Todas las categorías"
-                        filtrarArticulosPorCategoria(categoriaSeleccionada)
-                    } else {
-                        // No filtres la lista de artículos si la categoría es "Todas las categorías"
-                        articulosAdapter.articulos = dbHelper.obtenerArticulos() // Muestra todos los artículos
-                        articulosAdapter.notifyDataSetChanged()
-                    }
-                }
+//        val categorias = dbHelper.obtenerCategorias()
+//        val categoriasAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categorias)
+//        categoriasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//        categoriasSpinner.adapter = categoriasAdapter
+//
+//        categoriasSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onItemSelected(
+//                parent: AdapterView<*>?,
+//                view: View?,
+//                position: Int,
+//                id: Long
+//            ) {
+//                if (primeraSeleccion) {
+//                    primeraSeleccion = false
+//                } else {
+//                    val categoriaSeleccionada = categorias[position]
+//                    if (categoriaSeleccionada != "Todas las categorías") {
+//                        filtrarArticulosPorCategoria(categoriaSeleccionada)
+//                    } else {
+//                        articulosAdapter.articulos = dbHelper.obtenerArticulos()
+//                        articulosAdapter.notifyDataSetChanged()
+//                    }
+//                }
+//            }
+//
+//            override fun onNothingSelected(parent: AdapterView<*>?) {
+//                (categoriasSpinner.getChildAt(0) as TextView).text = "Categorías"
+//            }
+//        }
+      /*  estadoChipGroup.setOnCheckedChangeListener { group, checkedId ->
+            val estadoSeleccionado = when (checkedId) {
+                R.id.disponibleChip -> EstadoArticulo.DISPONIBLE
+                R.id.prestadoChip -> EstadoArticulo.PRESTADO
+                R.id.noDisponibleChip -> EstadoArticulo.NO_DISPONIBLE
+                else -> EstadoArticulo.DISPONIBLE
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                // No se ha seleccionado ninguna categoría
-                // Puedes agregar aquí alguna acción si lo deseas, como mostrar un mensaje al usuario
+            filtrarArticulosPorEstado(estadoSeleccionado)
+        }*/
+        estadoRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            val estadoSeleccionado = when (checkedId) {
+                R.id.disponibleRadioButton -> EstadoArticulo.DISPONIBLE
+                R.id.prestadoRadioButton -> EstadoArticulo.PRESTADO
+                R.id.noDisponibleRadioButton -> EstadoArticulo.NO_DISPONIBLE
+                else -> null
             }
+
+            filtrarArticulosPorEstado(estadoSeleccionado)
         }
     }
 
@@ -117,7 +153,6 @@ class ArticulosActivity : AppCompatActivity() {
             if (articuloId != -1) {
                 val articuloActualizado = dbHelper.obtenerArticuloPorId(articuloId)
                 if (articuloActualizado != null) {
-                    // Actualizar la vista con articuloActualizado
                     articulosAdapter.articulos = dbHelper.obtenerArticulos()
                     articulosAdapter.notifyDataSetChanged()
                 }
@@ -139,9 +174,19 @@ class ArticulosActivity : AppCompatActivity() {
         articulosAdapter.notifyDataSetChanged()
     }
 
-    private fun filtrarArticulosPorCategoria(categoria: String) {
-        val articulosFiltrados = dbHelper.obtenerArticulos().filter { articulo ->
-            articulo.categoria == categoria
+//    private fun filtrarArticulosPorCategoria(categoria: String) {
+//        val articulosFiltrados = dbHelper.obtenerArticulos().filter { articulo ->
+//            articulo.categoria == categoria
+//        }
+//        articulosAdapter.articulos = articulosFiltrados
+//        articulosAdapter.notifyDataSetChanged()
+//    }
+
+    private fun filtrarArticulosPorEstado(estado: EstadoArticulo?) {
+        val articulosFiltrados = if (estado == null) {
+            dbHelper.obtenerArticulos()
+        } else {
+            dbHelper.obtenerArticulos().filter { articulo -> articulo.estado == estado }
         }
         articulosAdapter.articulos = articulosFiltrados
         articulosAdapter.notifyDataSetChanged()

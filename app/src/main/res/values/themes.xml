@@ -2,4 +2,16 @@
 <resources>
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar" />
 
+
+    <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
+    <style name="AppTheme.Chips" parent="AppTheme.NoActionBar">
+        <item name="chipStyle">@style/Widget.MaterialComponents.Chip.Filter</item>
+        <item name="chipStandaloneStyle">@style/Widget.MaterialComponents.Chip.Filter</item>
+    </style>
+
 </resources>

@@ -39,13 +39,13 @@ class MainActivity : AppCompatActivity() {
         verPrestamosButton = findViewById(R.id.verPrestamosButton)
 
        // Insertar datos
-//        if (dbHelperArticulos.obtenerArticulos().isEmpty()) {
-//            insertarArticulos(dbHelperArticulos)
-//        }
-//
-//        if (dbHelperSocios.obtenerSocios().isEmpty()) {
-//            insertarSocios(dbHelperSocios)
-//        }
+        if (dbHelperArticulos.obtenerArticulos().isEmpty()) {
+            insertarArticulos(dbHelperArticulos)
+        }
+
+        if (dbHelperSocios.obtenerSocios().isEmpty()) {
+            insertarSocios(dbHelperSocios)
+        }
 //        /*if (dbHelperPrestamos.obtenerPrestamos().isEmpty()) {
 //            insertarPrestamos(dbHelperPrestamos)
 //        }
@@ -74,91 +74,37 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, PrestamosActivity::class.java)
             startActivity(intent)
         }
+
     }
-//    private fun insertarArticulos(dbHelperArticulos: ArticulosSQLite) {
-////        val articulos = listOf(
-////            Articulo(, "", "Bicicleta", "Mountain", "Bicicleta infantil", "Rueda 20", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
-////            Articulo(, "Kayak", "Hinchable", "Ocean", "Individual", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
-////            Articulo(, "PadelSurf", "Rigido", "River", "Dos plazas", EstadoArticulo.DISPONIBLE, "ruta/imagen3.jpg")
-//          //  Articulo(, "", "Bicicleta", "Mountain", "Bicicleta infantil", "Rueda 20", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
-////            Articulo(, "Kayak", "Hinchable", "Ocean", "Individual", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
-////            Articulo(, "PadelSurf", "Rigido", "River", "Dos plazas", EstadoArticulo.DISPONIBLE, "ruta/imagen3.jpg")
-////            // ... más artículos
-////        )
-//        val articulos = (1..2).map { i ->
-//            val categorias = listOf("Bicicleta", "Kayak", "Patinete", "PaddelSurf")
-//            val tipos = listOf("Infatil", "Adulto")
-//            val nombres = listOf("nombre", "nome", "name", "nooombre")
-//
-//            val descripciones = listOf("Descripción 1", "Descripción 2", "Descripción 3", "Descripción 10")
-//            val estados = listOf(EstadoArticulo.DISPONIBLE)
-//
-//            val nombre = nombres.random()
-//            val categoria = categorias.random()
-//            val tipo = tipos.random()
-//            val descripcion = descripciones.random()
-//            val estado = estados.random()
-//            val rutaImagen = "ruta/imagen$i.jpg" // Puedes ajustar la ruta de la imagen
-//
-//            Articulo(i, nombre, categoria, tipo, descripcion, estado, rutaImagen)
-//        }
-//
-//        for (articulo in articulos) {
-//            dbHelperArticulos.insertarArticulo(articulo)
-//        }
-//    }
-//    private fun insertarSocios(dbHelperSocios: SociosSQLite) {
-////        val socios = listOf(
-////            Socio(1,"Juan", "Pérez", 1234, 654321098, "juan.perez@example.com"),
-////            Socio(2,"María", "García", 5678, 612345678, "maria.garcia@example.com")
-////            // ... más socios
-////        )
-//        val socios = (1..1).map { i ->
-//            val nombres = listOf(
-//                "Juan",
-//                "María",
-//                "Pedro",
-//                "Ana",
-//                "Luis",
-//
-//            )
-//            val apellidos = listOf(
-//                "Pérez García",
-//                "García Fernández",
-//                "Rodríguez Romero",
-//                "González Romero",
-//                "Torres Romero"
-//            )
-//
-//            val nombre = nombres.random()
-//            val apellido = apellidos.random()
-//            val numSocio = i // Puedes usar un generador de números aleatorios si lo prefieres
-//            val telefono = (600000000..699999999).random() // Genera un número de teléfono aleatorio
-//            val email = "$nombre.$apellido@example.com".lowercase() // Genera un email aleatorio
-//
-//            Socio(
-//                numSocio,
-//                nombre,
-//                apellido,
-//                numSocio,
-//                telefono,
-//                email
-//            ) // numSocio se usa como idSocio
-//        }
-//        for (socio in socios) {
-//            dbHelperSocios.insertarSocio(socio)
-//        }
-//    }
-///*
-//    private fun insertarPrestamos(dbHelperPrestamos: PrestamosSQLite) {
-//        val prestamos = listOf(
-//            Prestamo(1, 1234, Date(), Date(), "Préstamo de camiseta"),
-//            Prestamo(2, 5678, Date(), Date(), "Préstamo de pantalón")
-//            // ... más préstamos
-//        )
-//
-//        for (prestamo in prestamos) {
-//            dbHelperPrestamos.insertarPrestamo(prestamo)
-//        }
-//    }*/
+    private fun insertarArticulos(dbHelperArticulos: ArticulosSQLite) {
+        val articulos = listOf(
+            Articulo(1, "Bicicleta", "Tipo", "nome1", "Descripcion", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
+            Articulo(2, "Kayak", "Tipo", "nome2", "Descripcion", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
+            Articulo(3, "Bicicleta", "Tipo", "nome3", "Descripcion", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
+            Articulo(4, "Kayak", "Tipo", "nome4", "Descripcion", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
+            Articulo(5, "Bicicleta", "Tipo", "nome5", "Descripcion", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
+            Articulo(6, "Kayak", "Tipo", "nome6", "Descripcion", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
+            Articulo(7, "Bicicleta", "Tipo", "nome7", "Descripcion", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
+            Articulo(8, "Kayak", "Tipo", "nome8", "Descripcionual", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
+            Articulo(9, "Bicicleta", "Tipo", "nome9", "BicDescripcionfantil", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
+            Articulo(10, "Kayak", "Tipo", "nome10", "InDescripcional", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
+
+
+        )
+
+        for (articulo in articulos) {
+            dbHelperArticulos.insertarArticulo(articulo)
+        }
+    }
+    private fun insertarSocios(dbHelperSocios: SociosSQLite) {
+        val socios = listOf(
+            Socio(1, "Juan", "Pérez", 1234, 654321098, "juan.perez@example.com"),
+            Socio(2, "María", "García", 5678, 678901234, "maria.garcia@example.com"),
+            // Agrega más socios aquí...
+        )
+
+        for (socio in socios) {
+            dbHelperSocios.insertarSocio(socio)
+        }
+    }
 }
