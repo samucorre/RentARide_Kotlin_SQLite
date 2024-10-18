@@ -23,6 +23,7 @@ import db.ArticulosSQLite
 import db.PrestamosSQLite
 import pf.dam.MainActivity
 import pf.dam.R
+import pf.dam.prestamos.EstadoPrestamo
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
@@ -41,7 +42,7 @@ class ArticuloEditActivity : AppCompatActivity() {
 
     private lateinit var botonCamara: Button
     private lateinit var botonGaleria: Button
-    private lateinit var estadoSpinner: Spinner
+    private lateinit var estadoSwitch: Switch
 
     private var articuloId: Int = -1
     private lateinit var articulo: Articulo
@@ -66,7 +67,7 @@ class ArticuloEditActivity : AppCompatActivity() {
         volverButton = findViewById(R.id.volverButton)
         botonCamara = findViewById(R.id.botonCamara)
         botonGaleria = findViewById(R.id.botonGaleria)
-        estadoSpinner = findViewById(R.id.estadoSpinner)
+        estadoSwitch = findViewById(R.id.estadoSwitch)
         homeButton = findViewById(R.id.homeButton)
 
         articuloId = intent.getIntExtra("articuloId", -1)
@@ -90,14 +91,16 @@ class ArticuloEditActivity : AppCompatActivity() {
         descripcionEditText.setText(articulo.descripcion)
 
         // Configurar el adaptador del Spinner
-        val estados = arrayOf(EstadoArticulo.DISPONIBLE, EstadoArticulo.NO_DISPONIBLE)
+       /* val estados = arrayOf(EstadoArticulo.DISPONIBLE, EstadoArticulo.NO_DISPONIBLE)
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, estados)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         estadoSpinner.adapter = adapter
 
         // Establecer la selección inicial del Spinner
         val estadoIndex = estados.indexOf(articulo.estado)
-        estadoSpinner.setSelection(if (estadoIndex >= 0) estadoIndex else 0)
+        estadoSpinner.setSelection(if (estadoIndex >= 0) estadoIndex else 0)*/
+
+        estadoSwitch.isChecked = articulo.estado  == EstadoArticulo.DISPONIBLE
 
         prestamosDbHelper = PrestamosSQLite(this) // Inicializar la instancia de PrestamosSQLite
 
@@ -140,7 +143,7 @@ class ArticuloEditActivity : AppCompatActivity() {
                 guardarImagenEnAlmacenamiento(it, nombreArchivo)
             } ?: articulo.rutaImagen
 
-            val estadoSeleccionado = estadoSpinner.selectedItem as EstadoArticulo
+            val estadoSeleccionado = if(estadoSwitch.isChecked) EstadoArticulo.DISPONIBLE else EstadoArticulo.NO_DISPONIBLE
 
             try {
                 if (articulo.idArticulo?.let { prestamosDbHelper.estaArticuloEnPrestamo(it) } ?: false) {

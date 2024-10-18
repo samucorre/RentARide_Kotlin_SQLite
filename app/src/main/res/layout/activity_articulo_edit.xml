@@ -42,12 +42,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tipoEditText" />
 
-    <Spinner
-        android:id="@+id/estadoSpinner"
-        android:layout_width="0dp"
+    <Switch
+        android:id="@+id/estadoSwitch"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Disponible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descripcionEditText" />
 
@@ -59,7 +58,7 @@
         android:src="@drawable/ico_imagen"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/estadoSpinner" />
+        app:layout_constraintTop_toBottomOf="@+id/estadoSwitch" />
 
     <Button
         android:id="@+id/botonCamara"

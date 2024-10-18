@@ -38,20 +38,8 @@ class ArticulosActivity : AppCompatActivity() {
         addArticuloButton.setOnClickListener {
             val intent = Intent(this, ArticuloAddActivity::class.java)
             startActivity(intent)
-          
+
         }
-
-       /* deleteArticuloButton.setOnClickListener {
-           //COMENTADO,PUEDE BORRAR TODOS LOS ARTICULOS
-            // val dbHelper = ArticulosSQLite(this) // Obtener instancia de ArticulosSQLite
-            //dbHelper.borrarTodosLosArticulos() // Llamar al método para borrar todos los artículos
-            // Actualizar la vista si es necesario (por ejemplo, si usas un RecyclerView)
-            //articulosAdapter.articulos = dbHelper.obtenerArticulos()
-            //articulosAdapter.notifyDataSetChanged()
-            //Toast.makeText(this, "Todos los artículos han sido eliminados", Toast.LENGTH_SHORT).show()
-
-        }*/
-
         backButton.setOnClickListener {
             finish()
         }

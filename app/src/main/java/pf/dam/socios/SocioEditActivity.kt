@@ -5,7 +5,6 @@ import android.content.Intent
 import android.database.sqlite.SQLiteException
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -80,7 +79,8 @@ class SocioEditActivity : AppCompatActivity() {
                         ).show()
                     } else {
                         val socioActualizado =
-                            Socio(socio.idSocio, nombre, apellido, numeroSocio, telefono, email)
+                            Socio(socio.idSocio, nombre, apellido, numeroSocio,
+                                telefono, email)
                         dbHelper.actualizarSocio(socioActualizado)
                         Toast.makeText(this, "Socio actualizado", Toast.LENGTH_SHORT).show()
                         setResult(RESULT_OK)

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/yellowRRRbackGround"
@@ -39,7 +40,7 @@
             android:id="@+id/idArticuloTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="ID Articulo"
+            android:text="Articulo:"
             android:drawableStart="@drawable/ico_articulo"
             android:drawablePadding="8dp"
             android:layout_marginTop="8dp"
@@ -47,15 +48,52 @@
             app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <TextView
-            android:id="@+id/idSocioTextView"
+            android:id="@+id/categoriaArticuloTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="ID Socio"
+            android:layout_marginStart="32dp"
+            android:drawableStart="@drawable/ico_cat_1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/idArticuloTextView" />
+
+        <ImageView
+            android:id="@+id/imagenArticuloImageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="260dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/categoriaArticuloTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/idArticuloTextView"/>
+
+        <TextView
+            android:id="@+id/datosSocioTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Socio:"
             android:drawableStart="@drawable/ico_socio"
             android:drawablePadding="8dp"
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/idArticuloTextView" />
+            app:layout_constraintTop_toBottomOf="@+id/categoriaArticuloTextView" />
+
+        <TextView
+            android:id="@+id/datos1SocioTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:drawableStart="@drawable/ico_socio"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/datosSocioTextView" />
+
+        <TextView
+            android:id="@+id/datos2SocioTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:drawableStart="@drawable/ico_socio"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/datos1SocioTextView" />
 
         <TextView
             android:id="@+id/fechaInicioTextView"
@@ -66,7 +104,7 @@
             android:drawablePadding="8dp"
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/idSocioTextView" />
+            app:layout_constraintTop_toBottomOf="@+id/datos2SocioTextView" />
 
         <TextView
             android:id="@+id/fechaFinTextView"
@@ -92,11 +130,13 @@
 
         <TextView
             android:id="@+id/estadoTextView"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Estado"
+            android:layout_marginTop="16dp"
             android:drawablePadding="8dp"
-            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="Estado"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/infoTextView" />
 

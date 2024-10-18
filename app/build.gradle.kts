@@ -74,5 +74,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.recyclerview.v121)
+    implementation("com.google.android.material:material:1.9.0")
 
 }

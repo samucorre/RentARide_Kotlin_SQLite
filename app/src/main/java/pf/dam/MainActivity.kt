@@ -77,15 +77,15 @@ class MainActivity : AppCompatActivity() {
     }
     private fun insertarArticulos(dbHelperArticulos: ArticulosSQLite) {
 //        val articulos = listOf(
-//            Articulo(1, "Bicicleta", "MTB", "Bicicleta infantil", "Rueda 20", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
-//            Articulo(2, "Kayak", "Hinchable", "Ocean", "Individual", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
-//            Articulo(3, "Kayak", "Rigido", "River", "Dos plazas", EstadoArticulo.DISPONIBLE, "ruta/imagen3.jpg")
+//            Articulo(, "", "MTB", "Bicicleta infantil", "Rueda 20", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
+//            Articulo(, "Kayak", "Hinchable", "Ocean", "Individual", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
+//            Articulo(, "Kayak", "Rigido", "River", "Dos plazas", EstadoArticulo.DISPONIBLE, "ruta/imagen3.jpg")
 //            // ... más artículos
 //        )
-        val articulos = (1..10).map { i ->
-            val nombres = listOf("Princess", "Ocean", "Corsario", "Aventura")
-            val categorias = listOf("Bicicleta", "Kayak", "Patinete", "Casco")
-            val tipos = listOf("Infantil", "Adulto", "Eléctrico")
+        val articulos = (1..5).map { i ->
+            val nombres = listOf("Bici de Luis", "Ocean Kayak", "Mondraker usada", "RiverSea")
+            val categorias = listOf("Bicicleta", "Kayak", "Patinete", "PaddelSurf")
+            val tipos = listOf("Infatil", "Adulto")
             val descripciones = listOf("Descripción 1", "Descripción 2", "Descripción 3", "Descripción 10")
             val estados = listOf(EstadoArticulo.DISPONIBLE, EstadoArticulo.NO_DISPONIBLE)
 

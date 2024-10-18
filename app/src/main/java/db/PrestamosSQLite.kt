@@ -5,9 +5,10 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import androidx.compose.foundation.layout.size
+import pf.dam.articulos.Articulo
 import pf.dam.prestamos.EstadoPrestamo
 import pf.dam.prestamos.Prestamo
+import pf.dam.socios.Socio
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,6 +19,15 @@ class PrestamosSQLite(context: Context) :
         private const val DATABASE_VERSION = 2 // Incrementa la versión de la base de datos
         private const val TAG = "PrestamosSQLite"
     }
+    private lateinit var articulosDbHelper: ArticulosSQLite // Declara la propiedad sin inicializarla
+    private lateinit var sociosDbHelper: SociosSQLite // Declara la propiedad sin inicializarla
+
+    init { // Inicializa las propiedades en el bloque init
+        articulosDbHelper = ArticulosSQLite(context.applicationContext) // Usa el contexto de la aplicación
+        sociosDbHelper = SociosSQLite(context.applicationContext) // Usa el contexto de la aplicación
+    }
+
+
 
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
@@ -340,5 +350,14 @@ class PrestamosSQLite(context: Context) :
         cursor.close()
         db.close()
         return estaEnPrestamo
+    }
+
+    ///PARA MOSTRAR DATOS EN PRESTAMOS
+    fun obtenerArticuloPrestamoId(idArticulo: Int): Articulo? {
+        return articulosDbHelper.obtenerArticuloPorId(idArticulo)
+    }
+
+    fun obtenerSocioPrestamoId(idSocio: Int): Socio? {
+        return sociosDbHelper.obtenerSocioPorId(idSocio)
     }
 }
