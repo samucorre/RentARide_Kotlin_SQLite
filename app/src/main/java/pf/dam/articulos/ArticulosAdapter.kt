@@ -2,6 +2,7 @@ package pf.dam.articulos
 
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,9 +50,15 @@ class ArticulosAdapter(articulos: List<Articulo>) :
         holder.tipoTextView.text = articulo.tipo ?: ""
         holder.descripcionTextView.text = articulo.descripcion ?: ""
       //  holder.estadoTextView.text = articulo.estado?.name ?: ""
+
         if (articulo.rutaImagen != null) {
             val imagenBitmap = BitmapFactory.decodeFile(articulo.rutaImagen)
             holder.imagenImageView.setImageBitmap(imagenBitmap)
+        } else {
+            // Mostrar una imagen por defecto si no hay rutaImagen
+            holder.imagenImageView.setImageResource(R.drawable.ico_imagen)
+        }
+
 
             val cardView = holder.itemView.findViewById<CardView>(R.id.cardView)
             val context = holder.itemView.context
@@ -66,7 +73,7 @@ class ArticulosAdapter(articulos: List<Articulo>) :
                     }
                 )
             )
-        }
+
 
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context

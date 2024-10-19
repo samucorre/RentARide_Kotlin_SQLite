@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.semantics.text
@@ -40,6 +41,8 @@ class PrestamoAddActivity : AppCompatActivity() {
     private lateinit var guardarButton: FloatingActionButton
     private lateinit var volverButton: FloatingActionButton
     private lateinit var homeButton: FloatingActionButton
+    private lateinit var socioLabelTextView : TextView
+    private lateinit var articuloLabelTextView : TextView
 
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
     private val calendar = Calendar.getInstance()
@@ -56,6 +59,8 @@ class PrestamoAddActivity : AppCompatActivity() {
         articuloSpinner = findViewById(R.id.articuloSpinner)
         socioSpinner = findViewById(R.id.socioSpinner)
         fechaInicioEditText = findViewById(R.id.fechaInicioEditText)
+        socioLabelTextView= findViewById(R.id.socioLabelTextView)
+        articuloLabelTextView = findViewById(R.id.articuloLabelTextView)
 
         infoEditText = findViewById(R.id.infoEditText)
         guardarButton = findViewById(R.id.guardarButton)
@@ -132,49 +137,7 @@ class PrestamoAddActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
-//        guardarButton.setOnClickListener {
-//            val posicionArticulo = articuloSpinner.selectedItemPosition
-//            val posicionSocio = socioSpinner.selectedItemPosition
-//            val fechaInicio = dateFormat.parse(fechaInicioEditText.text.toString())
-//
-//            val info = infoEditText.text.toString()
-//
-//            if (posicionArticulo == -1 || posicionSocio == -1 || fechaInicio == null) {
-//                Toast.makeText(
-//                    this,
-//                    "Por favor, selecciona un artículo y un socio, e introduce la fecha de inicio",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//            } else {
-//                val idArticulo = articulos.getOrNull(posicionArticulo)?.idArticulo
-//                val idSocio = socios.getOrNull(posicionSocio)?.idSocio
-//
-//                if (idArticulo != null && idSocio != null) {
-//                    val fechaFin: Date? = null
-//                    val nuevoPrestamo =
-//                        Prestamo(
-//                            null,
-//                            idArticulo,
-//                            idSocio,
-//                            fechaInicio,
-//                            fechaFin,
-//                            info,
-//                            EstadoPrestamo.ACTIVO
-//                        )
-//
-//                    dbHelper.insertarPrestamo(nuevoPrestamo)
-//
-//                    // Actualizar el estado del artículo a PRESTADO
-//                    articulosDbHelper.actualizarEstadoArticulo(idArticulo, EstadoArticulo.PRESTADO)
-//
-//                    Toast.makeText(this, "Préstamo añadido", Toast.LENGTH_SHORT).show()
-//                    finish()
-//                } else {
-//                    Toast.makeText(this, "Artículo o socio no encontrado", Toast.LENGTH_SHORT)
-//                        .show()
-//                }
-//            }
-//        }
+
         guardarButton.setOnClickListener {
             val posicionArticulo = articuloSpinner.selectedItemPosition
             val posicionSocio = socioSpinner.selectedItemPosition

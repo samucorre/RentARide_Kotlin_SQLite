@@ -120,6 +120,7 @@ class SocioDetalleActivity : AppCompatActivity() {
                                         "Socio eliminado",
                                         Toast.LENGTH_SHORT
                                     ).show()
+                    finish()
                                     }
             }
         }

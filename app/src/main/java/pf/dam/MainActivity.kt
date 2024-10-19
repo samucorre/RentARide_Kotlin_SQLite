@@ -2,6 +2,7 @@ package pf.dam
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -39,28 +40,36 @@ class MainActivity : AppCompatActivity() {
         dbHelperSocios = SociosSQLite(this)
         dbHelperPrestamos = PrestamosSQLite(this)
 
+
         val totalArticulos = dbHelperArticulos.obtenerArticulos().size
-        val totalArticulosDispos = dbHelperArticulos.obtenerArticulos().count { it.estado == EstadoArticulo.DISPONIBLE }
-        val totalArticulosPrestados = dbHelperArticulos.obtenerArticulos().count { it.estado == EstadoArticulo.PRESTADO }
+        val totalArticulosDispos =
+            dbHelperArticulos.obtenerArticulos().count { it.estado == EstadoArticulo.DISPONIBLE }
+        val totalArticulosPrestados =
+            dbHelperArticulos.obtenerArticulos().count { it.estado == EstadoArticulo.PRESTADO }
+        val totalArticulosNoDisponibles =
+            dbHelperArticulos.obtenerArticulos().count { it.estado == EstadoArticulo.NO_DISPONIBLE }
         val totalSocios = dbHelperSocios.obtenerSocios().size
-        val totalSociosPrestamosActivos=dbHelperPrestamos.obtenerPrestamos()
+        val totalSociosPrestamosActivos = dbHelperPrestamos.obtenerPrestamos()
             .filter { it.estado == EstadoPrestamo.ACTIVO }
             .distinctBy { it.idSocio }
             .count()
         val totalPrestamos = dbHelperPrestamos.obtenerPrestamos().size
-        val totalPrestamosActivos = dbHelperPrestamos.obtenerPrestamos().count { it.estado == EstadoPrestamo.ACTIVO }
-        val totalCerrados = dbHelperPrestamos.obtenerPrestamos().count { it.estado == EstadoPrestamo.CERRADO }
+        val totalPrestamosActivos =
+            dbHelperPrestamos.obtenerPrestamos().count { it.estado == EstadoPrestamo.ACTIVO }
+        val totalCerrados =
+            dbHelperPrestamos.obtenerPrestamos().count { it.estado == EstadoPrestamo.CERRADO }
 
         val zona1TextView = findViewById<TextView>(R.id.zona1)
         val zona2TextView = findViewById<TextView>(R.id.zona2)
         val zona3TextView = findViewById<TextView>(R.id.zona3)
 
-        zona1TextView.text = "Artículos: $totalArticulos\n"+
+        zona1TextView.text = "Artículos: $totalArticulos\n" +
                 "Disponibles: $totalArticulosDispos\n" +
-                "Prestados: $totalArticulosPrestados\n"
-        zona2TextView.text = "Socios: $totalSocios\n"+
+                "Prestados: $totalArticulosPrestados\n" +
+                "No disponibles: $totalArticulosNoDisponibles"
+        zona2TextView.text = "Socios: $totalSocios\n" +
                 "con préstamos activos: $totalSociosPrestamosActivos"
-        zona3TextView.text = "Préstamos: $totalPrestamos\n"+
+        zona3TextView.text = "Préstamos: $totalPrestamos\n" +
                 "Activos: $totalPrestamosActivos\n" +
                 "Cerrados: $totalCerrados\n"
 
@@ -72,9 +81,21 @@ class MainActivity : AppCompatActivity() {
 
         if (dbHelperArticulos.obtenerArticulos().isEmpty()) {
             Toast.makeText(this, "No hay artículos", Toast.LENGTH_SHORT).show()
+
+            //sin ruta imagen para null e icono
+
+            dbHelperArticulos.insertarArticulo(Articulo(null, "Bicicleta", "MTB", "Bici001","D01", EstadoArticulo.DISPONIBLE ))
+            dbHelperArticulos.insertarArticulo(Articulo(null, "Bicicleta", "Carretera", "Bici002", "D02",EstadoArticulo.DISPONIBLE))
+            dbHelperArticulos.insertarArticulo(Articulo(null, "Bicicleta", "Eléctrica", "Bici003","D03", EstadoArticulo.DISPONIBLE))
+            dbHelperArticulos.insertarArticulo(Articulo(null, "Kayak", "Rígido", "Kayak001","D01", EstadoArticulo.DISPONIBLE ))
+            dbHelperArticulos.insertarArticulo(Articulo(null, "Kayak", "Hinchable", "Kayak002", "D02",EstadoArticulo.DISPONIBLE))
+            dbHelperArticulos.insertarArticulo(Articulo(null, "Kayak", "Eléctrica", "Kayak003","D03", EstadoArticulo.DISPONIBLE))
+            dbHelperArticulos.insertarArticulo(Articulo(null, "PadellSurf", "Hinchable", "Tabla001", "D02",EstadoArticulo.DISPONIBLE))
+            dbHelperArticulos.insertarArticulo(Articulo(null, "Patinete", "Eléctrica", "Patín001","D03", EstadoArticulo.DISPONIBLE))
         }
         if (dbHelperSocios.obtenerSocios().isEmpty()) {
             Toast.makeText(this, "No hay socios", Toast.LENGTH_SHORT).show()
+            dbHelperSocios.insertarSocio(Socio(null, "Samuel", "Correa Pazos", 1,666666666,"ejemplo@samu.com"))
         }
         if (dbHelperPrestamos.obtenerPrestamos().isEmpty()) {
             Toast.makeText(this, "No hay préstamos", Toast.LENGTH_SHORT).show()
@@ -95,5 +116,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
+
     }
-   }
+}
