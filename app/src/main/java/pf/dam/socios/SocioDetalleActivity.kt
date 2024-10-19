@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
+import db.PrestamosSQLite
 import db.SociosSQLite
 import pf.dam.MainActivity
 import pf.dam.R
@@ -29,6 +30,7 @@ class SocioDetalleActivity : AppCompatActivity() {
     private lateinit var homeButton: FloatingActionButton
     private lateinit var addPrestamoButton: Button
     private lateinit var dbHelper: SociosSQLite
+    private lateinit var prestamosDbHelper:PrestamosSQLite
 
     private lateinit var nombreTextView: TextView
     private lateinit var apellidoTextView: TextView
@@ -55,6 +57,7 @@ class SocioDetalleActivity : AppCompatActivity() {
         setContentView(R.layout.activity_socio_detail)
 
         dbHelper = SociosSQLite(this)
+        prestamosDbHelper = PrestamosSQLite(this)
 
         editSocioButton = findViewById(R.id.editSocioButton)
         addPrestamoButton = findViewById(R.id.addPrestamoButton)
@@ -102,31 +105,41 @@ class SocioDetalleActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             deleteSocioButton.setOnClickListener {
-                setContent {
-                    var showDialog by remember { mutableStateOf(true) }
+                val prestamosActivos = prestamosDbHelper.estaSocioEnPrestamo(socioId)
+                if (prestamosActivos) {
+                    Toast.makeText(
+                        this,
+                        "No se puede eliminar el socio porque tiene préstamos activos",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    setContent {
+                        var showDialog by remember { mutableStateOf(true) }
 
-                    if (showDialog) {
-                        ShowDeleteConfirmationDialog(
-                            title = "Eliminar socio",
-                            message = "¿Estás seguro de que quieres eliminar este socio?",
-                            onPositiveButtonClick = {
-                                dbHelper.borrarSocio(socioId)
-                                Toast.makeText(this@SocioDetalleActivity, "Socio eliminado", Toast.LENGTH_SHORT).show()
-                                setResult(RESULT_OK)
-                                finish()
-                                showDialog = false
-                            },
-                            onDismissRequest = { showDialog = false
-                                finish()}
-                        )
+                        if (showDialog) {
+                            ShowDeleteConfirmationDialog(
+                                title = "Eliminar socio",
+                                message = "¿Estás seguro de que quieres eliminar este socio?",
+                                onPositiveButtonClick = {
+                                    dbHelper.borrarSocio(socioId)
+                                    Toast.makeText(
+                                        this@SocioDetalleActivity,
+                                        "Socio eliminado",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    setResult(RESULT_OK)
+                                    finish()
+                                    showDialog = false
+                                },
+                                onDismissRequest = {
+                                    showDialog = false
+                                    finish()
+                                }
+                            )
+                        }
                     }
                 }
-            }
-        } else {
-            Toast.makeText(this, "Socio no encontrado", Toast.LENGTH_SHORT).show()
-            finish()
-        }
-    }
+            }}}
 
 
     private fun mostrarSocio(socio: Socio) {

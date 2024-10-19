@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.semantics.text
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.PrestamosSQLite
@@ -40,9 +41,20 @@ class PrestamoDetalleActivity : AppCompatActivity() {
     private lateinit var sociosDbHelper: SociosSQLite
 
    private  lateinit var prestamoIdTextView: TextView
-    private lateinit var articuloTextView: TextView
+   // private lateinit var articuloTextView: TextView
+
+    private lateinit var datosArticuloTextView: TextView
+    private lateinit var datos1ArticuloTextView: TextView
+    private lateinit var datos2ArticuloTextView: TextView
+    private lateinit var datos3ArticuloTextView: TextView
     private lateinit var articuloImageView: ImageView
+
     private lateinit var socioTextView: TextView
+    private lateinit var datosSocioTextView: TextView
+    private lateinit var datos1SocioTextView: TextView
+    private lateinit var datos2SocioTextView: TextView
+
+
     private lateinit var fechaInicioTextView: TextView
     private lateinit var fechaFinTextView: TextView
     private lateinit var infoTextView: TextView
@@ -78,14 +90,24 @@ class PrestamoDetalleActivity : AppCompatActivity() {
         homeButton = findViewById(R.id.homeButton)
 
 
-        articuloTextView = findViewById(R.id.articuloTextView)
-        socioTextView = findViewById(R.id.socioTextView)
+       // articuloTextView = findViewById(R.id.articuloTextView)
+        //socioTextView = findViewById(R.id.socioTextView)
         prestamoIdTextView = findViewById(R.id.prestamoIdTextView)
         fechaInicioTextView = findViewById(R.id.fechaInicioTextView)
         fechaFinTextView = findViewById(R.id.fechaFinTextView)
         infoTextView = findViewById(R.id.infoTextView)
         estadoTextView = findViewById(R.id.estadoTextView)
         articuloImageView = findViewById(R.id.articuloImageView)
+
+        datosArticuloTextView = findViewById(R.id.datosArticuloTextView)
+        datos1ArticuloTextView = findViewById(R.id.datos1ArticuloTextView)
+        datos2ArticuloTextView = findViewById(R.id.datos2ArticuloTextView)
+        datos3ArticuloTextView = findViewById(R.id.datos3ArticuloTextView)
+        datosSocioTextView= findViewById(R.id.datosSocioTextView)
+        datos1SocioTextView= findViewById(R.id.datos1SocioTextView)
+        datos2SocioTextView= findViewById(R.id.datos2SocioTextView)
+
+
 
         prestamoId = intent.getIntExtra("idPrestamo", -1)
         val prestamo = prestamosDbHelper.obtenerPrestamoPorId(prestamoId)
@@ -106,6 +128,7 @@ class PrestamoDetalleActivity : AppCompatActivity() {
                 cerrarPrestamoButton.visibility = View.GONE // Ocultar el botón
             } else {
                 cerrarPrestamoButton.visibility = View.VISIBLE // Mostrar el botón
+
                 cerrarPrestamoButton.setOnClickListener {
                     // Actualizar el estado del préstamo a CERRADO
                     prestamo.estado = EstadoPrestamo.CERRADO
@@ -134,23 +157,8 @@ class PrestamoDetalleActivity : AppCompatActivity() {
                 editPrestamoLauncher.launch(intent)
             }
 
-//            deletePrestamoButton.setOnClickListener {
-//                // Actualizar el estado del artículo a DISPONIBLE
-//                articulosDbHelper.actualizarEstadoArticulo(
-//                    prestamo.idArticulo,
-//                    EstadoArticulo.DISPONIBLE
-//                )
-//
-//                dbHelper.borrarPrestamo(prestamoId)
-//                Toast.makeText(this, "Préstamo eliminado", Toast.LENGTH_SHORT).show()
-//                setResult(RESULT_OK)
-//                finish()
-//            }
             deletePrestamoButton.setOnClickListener {
 
-                articulosDbHelper.actualizarEstadoArticulo(
-                    prestamo.idArticulo,
-                    EstadoArticulo.DISPONIBLE)
 
                 if (prestamosDbHelper.estaSocioEnPrestamo(prestamo.idSocio)) {
                     // Mostrar un mensaje de error al usuario
@@ -166,6 +174,9 @@ class PrestamoDetalleActivity : AppCompatActivity() {
                                 message = "¿Estás seguro de que quieres eliminar este préstamo?",
                                 onPositiveButtonClick = {
                                     prestamosDbHelper.borrarPrestamo(prestamoId)
+                                    articulosDbHelper.actualizarEstadoArticulo(
+                                        prestamo.idArticulo,
+                                        EstadoArticulo.DISPONIBLE)
                                     Toast.makeText(this@PrestamoDetalleActivity, "Préstamo eliminado", Toast.LENGTH_SHORT).show()
                                     setResult(RESULT_OK)
                                     finish()
@@ -192,33 +203,58 @@ class PrestamoDetalleActivity : AppCompatActivity() {
         val articulo = articulosDbHelper.obtenerArticuloPorId(prestamo.idArticulo)
         val nombreArticulo = articulo?.nombre ?: "Artículo no encontrado"
         val categoriaArticulo = articulo?.categoria ?: ""
+        val tipoArticulo = articulo?.tipo ?: ""
+       // val descripcionArticulo = articulo?.descripcion ?: ""
+        //val estadoArticulo = articulo?.estado ?: ""
         val imagenArticulo = articulo?.rutaImagen ?: ""
+
 
         //socio
         val socio = sociosDbHelper.obtenerSocioPorId(prestamo.idSocio)
         val nombreSocio = socio?.nombre ?: "Socio no encontrado"
-               val numeroSocio = socio?.numeroSocio ?: ""
+        val apellidoSocio= socio?.apellido ?: ""
+        val numeroSocio = socio?.numeroSocio ?: ""
+        val telefonoSocio = socio?.telefono ?: ""
+       // val emailSocio = socio?.email ?: ""
 
         // Actualizar TextViews
+        prestamoIdTextView.text = "ID del préstamo: $prestamoId"
 
         prestamoIdTextView.text = "ID del préstamo: $prestamoId"
-        articuloTextView.text = "Artículo: $nombreArticulo ID:${prestamo.idArticulo}"
+        datosArticuloTextView.text ="Artículo: $nombreArticulo"
+        datos1ArticuloTextView.text = categoriaArticulo
+        datos2ArticuloTextView.text = tipoArticulo
+        datos3ArticuloTextView.text = "ID:${prestamo.idArticulo}"
+        datosSocioTextView.text = "Socio: $nombreSocio $apellidoSocio"
+        datos1SocioTextView.text = "$numeroSocio"
+        datos2SocioTextView.text = " $telefonoSocio"
 
-        socioTextView.text = "Socio: $nombreSocio \nNº socio: $numeroSocio"
+
+       /* articuloTextView.text = "Artículo: $nombreArticulo\n" +
+                "Categoría: $categoriaArticulo\n" +
+                "Tipo: $tipoArticulo\n" +
+                //"Descripción: $descripcionArticulo\n" +
+                "ID:${prestamo.idArticulo}\n"
+            //    "Estado: $estadoArticulo"
+
+        socioTextView.text = "Socio: $nombreSocio $apellidoSocio\n" +
+                "$numeroSocio\n" +
+                " $telefonoSocio\n" +
+                " $emailSocio"*/
 
         fechaInicioTextView.text = "Fecha inicio: ${dateFormat.format(prestamo.fechaInicio)}"
         // Manejar fechaFin: si es null, mostrar un mensaje o dejar el TextView vacío
-            val fechaFinString = if (prestamo.fechaFin != null) {
+        val fechaFinString = if (prestamo.fechaFin != null) {
             dateFormat.format(prestamo.fechaFin)
         } else {
-                "  " // O "" para dejarlo vacío
+            "  " // O "" para dejarlo vacío
         }
         fechaFinTextView.text =  "Fecha fin: ${fechaFinString}"
 
         infoTextView.text = "Información Adicional: ${prestamo.info}"
         estadoTextView.text = "Estado: ${prestamo.estado}"
 
-            // Cargar y mostrar la imagen (similar a ArticuloDetalleActivity)
+        // Cargar y mostrar la imagen (similar a ArticuloDetalleActivity)
         val imageView: ImageView = findViewById(R.id.articuloImageView) // Asegúrate de tener un ImageView en tu layout
         if (imagenArticulo.isNotEmpty()) {
             try {

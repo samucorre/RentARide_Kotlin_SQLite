@@ -82,12 +82,12 @@ class MainActivity : AppCompatActivity() {
             Articulo(2, "Kayak", "Tipo", "nome2", "Descripcion", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
             Articulo(3, "Bicicleta", "Tipo", "nome3", "Descripcion", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
             Articulo(4, "Kayak", "Tipo", "nome4", "Descripcion", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
-            Articulo(5, "Bicicleta", "Tipo", "nome5", "Descripcion", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
-            Articulo(6, "Kayak", "Tipo", "nome6", "Descripcion", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
-            Articulo(7, "Bicicleta", "Tipo", "nome7", "Descripcion", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
-            Articulo(8, "Kayak", "Tipo", "nome8", "Descripcionual", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
-            Articulo(9, "Bicicleta", "Tipo", "nome9", "BicDescripcionfantil", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
-            Articulo(10, "Kayak", "Tipo", "nome10", "InDescripcional", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
+//            Articulo(5, "Bicicleta", "Tipo", "nome5", "Descripcion", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
+//            Articulo(6, "Kayak", "Tipo", "nome6", "Descripcion", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
+//            Articulo(7, "Bicicleta", "Tipo", "nome7", "Descripcion", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
+//            Articulo(8, "Kayak", "Tipo", "nome8", "Descripcionual", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
+//            Articulo(9, "Bicicleta", "Tipo", "nome9", "BicDescripcionfantil", EstadoArticulo.DISPONIBLE, "ruta/imagen1.jpg"),
+//            Articulo(10, "Kayak", "Tipo", "nome10", "InDescripcional", EstadoArticulo.DISPONIBLE, "ruta/imagen2.jpg"),
 
 
         )
