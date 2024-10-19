@@ -126,10 +126,11 @@ class PrestamoDetalleActivity : AppCompatActivity() {
             }
 
             if (prestamo.estado == EstadoPrestamo.CERRADO) {
-                cerrarPrestamoButton.visibility = View.GONE // Ocultar el botón
+                cerrarPrestamoButton.visibility = View.GONE
+            editPrestamoButton.visibility=View.GONE// Ocultar el botón
             } else {
                 cerrarPrestamoButton.visibility = View.VISIBLE // Mostrar el botón
-
+                editPrestamoButton.visibility=View.VISIBLE
                 cerrarPrestamoButton.setOnClickListener {
                     // Actualizar el estado del préstamo a CERRADO
                     prestamo.estado = EstadoPrestamo.CERRADO
@@ -146,25 +147,25 @@ class PrestamoDetalleActivity : AppCompatActivity() {
                     cerrarPrestamoButton.visibility = View.GONE
                     mostrarPrestamo(prestamo)
                 }
+                editPrestamoButton.setOnClickListener {
+                    val intent = Intent(this, PrestamoEditActivity::class.java)
+                    intent.putExtra("prestamoId", prestamoId)
+                    editPrestamoLauncher.launch(intent)
+                }
             }
 
             homeButton.setOnClickListener {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
             }
-            editPrestamoButton.setOnClickListener {
-                val intent = Intent(this, PrestamoEditActivity::class.java)
-                intent.putExtra("prestamoId", prestamoId)
-                editPrestamoLauncher.launch(intent)
-            }
 
             deletePrestamoButton.setOnClickListener {
-
-
-                if (prestamosDbHelper.estaSocioEnPrestamo(prestamo.idSocio)) {
+                // Verificar si el préstamo está en estado activo
+                if (prestamo.estado == EstadoPrestamo.ACTIVO) {
                     // Mostrar un mensaje de error al usuario
-                    Toast.makeText(this, "No se puede eliminar el préstamo porque el socio está en un préstamo activo", Toast.LENGTH_SHORT).show()
-                } else {
+                    Toast.makeText(this, "No se puede eliminar un préstamo en estado activo", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener // Salir del OnClickListener
+                }else {
                     // Mostrar el diálogo de confirmación de eliminación
                     setContent {
                         var showDialog by remember { mutableStateOf(true) }
@@ -177,8 +178,13 @@ class PrestamoDetalleActivity : AppCompatActivity() {
                                     prestamosDbHelper.borrarPrestamo(prestamoId)
                                     articulosDbHelper.actualizarEstadoArticulo(
                                         prestamo.idArticulo,
-                                        EstadoArticulo.DISPONIBLE)
-                                    Toast.makeText(this@PrestamoDetalleActivity, "Préstamo eliminado", Toast.LENGTH_SHORT).show()
+                                        EstadoArticulo.DISPONIBLE
+                                    )
+                                    Toast.makeText(
+                                        this@PrestamoDetalleActivity,
+                                        "Préstamo eliminado",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                     setResult(RESULT_OK)
                                     finish()
                                     showDialog = false
@@ -253,3 +259,38 @@ class PrestamoDetalleActivity : AppCompatActivity() {
         }
     }
 }
+
+//////////////////
+
+//            deletePrestamoButton.setOnClickListener {
+//                if (prestamosDbHelper.estaSocioEnPrestamo(prestamo.idSocio)) {
+//                    // Mostrar un mensaje de error al usuario
+//                    Toast.makeText(this, "No se puede eliminar el préstamo porque el socio está en un préstamo activo", Toast.LENGTH_SHORT).show()
+//                } else {
+//                    // Mostrar el diálogo de confirmación de eliminación
+//                    setContent {
+//                        var showDialog by remember { mutableStateOf(true) }
+//
+//                        if (showDialog) {
+//                            ShowDeleteConfirmationDialog(
+//                                title = "Eliminar préstamo",
+//                                message = "¿Estás seguro de que quieres eliminar este préstamo?",
+//                                onPositiveButtonClick = {
+//                                    prestamosDbHelper.borrarPrestamo(prestamoId)
+//                                    articulosDbHelper.actualizarEstadoArticulo(
+//                                        prestamo.idArticulo,
+//                                        EstadoArticulo.DISPONIBLE)
+//                                    Toast.makeText(this@PrestamoDetalleActivity, "Préstamo eliminado", Toast.LENGTH_SHORT).show()
+//                                    setResult(RESULT_OK)
+//                                    finish()
+//                                    showDialog = false
+//                                },
+//                                onDismissRequest = {
+//                                    showDialog = false
+//                                    finish()
+//                                }
+//                            )
+//                        }
+//                    }
+//                }
+//            }

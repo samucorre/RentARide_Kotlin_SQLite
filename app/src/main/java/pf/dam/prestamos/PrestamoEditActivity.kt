@@ -53,14 +53,11 @@ class PrestamoEditActivity : AppCompatActivity() {
         prestamoId = intent.getIntExtra("prestamoId", -1)
         prestamo = dbHelper.obtenerPrestamoPorId(prestamoId)!!
 
-        homeButton.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
+
 
         if (prestamo.estado == EstadoPrestamo.CERRADO) {
             fechaInicioEditText.isEnabled = false
-            infoEditText.isEnabled = true
+            infoEditText.isEnabled = false
             estadoSwitch.isEnabled = false
             guardarButton.isEnabled = false
         }
@@ -109,6 +106,11 @@ class PrestamoEditActivity : AppCompatActivity() {
         }
 
         volverButton.setOnClickListener { finish() }
+
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun mostrarDatePicker(editText: EditText) {

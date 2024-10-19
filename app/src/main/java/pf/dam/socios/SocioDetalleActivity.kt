@@ -105,41 +105,25 @@ class SocioDetalleActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             deleteSocioButton.setOnClickListener {
-                val prestamosActivos = prestamosDbHelper.estaSocioEnPrestamo(socioId)
-                if (prestamosActivos) {
+                // Verificar si el socio tiene algún registro en la tabla de préstamos
+                val tieneRegistrosEnPrestamos = prestamosDbHelper.estaSocioEnPrestamo(socioId)
+
+                if (tieneRegistrosEnPrestamos) {
                     Toast.makeText(
                         this,
-                        "No se puede eliminar el socio porque tiene préstamos activos",
+                        "No se puede eliminar el socio porque tiene registros en préstamos",
                         Toast.LENGTH_SHORT
                     ).show()
-                } else {
-                    setContent {
-                        var showDialog by remember { mutableStateOf(true) }
-
-                        if (showDialog) {
-                            ShowDeleteConfirmationDialog(
-                                title = "Eliminar socio",
-                                message = "¿Estás seguro de que quieres eliminar este socio?",
-                                onPositiveButtonClick = {
-                                    dbHelper.borrarSocio(socioId)
+                }else{  dbHelper.borrarSocio(socioId)
                                     Toast.makeText(
                                         this@SocioDetalleActivity,
                                         "Socio eliminado",
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                    setResult(RESULT_OK)
-                                    finish()
-                                    showDialog = false
-                                },
-                                onDismissRequest = {
-                                    showDialog = false
-                                    finish()
-                                }
-                            )
-                        }
-                    }
-                }
-            }}}
+                                    }
+            }
+        }
+}
 
 
     private fun mostrarSocio(socio: Socio) {
@@ -151,3 +135,40 @@ class SocioDetalleActivity : AppCompatActivity() {
     }
 }
 
+//////////////////////////////////////////
+//deleteSocioButton.setOnClickListener {
+//                val prestamosActivos = prestamosDbHelper.estaSocioEnPrestamo(socioId)
+//                if (prestamosActivos) {
+//                    Toast.makeText(
+//                        this,
+//                        "No se puede eliminar el socio porque tiene préstamos activos",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                } else {
+//                    setContent {
+//                        var showDialog by remember { mutableStateOf(true) }
+//
+//                        if (showDialog) {
+//                            ShowDeleteConfirmationDialog(
+//                                title = "Eliminar socio",
+//                                message = "¿Estás seguro de que quieres eliminar este socio?",
+//                                onPositiveButtonClick = {
+//                                    dbHelper.borrarSocio(socioId)
+//                                    Toast.makeText(
+//                                        this@SocioDetalleActivity,
+//                                        "Socio eliminado",
+//                                        Toast.LENGTH_SHORT
+//                                    ).show()
+//                                    setResult(RESULT_OK)
+//                                    finish()
+//                                    showDialog = false
+//                                },
+//                                onDismissRequest = {
+//                                    showDialog = false
+//                                    finish()
+//                                }
+//                            )
+//                        }
+//                    }
+//                }
+//            }}

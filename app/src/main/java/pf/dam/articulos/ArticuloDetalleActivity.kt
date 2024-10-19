@@ -84,19 +84,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
         if (articulo != null) {
             mostrarArticulo(articulo)
 
-            editArticuloButton.setOnClickListener {
-                val intent = Intent(this, ArticuloEditActivity::class.java)
-                intent.putExtra("articuloId", articuloId)
-                editArticuloLauncher.launch(intent)
-            }
-            val editArticuloLauncher =registerForActivityResult(
-                ActivityResultContracts.StartActivityForResult()
-            ) { result ->
-                if (result.resultCode == RESULT_OK) {
-                    setResult(RESULT_OK, Intent().putExtra("articuloId", articuloId))
-                    finish()
-                }
-            }
+
 
             if (articulo.estado == EstadoArticulo.DISPONIBLE) {
                 addPrestamoButton.visibility = View.VISIBLE // Mostrar el botón
@@ -118,7 +106,29 @@ class ArticuloDetalleActivity : AppCompatActivity() {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
             }
+            editArticuloButton.setOnClickListener {
+                val idArticulo = dbHelper.obtenerIdArticuloBD(articulo)
+                if (idArticulo != -1) {
+                    val articulo = dbHelper.obtenerArticuloPorId(idArticulo) // Obtener el artículo por ID
 
+                    if (articulo?.estado == EstadoArticulo.PRESTADO) {
+                        Toast.makeText(this, "No se puede editar el artículo porque está prestado", Toast.LENGTH_SHORT).show()
+                    } else {
+                val intent = Intent(this, ArticuloEditActivity::class.java)
+                intent.putExtra("articuloId", articuloId)
+                editArticuloLauncher.launch(intent)
+                    }
+                }
+
+            }
+            val editArticuloLauncher =registerForActivityResult(
+                ActivityResultContracts.StartActivityForResult()
+            ) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    setResult(RESULT_OK, Intent().putExtra("articuloId", articuloId))
+                    finish()
+                }
+            }
             deleteArticuloButton.setOnClickListener {
                 val idArticulo = dbHelper.obtenerIdArticuloBD(articulo)
                 if (idArticulo != -1) {
