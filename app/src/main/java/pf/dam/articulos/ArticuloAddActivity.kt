@@ -45,6 +45,7 @@ class ArticuloAddActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_articulo_add)
+        supportActionBar?.title = "RR - Artículo nuevo"
 
         dbHelper = ArticulosSQLite(this)
         nombreEditText = findViewById(R.id.nombreEditText)

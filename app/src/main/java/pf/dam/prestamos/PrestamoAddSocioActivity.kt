@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
@@ -22,6 +23,7 @@ import pf.dam.R
 import pf.dam.articulos.Articulo
 import pf.dam.articulos.EstadoArticulo
 import pf.dam.socios.Socio
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -50,6 +52,7 @@ class PrestamoAddSocioActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_prestamo_add_socio) // Nuevo layout
+        supportActionBar?.title = "RR - Préstamo nuevo"
 
         dbHelper = PrestamosSQLite(this)
         articulosDbHelper = ArticulosSQLite(this)
@@ -97,30 +100,47 @@ class PrestamoAddSocioActivity : AppCompatActivity() {
 
         guardarButton.setOnClickListener {
             val posicionArticulo = articuloSpinner.selectedItemPosition // <-- Obtén el artículo seleccionado
-            val fechaInicio = dateFormat.parse(fechaInicioEditText.text.toString())
+            val fechaInicioString = fechaInicioEditText.text.toString()
             // val fechaFin = dateFormat.parse(fechaFinEditText.text.toString())
             val info = infoEditText.text.toString()
             val idArticulo = articulos.getOrNull(posicionArticulo)?.idArticulo
 
-            if (idArticulo != null && idSocioIntent != null) {
-                val fechaFin: Date? = null
-                val nuevoPrestamo = Prestamo(
-                    null,
-                    idArticulo,
-                    idSocio = idSocioIntent,
-                    fechaInicio,
-                    fechaFin,
-                    info,
-                    EstadoPrestamo.ACTIVO
-                )
-                dbHelper.insertarPrestamo(nuevoPrestamo)
-                articulosDbHelper.actualizarEstadoArticulo(idArticulo, EstadoArticulo.PRESTADO)
+            // Validar artículo y fechaInicio
+            if (idArticulo != null && !fechaInicioString.isEmpty() && idSocioIntent != null) {
+                try {
+                    val fechaInicio = dateFormat.parse(fechaInicioString)
+                    val fechaFin: Date? = null
+                    val nuevoPrestamo = Prestamo(
+                        null,
+                        idArticulo,
+                        idSocio = idSocioIntent,
+                        fechaInicio,
+                        fechaFin,
+                        info,
+                        EstadoPrestamo.ACTIVO
+                    )
+                    dbHelper.insertarPrestamo(nuevoPrestamo)
+                    articulosDbHelper.actualizarEstadoArticulo(idArticulo, EstadoArticulo.PRESTADO)
 
-                Toast.makeText(this, "Préstamo añadido", Toast.LENGTH_SHORT).show()
-                finish()
+                    Toast.makeText(this, "Préstamo añadido", Toast.LENGTH_SHORT).show()
+                    finish()
+                } catch (e: ParseException) {
+                    // Manejar la excepción, por ejemplo, mostrando un mensaje de error al usuario
+                    Log.e("Error", "Error al analizar la fecha: ${e.message}")
+                    Toast.makeText(this, "Formato de fecha incorrecto", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                // Mostrar un mensaje de error al usuario si el artículo o la fecha de inicio no están seleccionados
+                val mensajeError = if (idArticulo == null) {
+                    "Por favor, selecciona un artículo"
+                } else if (fechaInicioString.isEmpty()) {
+                    "Por favor, introduce la fecha de inicio"
+                } else {
+                    "Error desconocido" // O cualquier otro mensaje de error genérico
+                }
+                Toast.makeText(this, mensajeError, Toast.LENGTH_SHORT).show()
             }
         }
-
         volverButton.setOnClickListener { finish() }
     }
 

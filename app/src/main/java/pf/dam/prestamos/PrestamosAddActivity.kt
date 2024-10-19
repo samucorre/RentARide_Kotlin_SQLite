@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -20,6 +21,7 @@ import pf.dam.R
 import pf.dam.articulos.Articulo
 import pf.dam.articulos.EstadoArticulo
 import pf.dam.socios.Socio
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -46,6 +48,7 @@ class PrestamoAddActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_prestamo_add)
+        supportActionBar?.title = "RR - Préstamo nuevo"
 
         dbHelper = PrestamosSQLite(this)
         articulosDbHelper = ArticulosSQLite(this)
@@ -129,47 +132,83 @@ class PrestamoAddActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+//        guardarButton.setOnClickListener {
+//            val posicionArticulo = articuloSpinner.selectedItemPosition
+//            val posicionSocio = socioSpinner.selectedItemPosition
+//            val fechaInicio = dateFormat.parse(fechaInicioEditText.text.toString())
+//
+//            val info = infoEditText.text.toString()
+//
+//            if (posicionArticulo == -1 || posicionSocio == -1 || fechaInicio == null) {
+//                Toast.makeText(
+//                    this,
+//                    "Por favor, selecciona un artículo y un socio, e introduce la fecha de inicio",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            } else {
+//                val idArticulo = articulos.getOrNull(posicionArticulo)?.idArticulo
+//                val idSocio = socios.getOrNull(posicionSocio)?.idSocio
+//
+//                if (idArticulo != null && idSocio != null) {
+//                    val fechaFin: Date? = null
+//                    val nuevoPrestamo =
+//                        Prestamo(
+//                            null,
+//                            idArticulo,
+//                            idSocio,
+//                            fechaInicio,
+//                            fechaFin,
+//                            info,
+//                            EstadoPrestamo.ACTIVO
+//                        )
+//
+//                    dbHelper.insertarPrestamo(nuevoPrestamo)
+//
+//                    // Actualizar el estado del artículo a PRESTADO
+//                    articulosDbHelper.actualizarEstadoArticulo(idArticulo, EstadoArticulo.PRESTADO)
+//
+//                    Toast.makeText(this, "Préstamo añadido", Toast.LENGTH_SHORT).show()
+//                    finish()
+//                } else {
+//                    Toast.makeText(this, "Artículo o socio no encontrado", Toast.LENGTH_SHORT)
+//                        .show()
+//                }
+//            }
+//        }
         guardarButton.setOnClickListener {
             val posicionArticulo = articuloSpinner.selectedItemPosition
             val posicionSocio = socioSpinner.selectedItemPosition
-            val fechaInicio = dateFormat.parse(fechaInicioEditText.text.toString())
-
+            val fechaInicioString = fechaInicioEditText.text.toString()
             val info = infoEditText.text.toString()
 
-            if (posicionArticulo == -1 || posicionSocio == -1 || fechaInicio == null) {
-                Toast.makeText(
-                    this,
-                    "Por favor, selecciona un artículo y un socio, e introduce la fecha de inicio",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
+            // Validar fechaInicio
+            if (fechaInicioString.isEmpty()) {
+                // Mostrar un mensaje de error al usuario
+                Toast.makeText(this, "La fecha de inicio es obligatoria", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Si fechaInicio está llena, crear el préstamo e insertarlo en la base de datos
+            try {
+                val fechaInicio = dateFormat.parse(fechaInicioString)
                 val idArticulo = articulos.getOrNull(posicionArticulo)?.idArticulo
                 val idSocio = socios.getOrNull(posicionSocio)?.idSocio
 
-                if (idArticulo != null && idSocio != null) {
+                if (idArticulo != null && idSocio != null && fechaInicio != null) {
                     val fechaFin: Date? = null
-                    val nuevoPrestamo =
-                        Prestamo(
-                            null,
-                            idArticulo,
-                            idSocio,
-                            fechaInicio,
-                            fechaFin,
-                            info,
-                            EstadoPrestamo.ACTIVO
-                        )
-
+                    val nuevoPrestamo = Prestamo(null, idArticulo, idSocio, fechaInicio, fechaFin, info, EstadoPrestamo.ACTIVO)
                     dbHelper.insertarPrestamo(nuevoPrestamo)
-
                     // Actualizar el estado del artículo a PRESTADO
                     articulosDbHelper.actualizarEstadoArticulo(idArticulo, EstadoArticulo.PRESTADO)
-
                     Toast.makeText(this, "Préstamo añadido", Toast.LENGTH_SHORT).show()
                     finish()
                 } else {
-                    Toast.makeText(this, "Artículo o socio no encontrado", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(this, "Artículo o socio no encontrado", Toast.LENGTH_SHORT).show()
                 }
+            } catch (e: ParseException) {
+                // Manejar la excepción, por ejemplo, mostrando un mensaje de error al usuario
+                Log.e("Error", "Error al analizar la fecha: ${e.message}")
+                Toast.makeText(this, "Formato de fecha incorrecto", Toast.LENGTH_SHORT).show()
             }
         }
 

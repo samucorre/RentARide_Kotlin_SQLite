@@ -202,7 +202,6 @@ class ArticulosSQLite (context: Context):
         return rowsAffected
     }
 
-
     fun borrarTodosLosArticulos() {
         val db = writableDatabase
         db.delete("articulos", null, null)
@@ -286,6 +285,7 @@ class ArticulosSQLite (context: Context):
             Log.d(TAG, "No se pudo actualizar el estado del artículo con ID: $idArticulo")
         }
     }
+
     fun articuloEnPrestamo(idArticulo: Int): Boolean {
         val db = readableDatabase
         val cursor = db.rawQuery(

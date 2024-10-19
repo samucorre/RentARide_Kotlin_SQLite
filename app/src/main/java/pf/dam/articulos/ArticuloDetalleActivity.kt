@@ -61,6 +61,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_articulo_detail)
+        supportActionBar?.title = "RR - Artículo detalle"
 
         dbHelper = ArticulosSQLite(this)
 

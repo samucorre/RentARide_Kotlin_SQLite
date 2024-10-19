@@ -40,7 +40,7 @@ class SociosActivity : AppCompatActivity() {
         sociosAdapter = SociosAdapter(dbHelper.obtenerSocios())
         recyclerView.adapter = sociosAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-        supportActionBar?.title = "Socios"
+        supportActionBar?.title = "RR - Socios"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false

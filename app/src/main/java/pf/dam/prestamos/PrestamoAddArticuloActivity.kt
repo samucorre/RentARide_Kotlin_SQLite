@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
@@ -19,6 +20,7 @@ import pf.dam.MainActivity
 import pf.dam.R
 import pf.dam.articulos.EstadoArticulo
 import pf.dam.socios.Socio
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -46,6 +48,7 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_prestamo_add_articulo)
+        supportActionBar?.title = "RR - Préstamo nuevo"
 
         dbHelper = PrestamosSQLite(this)
         articulosDbHelper = ArticulosSQLite(this)
@@ -78,32 +81,40 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
             startActivity(intent)
         }
         guardarButton.setOnClickListener {
-            val fechaInicio = dateFormat.parse(fechaInicioEditText.text.toString())
+            val fechaInicioString = fechaInicioEditText.text.toString()
             val info = infoEditText.text.toString()
             val idSocio = idSocioSeleccionado
 
-            if (idSocio != null && idArticuloIntent != null) {
-                val fechaFin: Date? = null
-                val nuevoPrestamo = Prestamo(
-                    null,
-                    idArticulo = idArticuloIntent,
-                    idSocio,
-                    fechaInicio,
-                    fechaFin,
-                    info,
-                    EstadoPrestamo.ACTIVO
-                )
-                dbHelper.insertarPrestamo(nuevoPrestamo)
-                articulosDbHelper.actualizarEstadoArticulo(
-                    idArticuloIntent,
-                    EstadoArticulo.PRESTADO
-                )
+            // Validar socio y fechaInicio
+            if (idSocio != null && !fechaInicioString.isEmpty() && idArticuloIntent != null) {
+                try {
+                    val fechaInicio = dateFormat.parse(fechaInicioString)
+                    val fechaFin: Date? = null
+                    val nuevoPrestamo = Prestamo(
+                        null,
+                        idArticulo = idArticuloIntent,
+                        idSocio,
+                        fechaInicio,
+                        fechaFin,
+                        info,
+                        EstadoPrestamo.ACTIVO
+                    )
+                    dbHelper.insertarPrestamo(nuevoPrestamo)
+                    articulosDbHelper.actualizarEstadoArticulo(
+                        idArticuloIntent,
+                        EstadoArticulo.PRESTADO
+                    )
 
-                Toast.makeText(this, "Préstamo añadido", Toast.LENGTH_SHORT).show()
-                setResult(Activity.RESULT_OK)
-                finish()
+                    Toast.makeText(this, "Préstamo añadido", Toast.LENGTH_SHORT).show()
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                } catch (e: ParseException) {
+                    // Manejar la excepción, por ejemplo, mostrando un mensaje de error al usuario
+                    Log.e("Error", "Error al analizar la fecha: ${e.message}")
+                    Toast.makeText(this, "Formato de fecha incorrecto", Toast.LENGTH_SHORT).show()
+                }
             } else {
-                Toast.makeText(this, "Por favor, selecciona un socio", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Por favor, selecciona un socio e introduce la fecha de inicio", Toast.LENGTH_SHORT).show()
             }
         }
 

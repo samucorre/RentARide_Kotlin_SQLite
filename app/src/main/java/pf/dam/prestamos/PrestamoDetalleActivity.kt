@@ -78,6 +78,7 @@ class PrestamoDetalleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_prestamo_detail)
+        supportActionBar?.title = "RR - Préstamo detalle"
 
         prestamosDbHelper = PrestamosSQLite(this)
         articulosDbHelper = ArticulosSQLite(this)
@@ -219,7 +220,6 @@ class PrestamoDetalleActivity : AppCompatActivity() {
 
         // Actualizar TextViews
         prestamoIdTextView.text = "ID del préstamo: $prestamoId"
-
         prestamoIdTextView.text = "ID del préstamo: $prestamoId"
         datosArticuloTextView.text ="Artículo: $nombreArticulo"
         datos1ArticuloTextView.text = categoriaArticulo
@@ -228,29 +228,13 @@ class PrestamoDetalleActivity : AppCompatActivity() {
         datosSocioTextView.text = "Socio: $nombreSocio $apellidoSocio"
         datos1SocioTextView.text = "$numeroSocio"
         datos2SocioTextView.text = " $telefonoSocio"
-
-
-       /* articuloTextView.text = "Artículo: $nombreArticulo\n" +
-                "Categoría: $categoriaArticulo\n" +
-                "Tipo: $tipoArticulo\n" +
-                //"Descripción: $descripcionArticulo\n" +
-                "ID:${prestamo.idArticulo}\n"
-            //    "Estado: $estadoArticulo"
-
-        socioTextView.text = "Socio: $nombreSocio $apellidoSocio\n" +
-                "$numeroSocio\n" +
-                " $telefonoSocio\n" +
-                " $emailSocio"*/
-
         fechaInicioTextView.text = "Fecha inicio: ${dateFormat.format(prestamo.fechaInicio)}"
-        // Manejar fechaFin: si es null, mostrar un mensaje o dejar el TextView vacío
-        val fechaFinString = if (prestamo.fechaFin != null) {
+            val fechaFinString = if (prestamo.fechaFin != null) {
             dateFormat.format(prestamo.fechaFin)
         } else {
             "  " // O "" para dejarlo vacío
         }
         fechaFinTextView.text =  "Fecha fin: ${fechaFinString}"
-
         infoTextView.text = "Información Adicional: ${prestamo.info}"
         estadoTextView.text = "Estado: ${prestamo.estado}"
 

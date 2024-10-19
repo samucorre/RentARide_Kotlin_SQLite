@@ -33,7 +33,7 @@ class PrestamosActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_prestamos) // Asegúrate de tener este layout
-        supportActionBar?.title = "Préstamos"
+        supportActionBar?.title = "RR - Préstamos"
         dbHelper = PrestamosSQLite(this)
         recyclerView = findViewById(R.id.prestamosRecyclerView)
         addPrestamoButton = findViewById(R.id.addPrestamoButton)

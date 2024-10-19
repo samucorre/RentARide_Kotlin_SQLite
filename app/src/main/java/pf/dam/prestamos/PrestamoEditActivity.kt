@@ -38,6 +38,7 @@ class PrestamoEditActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_prestamo_edit)
+        supportActionBar?.title = "RR - Editar préstamo"
 
         dbHelper = PrestamosSQLite(this)
         articulosDbHelper = ArticulosSQLite(this)

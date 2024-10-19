@@ -37,7 +37,7 @@ class ArticulosActivity : AppCompatActivity() {
         // Configura el Toolbar
        // val toolbar = findViewById<Toolbar>(R.id.toolbar)
     //    setSupportActionBar(toolbar)
-        supportActionBar?.title = "Artículos"
+        supportActionBar?.title = "RR - Artículos"
 
         dbHelper = ArticulosSQLite(this)
         recyclerView = findViewById(R.id.articulosRecyclerView)
