@@ -10,5 +10,9 @@
     <style name="AppTheme.MaterialComponents" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Customize your Material Components theme here. -->
     </style>
+    <style name="MyDatePickerDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">#FFC107</item>
+        <item name="android:textColorPrimary">#FFC107</item>
+    </style>
 
 </resources>

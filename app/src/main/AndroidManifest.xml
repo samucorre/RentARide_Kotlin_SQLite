@@ -19,12 +19,13 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".articulos.ArticulosActivity"
+        <activity android:name=".ImportExportActivity" />
 
-        />
+        <activity android:name=".articulos.ArticulosActivity"        />
         <activity android:name=".articulos.ArticuloDetalleActivity" />
         <activity android:name=".articulos.ArticuloEditActivity" />
         <activity android:name=".articulos.ArticuloAddActivity" />
@@ -40,14 +41,12 @@
            <activity android:name=".prestamos.PrestamoAddActivity"/>
         <activity android:name=".prestamos.PrestamoAddSocioActivity"/>
         <activity android:name=".prestamos.PrestamoAddArticuloActivity"/>
-
-
-
        </application>
 
        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
        <uses-permission android:name="android.permission.CAMERA" />
        <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 
    </manifest>

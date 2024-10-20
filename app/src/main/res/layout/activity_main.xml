@@ -85,6 +85,14 @@
                 android:backgroundTint="#FFC107"
                 android:text="Préstamos" />
         </LinearLayout>
+
     </LinearLayout>
+    <Button
+        android:id="@+id/bdBtton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:backgroundTint="#FFC107"
+        android:text="DATA BASE" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

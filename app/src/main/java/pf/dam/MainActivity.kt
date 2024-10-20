@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var verArticulosButton: Button
     private lateinit var verSociosButton: Button
     private lateinit var verPrestamosButton: Button
+    private lateinit var bdBtton: Button
     private lateinit var totalArticulosTextView: TextView
     private lateinit var totalSociosTextView: TextView
     private lateinit var totalPrestamosTextView: TextView
@@ -77,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         verArticulosButton = findViewById(R.id.verArticulosButton)
         verSociosButton = findViewById(R.id.verSociosButton)
         verPrestamosButton = findViewById(R.id.verPrestamosButton)
+        bdBtton = findViewById(R.id.bdBtton)
 
 
         if (dbHelperArticulos.obtenerArticulos().isEmpty()) {
@@ -116,7 +118,15 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+bdBtton.setOnClickListener {
+    val intent = Intent(this, ImportExportActivity::class.java)
+    startActivity(intent)
 
+}
+
+    }
+
+    class ImportExport {
 
     }
 }
