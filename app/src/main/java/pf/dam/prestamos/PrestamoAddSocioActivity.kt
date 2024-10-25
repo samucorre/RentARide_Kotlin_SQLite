@@ -1,50 +1,42 @@
 package pf.dam.prestamos
 
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.semantics.text
-import androidx.core.widget.addTextChangedListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.PrestamosSQLite
 import db.SociosSQLite
 import pf.dam.MainActivity
 import pf.dam.R
-import pf.dam.articulos.Articulo
 import pf.dam.articulos.EstadoArticulo
-import pf.dam.socios.Socio
+import pf.dam.utils.DateUtil
 import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
-import java.util.Locale
 
 class PrestamoAddSocioActivity : AppCompatActivity() {
 
     private lateinit var dbHelper: PrestamosSQLite
     private lateinit var articulosDbHelper: ArticulosSQLite
     private lateinit var sociosDbHelper: SociosSQLite
+    private  lateinit var dateUtil : DateUtil
     private lateinit var articuloSpinner: Spinner
     private lateinit var busquedaArticuloEditText: EditText
-    private lateinit var fechaInicioEditText: EditText
+    private lateinit var fechaInicioButton: Button
     // private lateinit var fechaFinEditText: EditText
     private lateinit var infoEditText: EditText
     private lateinit var guardarButton: FloatingActionButton
     private lateinit var volverButton: FloatingActionButton
     private lateinit var homeButton: FloatingActionButton
-
-    private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-    private val calendar = Calendar.getInstance()
 
     private var socioId: Int = -1
 
@@ -57,10 +49,11 @@ class PrestamoAddSocioActivity : AppCompatActivity() {
         dbHelper = PrestamosSQLite(this)
         articulosDbHelper = ArticulosSQLite(this)
         sociosDbHelper = SociosSQLite(this)
+        dateUtil = DateUtil(this)
 
         articuloSpinner = findViewById(R.id.articuloSpinner) // <-- Inicializa el Spinner
         busquedaArticuloEditText = findViewById(R.id.busquedaArticuloEditText) // <-- Inicializa el EditText de búsqueda
-        fechaInicioEditText = findViewById(R.id.fechaInicioEditText)
+        fechaInicioButton = findViewById(R.id.fechaInicioButton)
         // fechaFinEditText = findViewById(R.id.fechaFinEditText)
         infoEditText = findViewById(R.id.infoEditText)
         guardarButton = findViewById(R.id.guardarButton)
@@ -69,8 +62,8 @@ class PrestamoAddSocioActivity : AppCompatActivity() {
 
         val idSocioIntent = intent.getIntExtra("idSocio", -1)
 
-        fechaInicioEditText.setOnClickListener {
-            mostrarDatePicker(fechaInicioEditText)
+        fechaInicioButton.setOnClickListener {
+            dateUtil.mostrarDatePicker(this,fechaInicioButton)
         }
 
         // Obtener la lista de artículos y configurar el adaptador del Spinner
@@ -100,7 +93,7 @@ class PrestamoAddSocioActivity : AppCompatActivity() {
 
         guardarButton.setOnClickListener {
             val posicionArticulo = articuloSpinner.selectedItemPosition // <-- Obtén el artículo seleccionado
-            val fechaInicioString = fechaInicioEditText.text.toString()
+            val fechaInicioString = fechaInicioButton.text.toString()
             // val fechaFin = dateFormat.parse(fechaFinEditText.text.toString())
             val info = infoEditText.text.toString()
             val idArticulo = articulos.getOrNull(posicionArticulo)?.idArticulo
@@ -108,7 +101,7 @@ class PrestamoAddSocioActivity : AppCompatActivity() {
             // Validar artículo y fechaInicio
             if (idArticulo != null && !fechaInicioString.isEmpty() && idSocioIntent != null) {
                 try {
-                    val fechaInicio = dateFormat.parse(fechaInicioString)
+                    val fechaInicio = dateUtil.dateFormat.parse(fechaInicioString)
                     val fechaFin: Date? = null
                     val nuevoPrestamo = Prestamo(
                         null,
@@ -142,22 +135,6 @@ class PrestamoAddSocioActivity : AppCompatActivity() {
             }
         }
         volverButton.setOnClickListener { finish() }
-    }
-
-    private fun mostrarDatePicker(editText: EditText) {
-        val datePicker = DatePickerDialog(
-            this,
-            { _, year, month, dayOfMonth ->
-                calendar.set(Calendar.YEAR, year)
-                calendar.set(Calendar.MONTH, month)
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                editText.setText(dateFormat.format(calendar.time))
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        )
-        datePicker.show()
     }
 
     private fun filtrarArticulos(textoBusqueda: String) {

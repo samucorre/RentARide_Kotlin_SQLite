@@ -27,30 +27,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tituloTextView" />
 
-    <EditText
-        android:id="@+id/fechaInicioEditText"
-        android:layout_width="0dp"
+    <Button
+        android:id="@+id/fechaInicioButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:clickable="true"
-        android:focusable="false"
-        android:hint="Fecha de inicio"
-        android:drawableStart="@drawable/ico_fecha"
+        app:backgroundTint="#FFC107"
+        android:text="Establecer fecha de inicio"
+        android:drawableStart="@drawable/ico_calendario"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/socioAutoCompleteTextView" />
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/infoEditText"
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/infoTextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="Información adicional (opcional)"
-        android:drawableStart="@drawable/ico_info"
-
+        android:layout_marginTop="8dp"
+        android:hint="Información adicional"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fechaInicioEditText" />
+        app:layout_constraintTop_toBottomOf="@id/fechaInicioButton">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/infoEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:lines="4"
+            android:gravity="top|start" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <LinearLayout
         android:layout_width="0dp"

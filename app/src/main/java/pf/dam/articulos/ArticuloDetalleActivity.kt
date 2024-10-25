@@ -10,13 +10,19 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import pf.dam.MainActivity
 import pf.dam.R
 import pf.dam.prestamos.PrestamoAddArticuloActivity
+import pf.dam.utils.ShowDeleteConfirmationDialog
 
 
 class ArticuloDetalleActivity : AppCompatActivity() {
@@ -80,7 +86,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
 
         articuloId = intent.getIntExtra("idArticulo", -1)
         val articulo = dbHelper.obtenerArticuloPorId(articuloId)
-       // Log.e("ArticuloDetalleActivity", "ArticuloId: $articuloId")
+        // Log.e("ArticuloDetalleActivity", "ArticuloId: $articuloId")
         if (articulo != null) {
             mostrarArticulo(articulo)
 
@@ -109,19 +115,24 @@ class ArticuloDetalleActivity : AppCompatActivity() {
             editArticuloButton.setOnClickListener {
                 val idArticulo = dbHelper.obtenerIdArticuloBD(articulo)
                 if (idArticulo != -1) {
-                    val articulo = dbHelper.obtenerArticuloPorId(idArticulo) // Obtener el artículo por ID
+                    val articulo =
+                        dbHelper.obtenerArticuloPorId(idArticulo) // Obtener el artículo por ID
 
                     if (articulo?.estado == EstadoArticulo.PRESTADO) {
-                        Toast.makeText(this, "No se puede editar el artículo porque está prestado", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "No se puede editar el artículo porque está prestado",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
-                val intent = Intent(this, ArticuloEditActivity::class.java)
-                intent.putExtra("articuloId", articuloId)
-                editArticuloLauncher.launch(intent)
+                        val intent = Intent(this, ArticuloEditActivity::class.java)
+                        intent.putExtra("articuloId", articuloId)
+                        editArticuloLauncher.launch(intent)
                     }
                 }
 
             }
-            val editArticuloLauncher =registerForActivityResult(
+            val editArticuloLauncher = registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()
             ) { result ->
                 if (result.resultCode == RESULT_OK) {
@@ -132,27 +143,49 @@ class ArticuloDetalleActivity : AppCompatActivity() {
             deleteArticuloButton.setOnClickListener {
                 val idArticulo = dbHelper.obtenerIdArticuloBD(articulo)
                 if (idArticulo != -1) {
-                    val articulo = dbHelper.obtenerArticuloPorId(idArticulo) // Obtener el artículo por ID
+                    val articulo =
+                        dbHelper.obtenerArticuloPorId(idArticulo) // Obtener el artículo por ID
 
                     if (articulo?.estado == EstadoArticulo.PRESTADO) {
-                        Toast.makeText(this, "No se puede borrar el artículo porque está prestado", Toast.LENGTH_SHORT).show()
-                    } else {
-                        val resultado = dbHelper.borrarArticulo(idArticulo)
-                        if (resultado > 0) {
-                            Toast.makeText(this, "Artículo eliminado", Toast.LENGTH_SHORT).show()
-                            setResult(RESULT_OK)
-                            finish()
-                        } else {
-                            Toast.makeText(this, "Error al eliminar el artículo", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "No se puede borrar el artículo porque está prestado",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else setContent {
+                        var showDialog by remember { mutableStateOf(true) }
+
+                        if (showDialog) {
+                            ShowDeleteConfirmationDialog(
+                                title = "Eliminar artículo",
+                                message = "¿Estás seguro de que quieres eliminar este artículo?",
+                                onPositiveButtonClick = {
+                                    dbHelper.borrarArticulo(articuloId)
+
+
+
+                                    Toast.makeText(
+                                        this@ArticuloDetalleActivity,
+                                        "Artículo eliminado",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    setResult(RESULT_OK)
+                                    finish()
+                                    showDialog = false
+                                },
+                                onDismissRequest = {
+                                    showDialog = false
+                                    finish()
+                                }
+                            )
                         }
                     }
-                } else {
-                    Toast.makeText(this, "Artículo no encontrado", Toast.LENGTH_SHORT).show()
-                    finish()
                 }
-            }//comentario para probar git
+            }
         }
     }
+
+
     private fun mostrarArticulo(articulo: Articulo) {
         nombreTextView.text = articulo.nombre ?: ""
         categoriaTextView.text = articulo.categoria ?: ""

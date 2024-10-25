@@ -36,6 +36,7 @@
                 android:layout_gravity="center_horizontal"
                 android:backgroundTint="#FFC107"
                 android:text="Artículos" />
+
         </LinearLayout>
 
         <LinearLayout

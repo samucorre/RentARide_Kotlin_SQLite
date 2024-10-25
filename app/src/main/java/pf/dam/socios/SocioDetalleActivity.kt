@@ -114,17 +114,37 @@ class SocioDetalleActivity : AppCompatActivity() {
                         "No se puede eliminar el socio porque tiene registros en préstamos",
                         Toast.LENGTH_SHORT
                     ).show()
-                }else{  dbHelper.borrarSocio(socioId)
-                                    Toast.makeText(
-                                        this@SocioDetalleActivity,
-                                        "Socio eliminado",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                    finish()
-                                    }
+                }else setContent {
+                    var showDialog by remember { mutableStateOf(true) }
+
+                    if (showDialog) {
+                        ShowDeleteConfirmationDialog(
+                            title = "Eliminar socio",
+                            message = "¿Estás seguro de que quieres eliminar este socio?",
+                            onPositiveButtonClick = {
+                                dbHelper.borrarSocio(socioId)
+
+
+
+                                Toast.makeText(
+                                    this@SocioDetalleActivity,
+                                    "Socio eliminado",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                setResult(RESULT_OK)
+                                finish()
+                                showDialog = false
+                            },
+                            onDismissRequest = {
+                                showDialog = false
+                                finish()
+                            }
+                        )
+                    }
+                }
             }
         }
-}
+    }
 
 
     private fun mostrarSocio(socio: Socio) {

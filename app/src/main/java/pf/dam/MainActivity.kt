@@ -1,16 +1,16 @@
 package pf.dam
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.semantics.text
 import db.ArticulosSQLite
 import db.PrestamosSQLite
 import db.SociosSQLite
+import org.junit.experimental.theories.DataPoint
 import pf.dam.articulos.Articulo
 import pf.dam.articulos.ArticulosActivity
 import pf.dam.articulos.EstadoArticulo
@@ -32,6 +32,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var totalSociosTextView: TextView
     private lateinit var totalPrestamosTextView: TextView
 
+
+
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -40,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         dbHelperArticulos = ArticulosSQLite(this)
         dbHelperSocios = SociosSQLite(this)
         dbHelperPrestamos = PrestamosSQLite(this)
+
 
 
         val totalArticulos = dbHelperArticulos.obtenerArticulos().size
@@ -68,6 +72,30 @@ class MainActivity : AppCompatActivity() {
                 "Disponibles: $totalArticulosDispos\n" +
                 "Prestados: $totalArticulosPrestados\n" +
                 "No disponibles: $totalArticulosNoDisponibles"
+
+//        val articulosSQLite = ArticulosSQLite(this) // Reemplaza 'this' con el contexto adecuado
+//        val categorias = articulosSQLite.obtenerCategorias()
+//        val cantidadArticulosPorCategoria = categorias.map { categoria ->
+//            articulosSQLite.obtenerArticulos().count { it.categoria == categoria }
+//        }
+//        val graph = findViewById<GraphView>(R.id.graph)
+//
+//        val series = BarGraphSeries(categorias.indices.map { i ->
+//            com.jjoe64.graphview.series.DataPoint(
+//                i.toDouble(),
+//                cantidadArticulosPorCategoria[i].toDouble()
+//            )
+//        }.toTypedArray())
+//
+//        graph.addSeries(series)
+
+// Personalización del gráfico (opcional)
+//        graph.title = "Cantidad de Artículos por Categoría"
+//        graph.viewport.isXAxisBoundsManual = true
+//        graph.viewport.setMinX(0.0)
+//        graph.viewport.setMaxX(categorias.size.toDouble() - 1)
+
+
         zona2TextView.text = "Socios: $totalSocios\n" +
                 "con préstamos activos: $totalSociosPrestamosActivos"
         zona3TextView.text = "Préstamos: $totalPrestamos\n" +
@@ -81,27 +109,29 @@ class MainActivity : AppCompatActivity() {
         bdBtton = findViewById(R.id.bdBtton)
 
 
-        if (dbHelperArticulos.obtenerArticulos().isEmpty()) {
-            Toast.makeText(this, "No hay artículos", Toast.LENGTH_SHORT).show()
-
-            //sin ruta imagen para null e icono
-
-            dbHelperArticulos.insertarArticulo(Articulo(null, "Bicicleta", "MTB", "Bici001","D01", EstadoArticulo.DISPONIBLE ))
-            dbHelperArticulos.insertarArticulo(Articulo(null, "Bicicleta", "Carretera", "Bici002", "D02",EstadoArticulo.DISPONIBLE))
-            dbHelperArticulos.insertarArticulo(Articulo(null, "Bicicleta", "Eléctrica", "Bici003","D03", EstadoArticulo.DISPONIBLE))
-            dbHelperArticulos.insertarArticulo(Articulo(null, "Kayak", "Rígido", "Kayak001","D01", EstadoArticulo.DISPONIBLE ))
-            dbHelperArticulos.insertarArticulo(Articulo(null, "Kayak", "Hinchable", "Kayak002", "D02",EstadoArticulo.DISPONIBLE))
-            dbHelperArticulos.insertarArticulo(Articulo(null, "Kayak", "Eléctrica", "Kayak003","D03", EstadoArticulo.DISPONIBLE))
-            dbHelperArticulos.insertarArticulo(Articulo(null, "PadellSurf", "Hinchable", "Tabla001", "D02",EstadoArticulo.DISPONIBLE))
-            dbHelperArticulos.insertarArticulo(Articulo(null, "Patinete", "Eléctrica", "Patín001","D03", EstadoArticulo.DISPONIBLE))
-        }
-        if (dbHelperSocios.obtenerSocios().isEmpty()) {
-            Toast.makeText(this, "No hay socios", Toast.LENGTH_SHORT).show()
-            dbHelperSocios.insertarSocio(Socio(null, "Samuel", "Correa Pazos", 1,666666666,"ejemplo@samu.com"))
-        }
-        if (dbHelperPrestamos.obtenerPrestamos().isEmpty()) {
-            Toast.makeText(this, "No hay préstamos", Toast.LENGTH_SHORT).show()
-        }
+//        if (dbHelperArticulos.obtenerArticulos().isEmpty()) {
+//            Toast.makeText(this, "No hay artículos", Toast.LENGTH_SHORT).show()
+//
+//            //sin ruta imagen para null e icono
+//
+//            dbHelperArticulos.insertarArticulo(Articulo(null, "Bicicleta", "MTB", "Bici001","D01", EstadoArticulo.DISPONIBLE ))
+//            dbHelperArticulos.insertarArticulo(Articulo(null, "Bicicleta", "Carretera", "Bici002", "D02",EstadoArticulo.DISPONIBLE))
+//            dbHelperArticulos.insertarArticulo(Articulo(null, "Bicicleta", "Eléctrica", "Bici003","D03", EstadoArticulo.DISPONIBLE))
+//            dbHelperArticulos.insertarArticulo(Articulo(null, "Kayak", "Rígido", "Kayak001","D01", EstadoArticulo.DISPONIBLE ))
+//            dbHelperArticulos.insertarArticulo(Articulo(null, "Kayak", "Hinchable", "Kayak002", "D02",EstadoArticulo.DISPONIBLE))
+//            dbHelperArticulos.insertarArticulo(Articulo(null, "Kayak", "Eléctrica", "Kayak003","D03", EstadoArticulo.DISPONIBLE))
+//            dbHelperArticulos.insertarArticulo(Articulo(null, "PadellSurf", "Hinchable", "Tabla001", "D02",EstadoArticulo.DISPONIBLE))
+//            dbHelperArticulos.insertarArticulo(Articulo(null, "Patinete", "Eléctrica", "Patín001","D03", EstadoArticulo.DISPONIBLE))
+//
+//
+//        }
+//        if (dbHelperSocios.obtenerSocios().isEmpty()) {
+//            Toast.makeText(this, "No hay socios", Toast.LENGTH_SHORT).show()
+//            dbHelperSocios.insertarSocio(Socio(null, "Samuel", "Correa Pazos", 1,666666666,"ejemplo@samu.com"))
+//        }
+//        if (dbHelperPrestamos.obtenerPrestamos().isEmpty()) {
+//            Toast.makeText(this, "No hay préstamos", Toast.LENGTH_SHORT).show()
+//        }
         // Configurar listeners de botones
         verArticulosButton.setOnClickListener {
             val intent = Intent(this, ArticulosActivity::class.java)
