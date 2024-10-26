@@ -6,7 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 
-class DialogoUtil(private val context: Context) {
+class DialogoUtil( context: Context) {
 
     @Composable
     fun ShowEditConfirmationDialog(

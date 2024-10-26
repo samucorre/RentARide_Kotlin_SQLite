@@ -148,11 +148,11 @@ class SocioDetalleActivity : AppCompatActivity() {
 
 
     private fun mostrarSocio(socio: Socio) {
-        nombreTextView.text = "Nombre: ${socio.nombre}"
-        apellidoTextView.text = "Apellido: ${socio.apellido}"
-        numeroSocioTextView.text = "Número de socio: ${socio.numeroSocio}"
-        telefonoTextView.text = "Teléfono: ${socio.telefono}"
-        emailTextView.text = "Email: ${socio.email}"
+        nombreTextView.text = "${socio.nombre}"
+        apellidoTextView.text = "${socio.apellido}"
+        numeroSocioTextView.text = "${socio.numeroSocio}"
+        telefonoTextView.text = "${socio.telefono}"
+        emailTextView.text = "${socio.email}"
     }
 }
 
