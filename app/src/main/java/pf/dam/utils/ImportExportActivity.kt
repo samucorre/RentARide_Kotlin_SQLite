@@ -1,4 +1,4 @@
-package pf.dam
+package pf.dam.utils
 
 import android.Manifest
 import android.content.Context
@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import pf.dam.R
 import java.io.File
 
 class ImportExportActivity : AppCompatActivity() {

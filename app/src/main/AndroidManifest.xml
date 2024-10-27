@@ -25,7 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ImportExportActivity" />
+        <activity android:name=".utils.ImportExportActivity" />
 
         <activity android:name=".articulos.ArticulosActivity"        />
         <activity android:name=".articulos.ArticuloDetalleActivity" />
@@ -43,7 +43,20 @@
            <activity android:name=".prestamos.PrestamoAddActivity"/>
         <activity android:name=".prestamos.PrestamoAddSocioActivity"/>
         <activity android:name=".prestamos.PrestamoAddArticuloActivity"/>
-       </application>
+
+        <activity android:name=".utils.GraficosActivity"/>
+        <activity
+            android:name=".utils.ArticulosGraphs"
+            android:exported="false" />
+        <activity
+            android:name=".utils.PrestamosGraphs"
+            android:exported="false" />
+        <activity
+            android:name=".utils.SocioGraphs"
+            android:exported="false" />
+
+
+    </application>
 
        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
        <uses-permission android:name="android.permission.CAMERA" />

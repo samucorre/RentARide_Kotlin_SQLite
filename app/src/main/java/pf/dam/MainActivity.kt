@@ -2,22 +2,25 @@ package pf.dam
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import db.ArticulosSQLite
 import db.PrestamosSQLite
 import db.SociosSQLite
-import org.junit.experimental.theories.DataPoint
-import pf.dam.articulos.Articulo
 import pf.dam.articulos.ArticulosActivity
 import pf.dam.articulos.EstadoArticulo
 import pf.dam.prestamos.EstadoPrestamo
 import pf.dam.prestamos.PrestamosActivity
-import pf.dam.socios.Socio
 import pf.dam.socios.SociosActivity
+import pf.dam.utils.GraficosActivity
+import pf.dam.utils.ImportExportActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var verSociosButton: Button
     private lateinit var verPrestamosButton: Button
     private lateinit var bdBtton: Button
+    private lateinit var graphButton: Button
     private lateinit var totalArticulosTextView: TextView
     private lateinit var totalSociosTextView: TextView
     private lateinit var totalPrestamosTextView: TextView
@@ -107,6 +111,7 @@ class MainActivity : AppCompatActivity() {
         verSociosButton = findViewById(R.id.verSociosButton)
         verPrestamosButton = findViewById(R.id.verPrestamosButton)
         bdBtton = findViewById(R.id.bdBtton)
+        graphButton = findViewById(R.id.graphButton)
 
 
 //        if (dbHelperArticulos.obtenerArticulos().isEmpty()) {
@@ -148,15 +153,16 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-bdBtton.setOnClickListener {
+        bdBtton.setOnClickListener {
     val intent = Intent(this, ImportExportActivity::class.java)
     startActivity(intent)
 
 }
 
-    }
-
-    class ImportExport {
+        graphButton.setOnClickListener {
+            val intent = Intent(this, GraficosActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 }
