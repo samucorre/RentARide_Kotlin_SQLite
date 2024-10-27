@@ -69,7 +69,7 @@ class SocioEditActivity : AppCompatActivity() {
                 val email = emailEditText.text.toString()
 
                 try {
-                    if (socio.idSocio?.let { prestamosDbHelper.estaSocioEnPrestamo(it) }
+                    if (socio.idSocio?.let { prestamosDbHelper.estaSocioEnPrestamoActivo(it) }
                             ?: false) { // Llamar a la función desde prestamosDbHelper
                         // Mostrar un mensaje de error al usuario
                         Toast.makeText(

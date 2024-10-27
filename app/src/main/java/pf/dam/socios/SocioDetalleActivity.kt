@@ -8,18 +8,16 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import db.ArticulosSQLite
 import db.PrestamosSQLite
 import db.SociosSQLite
 import pf.dam.MainActivity
 import pf.dam.R
-import pf.dam.prestamos.PrestamoAddActivity
+import pf.dam.articulos.Articulo
 import pf.dam.prestamos.PrestamoAddSocioActivity
 import pf.dam.utils.ShowDeleteConfirmationDialog
 
@@ -37,6 +35,8 @@ class SocioDetalleActivity : AppCompatActivity() {
     private lateinit var numeroSocioTextView: TextView
     private lateinit var telefonoTextView: TextView
     private lateinit var emailTextView: TextView
+    private lateinit var cantidadPrestamosTextView: TextView
+    private lateinit var articulosTextView: TextView
 
     private var socioId: Int = -1
 
@@ -70,6 +70,8 @@ class SocioDetalleActivity : AppCompatActivity() {
         numeroSocioTextView = findViewById(R.id.numeroSocioTextView)
         telefonoTextView = findViewById(R.id.telefonoTextView)
         emailTextView = findViewById(R.id.emailTextView)
+        cantidadPrestamosTextView= findViewById(R.id.cantidadPrestamosTextView)
+        articulosTextView = findViewById(R.id.articulosTextView)
 
         socioId = intent.getIntExtra("idSocio", -1)
         val socio = dbHelper.obtenerSocioPorId(socioId)
@@ -106,7 +108,7 @@ class SocioDetalleActivity : AppCompatActivity() {
             }
             deleteSocioButton.setOnClickListener {
                 // Verificar si el socio tiene algún registro en la tabla de préstamos
-                val tieneRegistrosEnPrestamos = prestamosDbHelper.estaSocioEnPrestamo(socioId)
+                val tieneRegistrosEnPrestamos = prestamosDbHelper.estaSocioEnPrestamoActivo(socioId)
 
                 if (tieneRegistrosEnPrestamos) {
                     Toast.makeText(
@@ -153,7 +155,29 @@ class SocioDetalleActivity : AppCompatActivity() {
         numeroSocioTextView.text = "${socio.numeroSocio}"
         telefonoTextView.text = "${socio.telefono}"
         emailTextView.text = "${socio.email}"
+
+        val prestamos = socio.idSocio?.let { prestamosDbHelper.obtenerPrestamosPorSocio(it) }
+
+        // Obtén la cantidad de préstamos
+        val cantidadPrestamos = prestamos?.size
+
+        // Obtén los artículos de los préstamos
+        val articulos = mutableSetOf<Articulo>()
+        if (prestamos != null) {
+            for (prestamo in prestamos) {
+                val articulo = prestamosDbHelper.obtenerArticuloPrestamoId(prestamo.idArticulo) // Usa prestamosDbHelper para obtener el artículo
+                if (articulo != null) {
+                    articulos.add(articulo)
+                }
+            }
+        }
+
+        // Muestra la cantidad de préstamos y los artículos en los TextViews
+        cantidadPrestamosTextView.text = "Cantidad de préstamos: $cantidadPrestamos"
+        articulosTextView.text = "Artículos: ${articulos.joinToString { it.nombre.toString() + " " + it.categoria.toString() }}\n"
     }
+
+
 }
 
 //////////////////////////////////////////

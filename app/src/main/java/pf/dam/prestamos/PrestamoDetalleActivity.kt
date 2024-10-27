@@ -258,6 +258,7 @@ class PrestamoDetalleActivity : AppCompatActivity() {
             imageView.setImageResource(R.drawable.ico_imagen) // Imagen por defecto si no hay imagen
         }
     }
+
 }
 
 //////////////////

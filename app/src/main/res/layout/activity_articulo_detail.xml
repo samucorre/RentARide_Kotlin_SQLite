@@ -151,6 +151,24 @@
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/cantidadPrestamosTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Cantidad de préstamos: "
+            android:textSize="18sp"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/sociosTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Socios: "
+            android:textSize="18sp"
+            android:gravity="center"/>
+
         <Button
             android:id="@+id/addPrestamoButton"
             android:layout_width="wrap_content"

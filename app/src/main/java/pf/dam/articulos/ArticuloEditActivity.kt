@@ -15,7 +15,6 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.semantics.text
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -23,7 +22,6 @@ import db.ArticulosSQLite
 import db.PrestamosSQLite
 import pf.dam.MainActivity
 import pf.dam.R
-import pf.dam.prestamos.EstadoPrestamo
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
@@ -103,7 +101,7 @@ class ArticuloEditActivity : AppCompatActivity() {
             val estadoSeleccionado = if(estadoSwitch.isChecked) EstadoArticulo.DISPONIBLE else EstadoArticulo.NO_DISPONIBLE
 
             try {
-                if (articulo.idArticulo?.let { prestamosDbHelper.estaArticuloEnPrestamo(it) } ?: false) {
+                if (articulo.idArticulo?.let { prestamosDbHelper.estaArticuloEnPrestamoActivo(it) } ?: false) {
                     // Mostrar un mensaje de error al usuario
                     Toast.makeText(this, "No se puede editar el artículo. Está presente en un préstamo activo.", Toast.LENGTH_SHORT).show()
                 } else {

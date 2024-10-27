@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import androidx.compose.foundation.layout.size
 import pf.dam.articulos.Articulo
 import pf.dam.prestamos.EstadoPrestamo
 import pf.dam.prestamos.Prestamo
@@ -273,6 +274,53 @@ class PrestamosSQLite(context: Context) :
         return listaPrestamos
     }
 
+    fun obtenerPrestamosPorSocio(idSocio: Int): List<Prestamo> {
+        val db = readableDatabase
+        val listaPrestamos = mutableListOf<Prestamo>()
+        try {
+            val selectQuery = "SELECT * FROM prestamos WHERE idSocio = ?"
+            db.rawQuery(selectQuery, arrayOf(idSocio.toString())).use { cursor ->
+                if (cursor.moveToFirst()) {
+                    do {
+                        val idPrestamo = cursor.getInt(cursor.getColumnIndexOrThrow("idPrestamo"))
+                        val idArticulo = cursor.getInt(cursor.getColumnIndexOrThrow("idArticulo"))
+                        val idSocio = cursor.getInt(cursor.getColumnIndexOrThrow("idSocio"))
+                        val fechaInicio =
+                            dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow("fechaInicio")))
+                        val fechaFinString =
+                            cursor.getString(cursor.getColumnIndexOrThrow("fechaFin"))
+                        val fechaFinDate: Date? = if (fechaFinString != null) {
+                            dateFormat.parse(fechaFinString)
+                        } else {
+                            null
+                        }
+                        val info = cursor.getString(cursor.getColumnIndexOrThrow("info"))
+                        val estado =
+                            EstadoPrestamo.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("estado")))
+
+                        val prestamo = Prestamo(
+                            idPrestamo,
+                            idArticulo,
+                            idSocio,
+                            fechaInicio,
+                            fechaFin = fechaFinDate,
+                            info,
+                            estado
+                        )
+                        listaPrestamos.add(prestamo)
+                    } while (cursor.moveToNext())
+                }
+            }
+            Log.d(TAG, "Se obtuvieron ${listaPrestamos.size} préstamos para el socio con ID: $idSocio")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error al obtener préstamos por socio: ${e.message}")
+            throw RuntimeException("Error obteniendo préstamos por socio: ${e.message}", e)
+        } finally {
+            db.close()
+        }
+        return listaPrestamos
+    }
+
     fun actualizarEstadoPrestamo(idPrestamo: Int, nuevoEstado: EstadoPrestamo) {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -288,7 +336,7 @@ class PrestamosSQLite(context: Context) :
         }
     }
 
-    fun estaArticuloEnPrestamo(idArticulo: Int): Boolean {
+    fun estaArticuloEnPrestamoActivo(idArticulo: Int): Boolean {
         val db = readableDatabase
         val cursor = db.rawQuery(
             "SELECT * FROM prestamos WHERE idArticulo = ? AND estado = ?",
@@ -300,7 +348,7 @@ class PrestamosSQLite(context: Context) :
         return estaEnPrestamo
     }
 
-    fun estaSocioEnPrestamo(idSocio: Int): Boolean {
+    fun estaSocioEnPrestamoActivo(idSocio: Int): Boolean {
         val db = readableDatabase
         val cursor = db.rawQuery(
             "SELECT * FROM prestamos WHERE idSocio = ? AND estado = ?",

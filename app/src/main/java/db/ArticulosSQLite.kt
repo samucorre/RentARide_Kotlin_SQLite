@@ -202,39 +202,6 @@ class ArticulosSQLite (context: Context):
         return rowsAffected
     }
 
-    fun borrarTodosLosArticulos() {
-        val db = writableDatabase
-        db.delete("articulos", null, null)
-        db.close()
-    }
-
-    fun obtenerEstadoArticulo(idArticulo: Int): EstadoArticulo? {
-        val db = readableDatabase
-        val cursor = db.query(
-            "articulos",
-            arrayOf("estado"),
-            "idArticulo = ?",
-            arrayOf(idArticulo.toString()),
-            null,
-            null,
-            null
-        )
-        try {
-            return if (cursor.moveToFirst()) {
-                if (cursor.getString(cursor.getColumnIndexOrThrow("estado")) != null) {
-                    EstadoArticulo.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("estado")))
-                } else {
-                    null
-                }
-            } else {
-                null
-            }
-        } finally {
-            cursor.close()
-            db.close()
-        }
-    }
-
     fun obtenerArticulosDisponibles(): List<Articulo> {
         val articulos = mutableListOf<Articulo>()
         val db = this.readableDatabase
@@ -320,5 +287,36 @@ class ArticulosSQLite (context: Context):
         db.close()
 
         return categorias
+    }
+    fun borrarTodosLosArticulos() {
+        val db = writableDatabase
+        db.delete("articulos", null, null)
+        db.close()
+    }
+    fun obtenerEstadoArticulo(idArticulo: Int): EstadoArticulo? {
+        val db = readableDatabase
+        val cursor = db.query(
+            "articulos",
+            arrayOf("estado"),
+            "idArticulo = ?",
+            arrayOf(idArticulo.toString()),
+            null,
+            null,
+            null
+        )
+        try {
+            return if (cursor.moveToFirst()) {
+                if (cursor.getString(cursor.getColumnIndexOrThrow("estado")) != null) {
+                    EstadoArticulo.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("estado")))
+                } else {
+                    null
+                }
+            } else {
+                null
+            }
+        } finally {
+            cursor.close()
+            db.close()
+        }
     }
 }

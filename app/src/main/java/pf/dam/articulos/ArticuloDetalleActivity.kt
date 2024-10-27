@@ -13,15 +13,19 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.add
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.semantics.text
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
+import db.PrestamosSQLite
 import pf.dam.MainActivity
 import pf.dam.R
 import pf.dam.prestamos.PrestamoAddArticuloActivity
+import pf.dam.socios.Socio
 import pf.dam.utils.ShowDeleteConfirmationDialog
 
 
@@ -32,12 +36,15 @@ class ArticuloDetalleActivity : AppCompatActivity() {
     private lateinit var homeButton: FloatingActionButton
     private lateinit var addPrestamoButton: Button
     private lateinit var dbHelper: ArticulosSQLite
+    private lateinit var dbHelperPrestamos: PrestamosSQLite
     private lateinit var nombreTextView: TextView
     private lateinit var categoriaTextView: TextView
     private lateinit var tipoTextView: TextView
     private lateinit var descripcionTextView: TextView
     private lateinit var estadoTextView: TextView
     private lateinit var imagenImageView: ImageView
+    private lateinit var cantidadPrestamosTextView: TextView
+    private lateinit var sociosTextView: TextView
 
     private var articuloId: Int = -1
 
@@ -70,6 +77,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
         supportActionBar?.title = "RR - Artículo detalle"
 
         dbHelper = ArticulosSQLite(this)
+        dbHelperPrestamos = PrestamosSQLite(this)
 
         editArticuloButton = findViewById(R.id.editArticuloButton)
         deleteArticuloButton = findViewById(R.id.deleteArticuloButton)
@@ -83,9 +91,12 @@ class ArticuloDetalleActivity : AppCompatActivity() {
         descripcionTextView = findViewById(R.id.descripcionTextView)
         estadoTextView = findViewById(R.id.estadoTextView)
         imagenImageView = findViewById(R.id.imagenImageView)
+        cantidadPrestamosTextView = findViewById(R.id.cantidadPrestamosTextView)
+        sociosTextView = findViewById(R.id.sociosTextView)
 
         articuloId = intent.getIntExtra("idArticulo", -1)
         val articulo = dbHelper.obtenerArticuloPorId(articuloId)
+        val prestamos = dbHelperPrestamos.obtenerPrestamosPorArticulo(articuloId)
         // Log.e("ArticuloDetalleActivity", "ArticuloId: $articuloId")
         if (articulo != null) {
             mostrarArticulo(articulo)
@@ -101,13 +112,11 @@ class ArticuloDetalleActivity : AppCompatActivity() {
             backButton.setOnClickListener {
                 finish()
             }
-
             addPrestamoButton.setOnClickListener {
                 val intent = Intent(this, PrestamoAddArticuloActivity::class.java)
                 intent.putExtra("idArticulo", articuloId)
                 addPrestamoLauncher.launch(intent)
             }
-
             homeButton.setOnClickListener {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
@@ -131,14 +140,6 @@ class ArticuloDetalleActivity : AppCompatActivity() {
                     }
                 }
 
-            }
-            val editArticuloLauncher = registerForActivityResult(
-                ActivityResultContracts.StartActivityForResult()
-            ) { result ->
-                if (result.resultCode == RESULT_OK) {
-                    setResult(RESULT_OK, Intent().putExtra("articuloId", articuloId))
-                    finish()
-                }
             }
             deleteArticuloButton.setOnClickListener {
                 val idArticulo = dbHelper.obtenerIdArticuloBD(articulo)
@@ -182,6 +183,15 @@ class ArticuloDetalleActivity : AppCompatActivity() {
                     }
                 }
             }
+
+            val editArticuloLauncher = registerForActivityResult(
+                ActivityResultContracts.StartActivityForResult()
+            ) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    setResult(RESULT_OK, Intent().putExtra("articuloId", articuloId))
+                    finish()
+                }
+            }
         }
     }
 
@@ -204,5 +214,26 @@ class ArticuloDetalleActivity : AppCompatActivity() {
         } else {
             imagenImageView.setImageResource(R.drawable.ico_imagen)
         }
+        // Obtén los préstamos del artículo
+        val prestamos = articulo.idArticulo?.let { dbHelperPrestamos.obtenerPrestamosPorArticulo(it) }
+
+        // Obtén la cantidad de préstamos
+        val cantidadPrestamos = prestamos?.size
+
+        // Obtén los socios de los préstamos
+        val socios = mutableSetOf<Socio>()
+        if (prestamos != null) {
+            for (prestamo in prestamos) {
+                val socio = dbHelperPrestamos.obtenerSocioPrestamoId(prestamo.idSocio) // Usa dbHelperPrestamos para obtener el socio
+                if (socio != null) {
+                    socios.add(socio)
+                }
+            }
+        }
+
+        // Muestra la cantidad de préstamos y los socios en los TextViews
+        cantidadPrestamosTextView.text = "Cantidad de préstamos: $cantidadPrestamos"
+        sociosTextView.text = "Socios: ${socios.joinToString { "${it.nombre} ${it.apellido}\n" }}"
+
     }
 }

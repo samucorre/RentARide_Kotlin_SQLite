@@ -134,6 +134,7 @@
             android:text="Email: "
             android:textSize="18sp"
             android:gravity="center"/>
+
         <Button
             android:id="@+id/addPrestamoButton"
             android:layout_width="wrap_content"
@@ -150,8 +151,25 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/emailTextView"
             app:layout_constraintVertical_bias="0.045" />
+        <TextView
+            android:id="@+id/cantidadPrestamosTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Cantidad de préstamos: "
+            android:textSize="18sp"
+            android:gravity="center"/>
 
+        <TextView
+            android:id="@+id/articulosTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Artículos: "
+            android:textSize="18sp"
+            android:gravity="center"/>
     </LinearLayout>
+
 
 
 
