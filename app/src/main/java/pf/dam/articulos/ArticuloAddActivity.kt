@@ -1,6 +1,7 @@
 package pf.dam.articulos
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Bitmap
@@ -98,6 +99,7 @@ class ArticuloAddActivity : AppCompatActivity() {
                 dbHelper.insertarArticulo(nuevoArticulo)
 
                 Toast.makeText(this, "Artículo añadido", Toast.LENGTH_SHORT).show()
+                setResult(Activity.RESULT_OK)
                 finish()
             }
         }

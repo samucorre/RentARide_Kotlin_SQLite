@@ -144,14 +144,7 @@
             android:text="Estado: "
             android:textSize="18sp"
             android:gravity="center"/>
-        <TextView
-            android:id="@+id/socioTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Prestado a: "
-            android:textSize="18sp"
-            android:gravity="center"/>
+
             <ImageView
                 android:id="@+id/imagenImageView"
                 android:layout_width="match_parent"

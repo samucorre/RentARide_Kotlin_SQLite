@@ -128,9 +128,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=" SOCIOS"
+                        android:textColor="@color/yellowRRR"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/yellowRRR" />
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -259,7 +259,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/cerrarAppButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:src="@drawable/ico_close"
+            app:backgroundTint="#FFC107" />
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/bdButton"
             android:layout_width="wrap_content"
