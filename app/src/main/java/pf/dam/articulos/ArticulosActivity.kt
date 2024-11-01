@@ -18,15 +18,12 @@ class ArticulosActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var articulosAdapter: ArticulosAdapter
-    private lateinit var dbHelper: ArticulosSQLite
+    private lateinit var db: ArticulosSQLite
     private lateinit var addArticuloButton: FloatingActionButton
     private lateinit var homeButton: FloatingActionButton
-    private lateinit var backButton: FloatingActionButton
+    //private lateinit var backButton: FloatingActionButton
     private lateinit var searchView: SearchView
-    private lateinit var categoriasSpinner: Spinner
-   // private lateinit var estadoChipGroup: ChipGroup
-  //  private lateinit var toolbar: Toolbar
-    private var primeraSeleccion = true // Variable para controlar la primera selección
+
     private lateinit var estadoRadioGroup: RadioGroup
 
     @SuppressLint("MissingInflatedId")
@@ -39,17 +36,15 @@ class ArticulosActivity : AppCompatActivity() {
     //    setSupportActionBar(toolbar)
         supportActionBar?.title = "RR - Artículos"
 
-        dbHelper = ArticulosSQLite(this)
+
+        db = ArticulosSQLite(this)
         recyclerView = findViewById(R.id.articulosRecyclerView)
         searchView = findViewById(R.id.searchView)
         addArticuloButton = findViewById(R.id.addArticuloButton)
-        backButton = findViewById(R.id.backButton)
+    //    backButton = findViewById(R.id.backButton)
         homeButton = findViewById(R.id.homeButton)
-     //   categoriasSpinner = findViewById(R.id.categoriasSpinner)
-      //  estadoChipGroup = findViewById(R.id.estadoChipGroup)
         estadoRadioGroup = findViewById(R.id.estadoRadioGroup)
-
-        articulosAdapter = ArticulosAdapter(dbHelper.obtenerArticulos())
+        articulosAdapter = ArticulosAdapter(db.obtenerArticulos())
         recyclerView.adapter = articulosAdapter
         recyclerView.layoutManager = GridLayoutManager(this, 1)
 
@@ -57,66 +52,27 @@ class ArticulosActivity : AppCompatActivity() {
             val intent = Intent(this, ArticuloAddActivity::class.java)
             startActivity(intent)
         }
-        backButton.setOnClickListener {
-            finish()
-        }
+//        backButton.setOnClickListener {
+//            setResult(RESULT_OK)
+//            finish()
+//        }
         homeButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
-
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                filtrarArticulos(newText)
+                articulosAdapter.articulos = db.articulosDbHelper.filtrarArticulos(db.readableDatabase, newText) // Llamada a la función
+                articulosAdapter.notifyDataSetChanged()
                 return true
             }
         })
 
-        // Configura el Spinner de categorías
-//        val categorias = dbHelper.obtenerCategorias()
-//        val categoriasAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categorias)
-//        categoriasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//        categoriasSpinner.adapter = categoriasAdapter
-//
-//        categoriasSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//            override fun onItemSelected(
-//                parent: AdapterView<*>?,
-//                view: View?,
-//                position: Int,
-//                id: Long
-//            ) {
-//                if (primeraSeleccion) {
-//                    primeraSeleccion = false
-//                } else {
-//                    val categoriaSeleccionada = categorias[position]
-//                    if (categoriaSeleccionada != "Todas las categorías") {
-//                        filtrarArticulosPorCategoria(categoriaSeleccionada)
-//                    } else {
-//                        articulosAdapter.articulos = dbHelper.obtenerArticulos()
-//                        articulosAdapter.notifyDataSetChanged()
-//                    }
-//                }
-//            }
-//
-//            override fun onNothingSelected(parent: AdapterView<*>?) {
-//                (categoriasSpinner.getChildAt(0) as TextView).text = "Categorías"
-//            }
-//        }
-      /*  estadoChipGroup.setOnCheckedChangeListener { group, checkedId ->
-            val estadoSeleccionado = when (checkedId) {
-                R.id.disponibleChip -> EstadoArticulo.DISPONIBLE
-                R.id.prestadoChip -> EstadoArticulo.PRESTADO
-                R.id.noDisponibleChip -> EstadoArticulo.NO_DISPONIBLE
-                else -> EstadoArticulo.DISPONIBLE
-            }
-
-            filtrarArticulosPorEstado(estadoSeleccionado)
-        }*/
-        estadoRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+        estadoRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             val estadoSeleccionado = when (checkedId) {
                 R.id.disponibleRadioButton -> EstadoArticulo.DISPONIBLE
                 R.id.prestadoRadioButton -> EstadoArticulo.PRESTADO
@@ -124,8 +80,10 @@ class ArticulosActivity : AppCompatActivity() {
                 else -> null
             }
 
-            filtrarArticulosPorEstado(estadoSeleccionado)
+            articulosAdapter.articulos = db.articulosDbHelper.filtrarArticulosPorEstado(db.readableDatabase, estadoSeleccionado) // Llamada a la función
+            articulosAdapter.notifyDataSetChanged()
         }
+
     }
 
     override fun onResume() {
@@ -133,54 +91,51 @@ class ArticulosActivity : AppCompatActivity() {
         actualizarListaArticulos()
     }
 
-    private fun actualizarListaArticulos() {
-        articulosAdapter.articulos = dbHelper.obtenerArticulos()
-        articulosAdapter.notifyDataSetChanged()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             val articuloId = data?.getIntExtra("idArticulo", -1) ?: -1
             if (articuloId != -1) {
-                val articuloActualizado = dbHelper.obtenerArticuloPorId(articuloId)
+                val articuloActualizado = db.obtenerArticuloPorId(articuloId)
                 if (articuloActualizado != null) {
-                    articulosAdapter.articulos = dbHelper.obtenerArticulos()
+                    articulosAdapter.articulos = db.obtenerArticulos()
                     articulosAdapter.notifyDataSetChanged()
                 }
             }
         }
     }
 
-    private fun filtrarArticulos(query: String?) {
-        val articulosFiltrados = if (query.isNullOrEmpty()) {
-            dbHelper.obtenerArticulos()
-        } else {
-            dbHelper.obtenerArticulos().filter { articulo ->
-                articulo.nombre?.contains(query, ignoreCase = true) ?: false ||
-                        articulo.categoria?.contains(query, ignoreCase = true) ?: false ||
-                        articulo.tipo?.contains(query, ignoreCase = true) ?: false
-            }
-        }
-        articulosAdapter.articulos = articulosFiltrados
-        articulosAdapter.notifyDataSetChanged()
-    }
+//    private fun actualizarListaArticulos() {
+//        articulosAdapter.articulos = db.obtenerArticulos()
+//        articulosAdapter.notifyDataSetChanged()
+//    }
+private fun actualizarListaArticulos() {
+    val db = ArticulosSQLite(this)
+    val articulos = db.obtenerArticulos()
+    articulosAdapter.articulos = articulos
+    articulosAdapter.notifyDataSetChanged()
+}
 
-//    private fun filtrarArticulosPorCategoria(categoria: String) {
-//        val articulosFiltrados = dbHelper.obtenerArticulos().filter { articulo ->
-//            articulo.categoria == categoria
+//    private fun filtrarArticulos(query: String?) {
+//        val articulosFiltrados = if (query.isNullOrEmpty()) {
+//            db.obtenerArticulos()
+//        } else {
+//            db.obtenerArticulos().filter { articulo ->
+//                articulo.nombre?.contains(query, ignoreCase = true) ?: false ||
+//                        articulo.categoria?.contains(query, ignoreCase = true) ?: false ||
+//                        articulo.tipo?.contains(query, ignoreCase = true) ?: false
+//            }
 //        }
 //        articulosAdapter.articulos = articulosFiltrados
 //        articulosAdapter.notifyDataSetChanged()
 //    }
-
-    private fun filtrarArticulosPorEstado(estado: EstadoArticulo?) {
-        val articulosFiltrados = if (estado == null) {
-            dbHelper.obtenerArticulos()
-        } else {
-            dbHelper.obtenerArticulos().filter { articulo -> articulo.estado == estado }
-        }
-        articulosAdapter.articulos = articulosFiltrados
-        articulosAdapter.notifyDataSetChanged()
-    }
+//    private fun filtrarArticulosPorEstado(estado: EstadoArticulo?) {
+//        val articulosFiltrados = if (estado == null) {
+//            db.obtenerArticulos()
+//        } else {
+//            db.obtenerArticulos().filter { articulo -> articulo.estado == estado }
+//        }
+//        articulosAdapter.articulos = articulosFiltrados
+//        articulosAdapter.notifyDataSetChanged()
+//    }
 }

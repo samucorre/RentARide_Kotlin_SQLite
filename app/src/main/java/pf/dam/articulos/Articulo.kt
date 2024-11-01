@@ -4,8 +4,7 @@ import java.io.Serializable
 
 open class Articulo (
 
-    var idArticulo: Int? = null, // Nueva propiedad id
-
+    var idArticulo: Int? = null,
     val categoria: String? = null,
     val tipo: String? = null,
     val nombre: String? = null,

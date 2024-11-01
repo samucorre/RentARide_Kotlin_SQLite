@@ -61,7 +61,7 @@ class ArticuloAddActivity : AppCompatActivity() {
         imageView = findViewById(R.id.imageView)
         estadoCheckBox = findViewById(R.id.estadoCheckBox)
 
-        val estado = if (estadoCheckBox.isChecked) EstadoArticulo.DISPONIBLE else EstadoArticulo.NO_DISPONIBLE
+        if (estadoCheckBox.isChecked) EstadoArticulo.DISPONIBLE else EstadoArticulo.NO_DISPONIBLE
 
 
         homeButton.setOnClickListener {

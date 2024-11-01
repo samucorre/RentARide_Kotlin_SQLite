@@ -19,7 +19,7 @@ class SociosActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchView: SearchView
     private lateinit var sociosAdapter: SociosAdapter
-    private lateinit var dbHelper: SociosSQLite
+    private lateinit var db: SociosSQLite
     private lateinit var addSocioButton: FloatingActionButton
     private lateinit var backButton: FloatingActionButton
     private lateinit var homeButton: FloatingActionButton
@@ -30,14 +30,14 @@ class SociosActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_socios)
 
-        dbHelper = SociosSQLite(this)
+        db = SociosSQLite(this)
         recyclerView = findViewById(R.id.sociosRecyclerView)
         searchView = findViewById(R.id.searchView)
         addSocioButton = findViewById(R.id.addSocioButton)
-        backButton = findViewById(R.id.backButton)
+      //  backButton = findViewById(R.id.backButton)
         homeButton = findViewById(R.id.homeButton)
 
-        sociosAdapter = SociosAdapter(dbHelper.obtenerSocios())
+        sociosAdapter = SociosAdapter(db.obtenerSocios())
         recyclerView.adapter = sociosAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         supportActionBar?.title = "RR - Socios"
@@ -47,7 +47,7 @@ class SociosActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                val sociosFiltrados = dbHelper.obtenerSocios().filter { socio -> // <-- Cambio aquí
+                val sociosFiltrados = db.obtenerSocios().filter { socio -> // <-- Cambio aquí
                     socio.nombre.contains(newText.orEmpty(), ignoreCase = true) ||
                             socio.apellido.contains(newText.orEmpty(), ignoreCase = true) ||
                             socio.numeroSocio.toString().contains(newText.orEmpty(), ignoreCase = true)||
@@ -65,9 +65,9 @@ class SociosActivity : AppCompatActivity() {
         }
 
 
-        backButton.setOnClickListener {
-        finish()
-    }
+     //   backButton.setOnClickListener {
+     //   finish()
+  //  }
         homeButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
@@ -80,7 +80,7 @@ class SociosActivity : AppCompatActivity() {
     }
 
     private fun actualizarListaSocios() {
-        sociosAdapter.socios = dbHelper.obtenerSocios()
+        sociosAdapter.socios = db.obtenerSocios()
         sociosAdapter.notifyDataSetChanged()
     }
 
@@ -89,10 +89,10 @@ class SociosActivity : AppCompatActivity() {
         if (resultCode == RESULT_OK) {
             val socioId = data?.getIntExtra("idSocio", -1) ?: -1
             if (socioId != -1) {
-                val socioActualizado = dbHelper.obtenerSocioPorId(socioId)
+                val socioActualizado = db.obtenerSocioPorId(socioId)
                 if (socioActualizado != null) {
                     // Actualizar la vista con articuloActualizado
-                    sociosAdapter.socios = dbHelper.obtenerSocios()
+                    sociosAdapter.socios = db.obtenerSocios()
                     sociosAdapter.notifyDataSetChanged()
                 }
             }

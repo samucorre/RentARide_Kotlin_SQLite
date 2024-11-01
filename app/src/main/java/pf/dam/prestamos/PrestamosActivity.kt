@@ -24,7 +24,7 @@ class PrestamosActivity : AppCompatActivity() {
     private lateinit var prestamosAdapter: PrestamosAdapter
     private lateinit var dbHelper: PrestamosSQLite
     private lateinit var addPrestamoButton: FloatingActionButton
-    private lateinit var backButton: FloatingActionButton
+  //  private lateinit var backButton: FloatingActionButton
     private lateinit var homeButton: FloatingActionButton
     private lateinit var estadoRadioGroup: RadioGroup
     private lateinit var searchView: SearchView
@@ -37,7 +37,7 @@ class PrestamosActivity : AppCompatActivity() {
         dbHelper = PrestamosSQLite(this)
         recyclerView = findViewById(R.id.prestamosRecyclerView)
         addPrestamoButton = findViewById(R.id.addPrestamoButton)
-        backButton = findViewById(R.id.backButton)
+     //   backButton = findViewById(R.id.backButton)
         homeButton = findViewById(R.id.homeButton)
         estadoRadioGroup = findViewById(R.id.estadoRadioGroup)
         searchView = findViewById(R.id.searchView)
@@ -54,9 +54,9 @@ class PrestamosActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
-        backButton.setOnClickListener {
-            finish()
-        }
+    //    backButton.setOnClickListener {
+     //       finish()
+    //    }
 
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

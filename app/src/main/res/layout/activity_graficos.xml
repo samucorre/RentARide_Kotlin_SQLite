@@ -26,77 +26,87 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ver gráficos de socios" />
+<!--        -->
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Gráfico de líneas" />-->
 
-        <TextView
+<!--        <com.github.mikephil.charting.charts.LineChart-->
+<!--            android:id="@+id/chart"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="300dp" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Gráfico de barras" />-->
+
+<!--        <com.github.mikephil.charting.charts.BarChart-->
+<!--            android:id="@+id/barChart"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="300dp" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Gráfico de radar" />-->
+
+<!--        <com.github.mikephil.charting.charts.RadarChart-->
+<!--            android:id="@+id/radarChart"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="300dp" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Gráfico de pastel" />-->
+
+<!--        <com.github.mikephil.charting.charts.PieChart-->
+<!--            android:id="@+id/pieChart"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="300dp" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Gráfico de dispersión" />-->
+
+<!--        <com.github.mikephil.charting.charts.ScatterChart-->
+<!--            android:id="@+id/scatterChart"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="300dp" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Gráfico de burbujas" />-->
+
+<!--        <com.github.mikephil.charting.charts.BubbleChart-->
+<!--            android:id="@+id/bubbleChart"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="300dp" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Gráfico de velas" />-->
+
+<!--        <com.github.mikephil.charting.charts.CandleStickChart-->
+<!--            android:id="@+id/candleStickChart"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="300dp" />-->
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/homeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Gráfico de líneas" />
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gráfico de barras" />
-
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barChart"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gráfico de radar" />
-
-        <com.github.mikephil.charting.charts.RadarChart
-            android:id="@+id/radarChart"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gráfico de pastel" />
-
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/pieChart"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gráfico de dispersión" />
-
-        <com.github.mikephil.charting.charts.ScatterChart
-            android:id="@+id/scatterChart"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gráfico de burbujas" />
-
-        <com.github.mikephil.charting.charts.BubbleChart
-            android:id="@+id/bubbleChart"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gráfico de velas" />
-
-        <com.github.mikephil.charting.charts.CandleStickChart
-            android:id="@+id/candleStickChart"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
-
+            android:layout_margin="16dp"
+            android:src="@drawable/ico_home"
+            app:backgroundTint="#FFC107"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </LinearLayout>
+
 
 </ScrollView>

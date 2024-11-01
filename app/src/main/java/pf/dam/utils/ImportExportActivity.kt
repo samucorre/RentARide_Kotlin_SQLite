@@ -2,6 +2,7 @@ package pf.dam.utils
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
@@ -11,6 +12,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import pf.dam.MainActivity
 import pf.dam.R
 import java.io.File
 
@@ -24,7 +27,8 @@ class ImportExportActivity : AppCompatActivity() {
 
         val exportarButton = findViewById<Button>(R.id.exportarButton)
         val importarButton = findViewById<Button>(R.id.importarButton)
-
+        val homeButton=findViewById<FloatingActionButton>(R.id.homeButton)
+        val volverButton=findViewById<FloatingActionButton>(R.id.volverButton)
         exportarButton.setOnClickListener {
             if (tienePermisos()) {
                 exportarBasesDeDatos(this)
@@ -40,7 +44,18 @@ class ImportExportActivity : AppCompatActivity() {
                 solicitarPermisos()
             }
         }
+
+        homeButton.setOnClickListener {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
     }
+
+        volverButton.setOnClickListener {
+        finish()
+    }
+
+    }
+
 
     private fun tienePermisos(): Boolean {
         return ContextCompat.checkSelfPermission(
@@ -121,25 +136,6 @@ class ImportExportActivity : AppCompatActivity() {
         }
     }
 
-//    private fun importarBaseDeDatos(context: Context) {
-//        val nombreArchivo = "proba.db"
-//        val directorio = context.getExternalFilesDir(null)
-//        val archivoOrigen = File(directorio, nombreArchivo)
-//        val archivoDestino = context.getDatabasePath(nombreArchivo)
-//
-//        try {
-//            archivoOrigen.copyTo(archivoDestino, overwrite = true)
-//            Toast.makeText(
-//                context,
-//                "Base de datos importada desde: ${archivoOrigen.absolutePath}",
-//                Toast.LENGTH_LONG
-//            ).show()
-//        } catch (e: Exception) {
-//            Log.e("Error", "Error al importar la base de datos: ${e.message}")
-//            Toast.makeText(context, "Error al importar la base de datos", Toast.LENGTH_SHORT)
-//                .show()
-//        }
-//    }
 private fun importarBaseDeDatos(context: Context) {
     val nombreCarpeta = "databases" // Nombre de la carpeta a importar
     val directorioOrigen = File(context.getExternalFilesDir(null), nombreCarpeta) // Carpeta de origen en el almacenamiento externo

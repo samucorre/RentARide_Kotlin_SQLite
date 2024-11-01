@@ -1,5 +1,6 @@
 package pf.dam.utils
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.charts.BarChart
@@ -12,7 +13,9 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.PrestamosSQLite
+import pf.dam.MainActivity
 import pf.dam.R
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -21,6 +24,8 @@ class PrestamosGraphs : AppCompatActivity() {
 
     private lateinit var barChartPrestamosPorMes: BarChart
     private lateinit var pieChartPrestamosPorEstado: PieChart
+    private lateinit var homeButton: FloatingActionButton
+    private lateinit var volverButton: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +33,18 @@ class PrestamosGraphs : AppCompatActivity() {
 
         barChartPrestamosPorMes = findViewById(R.id.barChartPrestamosPorMes)
         pieChartPrestamosPorEstado = findViewById(R.id.pieChartPrestamosPorEstado)
+        homeButton = findViewById(R.id.homeButton)
+        volverButton = findViewById(R.id.volverButton)
+
+        configurarGraficos()
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        volverButton.setOnClickListener {
+            finish()
+        }
 
         configurarGraficos()
     }
