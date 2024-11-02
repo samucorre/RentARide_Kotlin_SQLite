@@ -23,20 +23,36 @@
                 android:id="@+id/pieChart"
                 android:layout_width="match_parent"
                 android:layout_height="300dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Estado de artículos:"
+                android:paddingTop="20dp"
+                android:textSize="9sp"
+                android:textColor="@color/black"/>
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/barChart"
                 android:layout_width="match_parent"
-                android:layout_height="300dp" />
+                android:layout_height="300dp"
+                android:paddingTop="20dp"/>
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/pieChart2"
                 android:layout_width="match_parent"
-                android:layout_height="300dp" />
-
+                android:layout_height="300dp"
+                android:paddingTop="20dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Artículos más prestados:"
+                android:paddingTop="20dp"
+                android:textSize="9sp"
+                android:textColor="@color/black"/>
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/barChart2"
                 android:layout_width="match_parent"
-                android:layout_height="300dp" />
+                android:layout_height="300dp"
+                android:paddingTop="20dp"/>
 
         </LinearLayout>
 

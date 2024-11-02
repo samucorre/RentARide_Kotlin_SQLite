@@ -39,7 +39,7 @@
             android:id="@+id/numeroSocioTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Nº socio"
+            android:text="Nº socio:"
             android:drawableStart="@drawable/ico_socio"
             android:drawablePadding="8dp"
             android:layout_marginTop="8dp"
@@ -67,6 +67,37 @@
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/telefonoTextView" />
+        <TextView
+            android:id="@+id/fechaNacimientoTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Fecha de nacimiento: "
+            android:drawableStart="@drawable/ico_calendar"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emailTextView" />
+
+        <TextView
+            android:id="@+id/fechaIngresoSocioTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Fecha de ingreso:"
+            android:drawableStart="@drawable/ico_calendar_month"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fechaNacimientoTextView" />
+
+        <TextView
+            android:id="@+id/generoTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ico_genero"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fechaIngresoSocioTextView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

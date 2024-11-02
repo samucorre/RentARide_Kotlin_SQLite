@@ -47,15 +47,18 @@ class SociosActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                val sociosFiltrados = db.obtenerSocios().filter { socio -> // <-- Cambio aquí
-                    socio.nombre.contains(newText.orEmpty(), ignoreCase = true) ||
-                            socio.apellido.contains(newText.orEmpty(), ignoreCase = true) ||
-                            socio.numeroSocio.toString().contains(newText.orEmpty(), ignoreCase = true)||
-                            socio.telefono.toString().contains(newText.orEmpty(), ignoreCase = true)||
-                            socio.email.contains(newText.orEmpty(), ignoreCase = true)
+                val sociosFiltrados = db.obtenerSocios().filter { socio ->
+                    socio.nombre?.contains(newText.orEmpty(), ignoreCase = true) ?: false ||
+                            socio.apellido?.contains(newText.orEmpty(), ignoreCase = true) ?: false ||
+                            socio.numeroSocio.toString().contains(newText.orEmpty(), ignoreCase = true) ||
+                            socio.telefono.toString().contains(newText.orEmpty(), ignoreCase = true) ||
+                            socio.email?.contains(newText.orEmpty(), ignoreCase = true) ?: false ||
+                            socio.fechaNacimiento?.toString()?.contains(newText.orEmpty(), ignoreCase = true) ?: false ||
+                            socio.fechaIngresoSocio?.toString()?.contains(newText.orEmpty(), ignoreCase = true) ?: false ||
+                            socio.genero?.toString()?.contains(newText.orEmpty(), ignoreCase = true) ?: false
                 }
-                sociosAdapter.socios = sociosFiltrados // <-- Cambio aquí
-                sociosAdapter.notifyDataSetChanged() // <-- Cambio aquí
+                sociosAdapter.socios = sociosFiltrados
+                sociosAdapter.notifyDataSetChanged()
                 return true
             }
         })

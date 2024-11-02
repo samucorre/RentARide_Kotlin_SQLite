@@ -21,9 +21,12 @@ class SociosSQLite(context: Context) :
                 idSocio INTEGER PRIMARY KEY AUTOINCREMENT,
                 nombre TEXT,
                 apellido TEXT,
-                numeroSocio INTEGER,
+                numeroSocio INTEGER UNIQUE,
                 telefono INTEGER,
-                email TEXT
+                email TEXT,
+                fechaNacimiento TEXT,  
+                fechaIngresoSocio TEXT,
+                genero TEXT
             )
         """.trimIndent()
         db.execSQL(crearTablaSocios)

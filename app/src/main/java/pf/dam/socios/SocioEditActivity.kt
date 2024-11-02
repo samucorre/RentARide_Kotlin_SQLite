@@ -6,24 +6,35 @@ import android.database.sqlite.SQLiteException
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.semantics.text
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.PrestamosSQLite
 import db.SociosSQLite
 import pf.dam.MainActivity
 import pf.dam.R
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Locale
+
 
 class SocioEditActivity : AppCompatActivity() {
 
-    private lateinit var dbHelper: SociosSQLite
-    private lateinit var prestamosDbHelper: PrestamosSQLite // Instancia de PrestamosSQLite
-
+    private lateinit var dbSocios: SociosSQLite
+    private lateinit var dbPrestamos: PrestamosSQLite
     private lateinit var nombreEditText: EditText
     private lateinit var apellidoEditText: EditText
     private lateinit var numeroSocioEditText: EditText
     private lateinit var telefonoEditText: EditText
     private lateinit var emailEditText: EditText
+    private lateinit var fechaNacimientoEditText: EditText
+    private lateinit var fechaIngresoSocioEditText: EditText
+    private lateinit var generoRadioGroup: RadioGroup
+    private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+
+
     private lateinit var guardarButton: FloatingActionButton
     private lateinit var volverButton: FloatingActionButton
     private lateinit var homeButton: FloatingActionButton
@@ -35,19 +46,22 @@ class SocioEditActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_socio_edit)
 
-        dbHelper = SociosSQLite(this)
-        prestamosDbHelper = PrestamosSQLite(this)
+        dbSocios = SociosSQLite(this)
+        dbPrestamos = PrestamosSQLite(this)
         nombreEditText = findViewById(R.id.nombreEditText)
         apellidoEditText = findViewById(R.id.apellidoEditText)
         numeroSocioEditText = findViewById(R.id.numeroSocioEditText)
         telefonoEditText = findViewById(R.id.telefonoEditText)
         emailEditText = findViewById(R.id.emailEditText)
+        fechaNacimientoEditText = findViewById(R.id.fechaNacimientoEditText)
+        fechaIngresoSocioEditText = findViewById(R.id.fechaIngresoSocioEditText)
+        generoRadioGroup = findViewById(R.id.generoRadioGroup)
         guardarButton = findViewById(R.id.guardarButton)
         volverButton = findViewById(R.id.volverButton)
         homeButton = findViewById(R.id.homeButton)
 
         socioId = intent.getIntExtra("socioId", -1)
-        val socio = dbHelper.obtenerSocioPorId(socioId)
+        val socio = dbSocios.obtenerSocioPorId(socioId)
 
         if (socio != null) {
             nombreEditText.setText(socio.nombre)
@@ -55,6 +69,13 @@ class SocioEditActivity : AppCompatActivity() {
             numeroSocioEditText.setText(socio.numeroSocio.toString())
             telefonoEditText.setText(socio.telefono.toString())
             emailEditText.setText(socio.email)
+            fechaNacimientoEditText.setText(socio.fechaNacimiento.toString())
+            fechaIngresoSocioEditText.setText(socio.fechaIngresoSocio.toString())
+            when (socio.genero) {
+                Genero.HOMBRE -> generoRadioGroup.check(R.id.hombreRadioButton)
+                Genero.MUJER -> generoRadioGroup.check(R.id.mujerRadioButton)
+                else -> { /* No hacer nada o establecer un valor por defecto */ }
+            }
 
 
             homeButton.setOnClickListener {
@@ -67,9 +88,26 @@ class SocioEditActivity : AppCompatActivity() {
                 val numeroSocio = numeroSocioEditText.text.toString().toIntOrNull() ?: 0
                 val telefono = telefonoEditText.text.toString().toIntOrNull() ?: 0
                 val email = emailEditText.text.toString()
+                val fechaNacimiento = try {
+                    dateFormat.parse(fechaNacimientoEditText.text.toString())
+                } catch (e: ParseException) {
+                    null // o un valor por defecto si lo prefieres
+                }
+                val fechaIngresoSocio = try {
+                    dateFormat.parse(fechaIngresoSocioEditText.text.toString())
+                } catch (e: ParseException) {
+                    null // o un valor por defecto si lo prefieres
+                }
+
+                // Manejar el caso nulo para genero
+                val genero = when (generoRadioGroup.checkedRadioButtonId) {
+                    R.id.hombreRadioButton -> Genero.HOMBRE
+                    R.id.mujerRadioButton -> Genero.MUJER
+                    else -> null // o el valor por defecto que desees
+                }
 
                 try {
-                    if (socio.idSocio?.let { prestamosDbHelper.estaSocioEnPrestamoActivo(it) }
+                    if (socio.idSocio?.let { dbPrestamos.estaSocioEnPrestamoActivo(it) }
                             ?: false) { // Llamar a la función desde prestamosDbHelper
                         // Mostrar un mensaje de error al usuario
                         Toast.makeText(
@@ -80,8 +118,10 @@ class SocioEditActivity : AppCompatActivity() {
                     } else {
                         val socioActualizado =
                             Socio(socio.idSocio, nombre, apellido, numeroSocio,
-                                telefono, email)
-                        dbHelper.actualizarSocio(socioActualizado)
+                                telefono, email, fechaNacimiento,
+                                fechaIngresoSocio,
+                                genero)
+                        dbSocios.actualizarSocio(socioActualizado)
                         Toast.makeText(this, "Socio actualizado", Toast.LENGTH_SHORT).show()
                         setResult(RESULT_OK)
                         finish()

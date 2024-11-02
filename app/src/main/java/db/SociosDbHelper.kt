@@ -4,7 +4,13 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+
+import pf.dam.socios.Genero
 import pf.dam.socios.Socio
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import kotlin.text.format
 
 class SociosDbHelper(private val dbHelper: SociosSQLite) {
 
@@ -36,6 +42,9 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
             put("numeroSocio", socio.numeroSocio)
             put("telefono", socio.telefono)
             put("email", socio.email)
+            put("fechaNacimiento", formatearFecha(socio.fechaNacimiento)) // Nuevo campo
+            put("fechaIngresoSocio", formatearFecha(socio.fechaIngresoSocio)) // Nuevo campo
+            put("genero", socio.genero?.name) // Nuevo campo
         }
         val idSocio = db.insert("socios", null, values)
         socio.idSocio = idSocio.toInt()
@@ -50,6 +59,9 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
             put("numeroSocio", socio.numeroSocio)
             put("telefono", socio.telefono)
             put("email", socio.email)
+            put("fechaNacimiento", formatearFecha(socio.fechaNacimiento)) // Nuevo campo
+            put("fechaIngresoSocio", formatearFecha(socio.fechaIngresoSocio)) // Nuevo campo
+            put("genero", socio.genero?.name) // Nuevo campo
         }
         db.update("socios", values, "idSocio = ?", arrayOf(socio.idSocio.toString()))
     }
@@ -65,7 +77,36 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
             getString(getColumnIndexOrThrow("apellido")) ?: "",
             getInt(getColumnIndexOrThrow("numeroSocio")),
             getInt(getColumnIndexOrThrow("telefono")),
-            getString(getColumnIndexOrThrow("email")) ?: ""
+            getString(getColumnIndexOrThrow("email")) ?: "",
+            parsearFecha(getString(getColumnIndexOrThrow("fechaNacimiento"))), // Nuevo campo
+            parsearFecha(getString(getColumnIndexOrThrow("fechaIngresoSocio"))), // Nuevo campo
+            obtenerGenero(getString(getColumnIndexOrThrow("genero"))) // Nuevo campo
         )
+    }
+
+    // Funciones auxiliares para formatear y parsear fechas
+    private fun formatearFecha(fecha: Date?): String? {
+        return if (fecha != null) {
+            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(fecha)
+        } else {
+            null
+        }
+    }
+
+    private fun parsearFecha(fechaString: String?): Date? {
+        return if (fechaString != null) {
+            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(fechaString)
+        } else {
+            null
+        }
+    }
+
+    // Función auxiliar para obtener el género desde el nombre del enum
+    private fun obtenerGenero(generoString: String?): Genero? {
+        return if (generoString != null) {
+            Genero.valueOf(generoString)
+        } else {
+            null
+        }
     }
 }

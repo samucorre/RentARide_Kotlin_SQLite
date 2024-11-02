@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.semantics.text
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.PrestamosSQLite
 import db.SociosSQLite
@@ -35,6 +36,9 @@ class SocioDetalleActivity : AppCompatActivity() {
     private lateinit var numeroSocioTextView: TextView
     private lateinit var telefonoTextView: TextView
     private lateinit var emailTextView: TextView
+    private lateinit var fechaNacimientoTextView: TextView
+    private lateinit var fechaIngresoSocioTextView: TextView
+    private lateinit var generoTextView: TextView
     private lateinit var cantidadPrestamosTextView: TextView
     private lateinit var articulosTextView: TextView
 
@@ -72,6 +76,9 @@ class SocioDetalleActivity : AppCompatActivity() {
         emailTextView = findViewById(R.id.emailTextView)
         cantidadPrestamosTextView= findViewById(R.id.cantidadPrestamosTextView)
         articulosTextView = findViewById(R.id.articulosTextView)
+        fechaNacimientoTextView = findViewById(R.id.fechaNacimientoTextView)
+        fechaIngresoSocioTextView = findViewById(R.id.fechaIngresoSocioTextView)
+        generoTextView = findViewById(R.id.generoTextView)
 
         socioId = intent.getIntExtra("idSocio", -1)
         val socio = dbHelper.obtenerSocioPorId(socioId)
@@ -155,6 +162,9 @@ class SocioDetalleActivity : AppCompatActivity() {
         numeroSocioTextView.text = "${socio.numeroSocio}"
         telefonoTextView.text = "${socio.telefono}"
         emailTextView.text = "${socio.email}"
+        fechaNacimientoTextView.text = "Fecha de nacimiento: ${socio.fechaNacimiento}"
+        fechaIngresoSocioTextView.text = "Fecha de ingreso: ${socio.fechaIngresoSocio}"
+        generoTextView.text = "Género: ${socio.genero}"
 
         val prestamos = socio.idSocio?.let { prestamosDbHelper.obtenerPrestamosPorSocio(it) }
 
@@ -179,41 +189,3 @@ class SocioDetalleActivity : AppCompatActivity() {
 
 
 }
-
-//////////////////////////////////////////
-//deleteSocioButton.setOnClickListener {
-//                val prestamosActivos = prestamosDbHelper.estaSocioEnPrestamo(socioId)
-//                if (prestamosActivos) {
-//                    Toast.makeText(
-//                        this,
-//                        "No se puede eliminar el socio porque tiene préstamos activos",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                } else {
-//                    setContent {
-//                        var showDialog by remember { mutableStateOf(true) }
-//
-//                        if (showDialog) {
-//                            ShowDeleteConfirmationDialog(
-//                                title = "Eliminar socio",
-//                                message = "¿Estás seguro de que quieres eliminar este socio?",
-//                                onPositiveButtonClick = {
-//                                    dbHelper.borrarSocio(socioId)
-//                                    Toast.makeText(
-//                                        this@SocioDetalleActivity,
-//                                        "Socio eliminado",
-//                                        Toast.LENGTH_SHORT
-//                                    ).show()
-//                                    setResult(RESULT_OK)
-//                                    finish()
-//                                    showDialog = false
-//                                },
-//                                onDismissRequest = {
-//                                    showDialog = false
-//                                    finish()
-//                                }
-//                            )
-//                        }
-//                    }
-//                }
-//            }}

@@ -51,12 +51,14 @@ class ArticulosAdapter(articulos: List<Articulo>) :
         holder.descripcionTextView.text = articulo.descripcion ?: ""
       //  holder.estadoTextView.text = articulo.estado?.name ?: ""
 
-        if (articulo.rutaImagen != null) {
-            val imagenBitmap = BitmapFactory.decodeFile(articulo.rutaImagen)
-            holder.imagenImageView.setImageBitmap(imagenBitmap)
+        if (articulo.rutaImagen.isNullOrEmpty()) {
+
+            holder.imagenImageView.setImageResource(R.drawable.ico_imagen)
+
         } else {
             // Mostrar una imagen por defecto si no hay rutaImagen
-            holder.imagenImageView.setImageResource(R.drawable.ico_imagen)
+            val imagenBitmap = BitmapFactory.decodeFile(articulo.rutaImagen)
+            holder.imagenImageView.setImageBitmap(imagenBitmap)
         }
 
 

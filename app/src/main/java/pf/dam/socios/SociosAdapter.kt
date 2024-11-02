@@ -6,9 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.compose.ui.semantics.text
 import androidx.recyclerview.widget.RecyclerView
 import db.SociosSQLite
 import pf.dam.R
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class SociosAdapter(socios: List<Socio>) :
     RecyclerView.Adapter<SociosAdapter.SocioViewHolder>() {
@@ -18,6 +21,7 @@ class SociosAdapter(socios: List<Socio>) :
                     field = value
                     notifyDataSetChanged()
     }
+    private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
     class SocioViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nombreTextView: TextView = itemView.findViewById(R.id.nombreTextView)
@@ -25,7 +29,9 @@ class SociosAdapter(socios: List<Socio>) :
         val numeroSocioTextView: TextView = itemView.findViewById(R.id.numeroSocioTextView)
         val telefonoTextView: TextView = itemView.findViewById(R.id.telefonoTextView)
         val emailTextView: TextView = itemView.findViewById(R.id.emailTextView)
-        // ... otros TextViews o Views que necesites
+        val fechaNacimientoTextView: TextView = itemView.findViewById(R.id.fechaNacimientoTextView)
+        val fechaIngresoSocioTextView: TextView = itemView.findViewById(R.id.fechaIngresoSocioTextView)
+        val generoTextView: TextView = itemView.findViewById(R.id.generoTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SocioViewHolder {
@@ -41,8 +47,10 @@ class SociosAdapter(socios: List<Socio>) :
         //holder.apellidoTextView.text = "Apellido: ${socio.apellido}"
         holder.numeroSocioTextView.text = "Número de socio: ${socio.numeroSocio}"
         holder.telefonoTextView.text = "Teléfono: ${socio.telefono}"
-        holder.emailTextView.text = "Email: ${socio.email}" // Asegúrate de que Email se pueda convertir a String
-        // ... configura otros TextViews o Views
+        holder.emailTextView.text = "Email: ${socio.email}"
+        holder.fechaNacimientoTextView.text = "Fecha de nacimiento: ${dateFormat.format(socio.fechaNacimiento)}"
+        holder.fechaIngresoSocioTextView.text = "Fecha de ingreso: ${dateFormat.format(socio.fechaIngresoSocio)}"
+        holder.generoTextView.text = "Género: ${socio.genero}"
 
     holder.itemView.setOnClickListener {
         val context = holder.itemView.context

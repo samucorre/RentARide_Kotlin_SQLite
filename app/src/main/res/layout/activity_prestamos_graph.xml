@@ -18,15 +18,39 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Préstamos por mes"
+                android:paddingTop="20dp"
+                android:textSize="9sp"
+                android:textColor="@color/black"/>
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barChartPrestamosPorMes"
         android:layout_width="match_parent"
         android:layout_height="300dp" />
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Estado préstamos"
+                android:paddingTop="20dp"
+                android:textSize="9sp"
+                android:textColor="@color/black"/>
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieChartPrestamosPorEstado"
         android:layout_width="match_parent"
         android:layout_height="300dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Préstamos por mes"
+                android:paddingTop="20dp"
+                android:textSize="9sp"
+                android:textColor="@color/black"/>
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChartPrestamosPorMes"
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
 
     </LinearLayout>
 

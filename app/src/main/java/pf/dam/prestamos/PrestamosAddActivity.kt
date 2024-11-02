@@ -24,9 +24,9 @@ import java.util.Date
 
 class PrestamoAddActivity : AppCompatActivity() {
 
-    private lateinit var dbHelper: PrestamosSQLite
-    private lateinit var articulosDbHelper: ArticulosSQLite
-    private lateinit var sociosDbHelper: SociosSQLite
+    private lateinit var dbPrestamos: PrestamosSQLite
+    private lateinit var dbArticulos: ArticulosSQLite
+    private lateinit var dbSocios: SociosSQLite
     private  lateinit var dateUtil : DateUtil
     private lateinit var articuloSpinner: Spinner
     private lateinit var socioSpinner: Spinner
@@ -47,9 +47,10 @@ class PrestamoAddActivity : AppCompatActivity() {
         setContentView(R.layout.activity_prestamo_add)
         supportActionBar?.title = "RR - Préstamo nuevo"
 
-        dbHelper = PrestamosSQLite(this)
-        articulosDbHelper = ArticulosSQLite(this)
-        sociosDbHelper = SociosSQLite(this)
+
+        dbPrestamos = PrestamosSQLite(this)
+        dbArticulos = ArticulosSQLite(this)
+        dbSocios = SociosSQLite(this)
         dateUtil = DateUtil(this)
 
         articuloSpinner = findViewById(R.id.articuloSpinner)
@@ -70,8 +71,8 @@ class PrestamoAddActivity : AppCompatActivity() {
 
 
 
-        val articulos = articulosDbHelper.obtenerArticulosDisponibles()
-        val socios = sociosDbHelper.obtenerSocios()
+        val articulos = dbArticulos.obtenerArticulosDisponibles()
+        val socios = dbSocios.obtenerSocios()
 
         fechaInicioButton.setOnClickListener {
             dateUtil.mostrarDatePicker(this, fechaInicioButton)
@@ -118,9 +119,9 @@ class PrestamoAddActivity : AppCompatActivity() {
                 if (idArticulo != null && idSocio != null && fechaInicio != null) {
                     val fechaFin: Date? = null
                     val nuevoPrestamo = Prestamo(null, idArticulo, idSocio, fechaInicio, fechaFin, info, EstadoPrestamo.ACTIVO)
-                    dbHelper.insertarPrestamo(nuevoPrestamo)
+                    dbPrestamos.insertarPrestamo(nuevoPrestamo)
                     // Actualizar el estado del artículo a PRESTADO
-                    articulosDbHelper.actualizarEstadoArticulo(idArticulo, EstadoArticulo.PRESTADO)
+                    dbArticulos.actualizarEstadoArticulo(idArticulo, EstadoArticulo.PRESTADO)
                     Toast.makeText(this, "Préstamo añadido", Toast.LENGTH_SHORT).show()
                     finish()
                 } else {
