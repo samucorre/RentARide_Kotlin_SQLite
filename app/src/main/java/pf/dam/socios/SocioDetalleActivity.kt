@@ -169,8 +169,8 @@ class SocioDetalleActivity : AppCompatActivity() {
         numeroSocioTextView.text = "${socio.numeroSocio}"
         telefonoTextView.text = "${socio.telefono}"
         emailTextView.text = "${socio.email}"
-        fechaNacimientoTextView.text = "Fecha de nacimiento: ${socio.fechaNacimiento}"
-        fechaIngresoSocioTextView.text = "Fecha de ingreso: ${socio.fechaIngresoSocio}"
+        fechaNacimientoTextView.text = "Fecha de nacimiento: ${dateFormat.format(socio.fechaNacimiento)}"
+        fechaIngresoSocioTextView.text = "Fecha de ingreso: ${dateFormat.format(socio.fechaIngresoSocio)}"
         generoTextView.text = "Género: ${socio.genero}"
 
         val prestamos = socio.idSocio?.let { prestamosDbHelper.obtenerPrestamosPorSocio(it) }
