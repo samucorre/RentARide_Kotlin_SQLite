@@ -9,11 +9,13 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.semantics.error
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.SociosSQLite
 import pf.dam.MainActivity
 import pf.dam.R
 import pf.dam.utils.DateUtil
+import pf.dam.utils.ValidacionUtils
 import java.text.ParseException
 
 class SocioAddActivity : AppCompatActivity() {
@@ -78,6 +80,11 @@ class SocioAddActivity : AppCompatActivity() {
 
 
 //
+        val validacionUtils = ValidacionUtils()
+        val db = dbSocios.writableDatabase
+        validacionUtils.validateEmail(emailEditText)
+        validacionUtils.validateNumeroSocio(numeroSocioEditText, db)
+
         guardarButton.setOnClickListener {
 
             val nombre = nombreEditText.text.toString()
@@ -96,6 +103,11 @@ class SocioAddActivity : AppCompatActivity() {
                 R.id.hombreRadioButton -> Genero.HOMBRE
                 R.id.mujerRadioButton -> Genero.MUJER
                 else -> null
+            }
+            // Validaciones
+            if (nombre.isBlank() || apellido.isBlank() || numeroSocio == null || telefono == null || email.isBlank() || fechaNacimientoString.isBlank() || fechaIngresoSocioString.isBlank() || genero == null) {
+                Toast.makeText(this, "Por favor, rellena todos los campos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
 
             try {

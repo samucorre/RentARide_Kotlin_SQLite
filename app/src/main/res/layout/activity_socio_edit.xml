@@ -105,7 +105,7 @@
         app:layout_constraintTop_toBottomOf="@id/telefonoEditText" />
 
     <TextView
-        android:id="@+id/fechaNacimientoLabel"
+        android:id="@+id/fechaIngresoLabel"
         style="@style/LabelStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -121,7 +121,7 @@
         android:hint="Fecha de nacimiento"
         android:focusable="false"
         app:layout_constraintTop_toBottomOf="@id/emailEditText"
-        app:layout_constraintStart_toEndOf="@id/fechaNacimientoLabel"
+        app:layout_constraintStart_toEndOf="@id/fechaIngresoLabel"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 

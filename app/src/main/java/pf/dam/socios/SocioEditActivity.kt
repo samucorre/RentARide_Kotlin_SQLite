@@ -123,12 +123,20 @@ class SocioEditActivity : AppCompatActivity() {
             guardarButton.setOnClickListener {
                 val nombre = nombreEditText.text.toString()
                 val apellido = apellidoEditText.text.toString()
-                val numeroSocio = numeroSocioEditText.text.toString().toIntOrNull() ?: 0
-                val telefono = telefonoEditText.text.toString().toIntOrNull() ?: 0
+                val numeroSocio = numeroSocioEditText.text.toString().toIntOrNull()
+                val telefono = telefonoEditText.text.toString().toIntOrNull()
                 val email = emailEditText.text.toString()
                 val fechaNacimientoString = fechaNacimientoEditText.text.toString()
                 val fechaIngresoSocioString = fechaIngresoSocioEditText.text.toString()
-
+                val genero = when (generoRadioGroup.checkedRadioButtonId) {
+                    R.id.hombreRadioButton -> Genero.HOMBRE
+                    R.id.mujerRadioButton -> Genero.MUJER
+                    else -> null
+                }
+                if (nombre.isBlank() || apellido.isBlank() || numeroSocio == null || telefono == null || email.isBlank() || fechaNacimientoString.isBlank() || fechaIngresoSocioString.isBlank() || genero == null) {
+                    Toast.makeText(this, "Por favor, rellena todos los campos", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
                 try {
                     val fechaNacimiento = dateUtil.dateFormat.parse(fechaNacimientoString)
                     val fechaIngresoSocio = dateUtil.dateFormat.parse(fechaIngresoSocioString)
