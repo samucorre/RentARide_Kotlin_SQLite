@@ -99,7 +99,7 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
 
     private fun parsearFecha(fechaString: String?): Date? {
         return if (fechaString != null) {
-            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(fechaString)
+            SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse(fechaString)
         } else {
             null
         }
@@ -126,7 +126,8 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
                     fechaNacimiento?.let {
                         val mesNacimiento = Calendar.getInstance().apply { time = it }.get(Calendar.MONTH) + 1
                         if (mesNacimiento == mesActual) {
-                            val nombreCompleto = "${cursor.getString(cursor.getColumnIndexOrThrow("nombre"))} ${cursor.getString(cursor.getColumnIndexOrThrow("apellido"))} ${formatearFecha(it)}"
+                            val nombreCompleto = "${cursor.getString(cursor.getColumnIndexOrThrow("nombre"))} " +
+                                    "${cursor.getString(cursor.getColumnIndexOrThrow("apellido"))} ${formatearFecha(it)}"
                             listaSociosCumpleaneros.add(Pair(nombreCompleto, it))
                         }
                     }

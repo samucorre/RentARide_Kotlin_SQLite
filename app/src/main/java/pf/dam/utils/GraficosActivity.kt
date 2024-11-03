@@ -67,6 +67,7 @@ class GraficosActivity : AppCompatActivity() {
     private lateinit var dbArticulos: ArticulosSQLite
     private lateinit var dbSocios: SociosSQLite
     private lateinit var dbPrestamos: PrestamosSQLite
+    private lateinit var dateUtil: DateUtil
         private lateinit var zona1TextView: TextView
         private lateinit var zona2TextView: TextView
     private lateinit var zona3TextView: TextView
@@ -87,6 +88,7 @@ class GraficosActivity : AppCompatActivity() {
         dbArticulos = ArticulosSQLite(this)
         dbSocios = SociosSQLite(this)
         dbPrestamos = PrestamosSQLite(this)
+        dateUtil = DateUtil(this)
 
         zona1TextView = findViewById(R.id.zona1)
         zona2TextView = findViewById(R.id.zona2)
@@ -205,7 +207,7 @@ class GraficosActivity : AppCompatActivity() {
             "Número total de Socios: \t$totalSocios\n" +
                 "Socios con préstamos activos: \t$totalSociosPrestamosActivos\n"+
                 "Cumpleaños del mes:"+"\n\t${sociosCumpleaneros.joinToString("\n\t") { it.first }}"+
-                "\nUltimo socio registrado: \t${ultimoSocioRegistrado?.nombre} ${ultimoSocioRegistrado?.apellido} "
+                "\nUltimo socio registrado: \t${ultimoSocioRegistrado?.nombre} ${ultimoSocioRegistrado?.apellido}  ${dateUtil.dateFormat.format(ultimoSocioRegistrado?.fechaIngresoSocio)}"
         zona3TextView.text ="\t\tPRESTAMOS\n" +
             "Préstamos totales: $totalPrestamos\n" +
                 "Préstamos activos: $totalPrestamosActivos\n" +
