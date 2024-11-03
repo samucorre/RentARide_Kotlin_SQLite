@@ -15,6 +15,9 @@ import kotlin.text.format
 
 class SociosDbHelper(private val dbHelper: SociosSQLite) {
 
+
+    private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+
     fun obtenerSocios(db: SQLiteDatabase): List<Socio> {
         val listaSocios = mutableListOf<Socio>()
         db.rawQuery("SELECT * FROM socios", null).use { cursor ->
@@ -43,8 +46,8 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
             put("numeroSocio", socio.numeroSocio)
             put("telefono", socio.telefono)
             put("email", socio.email)
-            put("fechaNacimiento", formatearFecha(socio.fechaNacimiento)) // Nuevo campo
-            put("fechaIngresoSocio", formatearFecha(socio.fechaIngresoSocio)) // Nuevo campo
+            put("fechaNacimiento",dateFormat.format(socio.fechaNacimiento))
+            put("fechaIngresoSocio",dateFormat.format(socio.fechaIngresoSocio))
             put("genero", socio.genero?.name) // Nuevo campo
         }
         val idSocio = db.insert("socios", null, values)
@@ -60,8 +63,8 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
             put("numeroSocio", socio.numeroSocio)
             put("telefono", socio.telefono)
             put("email", socio.email)
-            put("fechaNacimiento", formatearFecha(socio.fechaNacimiento)) // Nuevo campo
-            put("fechaIngresoSocio", formatearFecha(socio.fechaIngresoSocio)) // Nuevo campo
+            put("fechaNacimiento", socio.fechaNacimiento?.let { dateFormat.format(it) }) // Nuevo campo
+            put("fechaIngresoSocio", socio.fechaIngresoSocio?.let { dateFormat.format(it) }) // Nuevo campo
             put("genero", socio.genero?.name) // Nuevo campo
         }
         db.update("socios", values, "idSocio = ?", arrayOf(socio.idSocio.toString()))
@@ -79,8 +82,8 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
             getInt(getColumnIndexOrThrow("numeroSocio")),
             getInt(getColumnIndexOrThrow("telefono")),
             getString(getColumnIndexOrThrow("email")) ?: "",
-            parsearFecha(getString(getColumnIndexOrThrow("fechaNacimiento"))), // Nuevo campo
-            parsearFecha(getString(getColumnIndexOrThrow("fechaIngresoSocio"))), // Nuevo campo
+            dateFormat.parse(getString(getColumnIndexOrThrow("fechaNacimiento")))!!, // Nuevo campo
+            dateFormat.parse(getString(getColumnIndexOrThrow("fechaIngresoSocio")))!!, // Nuevo campo
             obtenerGenero(getString(getColumnIndexOrThrow("genero"))) // Nuevo campo
         )
     }

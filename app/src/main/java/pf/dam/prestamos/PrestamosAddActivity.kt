@@ -30,7 +30,6 @@ class PrestamoAddActivity : AppCompatActivity() {
     private  lateinit var dateUtil : DateUtil
     private lateinit var articuloSpinner: Spinner
     private lateinit var socioSpinner: Spinner
-    //private lateinit var fechaInicioEditText: EditText
     private lateinit var fechaFinEditText: EditText
     private lateinit var fechaInicioButton: Button
     private lateinit var infoEditText: EditText
@@ -55,7 +54,6 @@ class PrestamoAddActivity : AppCompatActivity() {
 
         articuloSpinner = findViewById(R.id.articuloSpinner)
         socioSpinner = findViewById(R.id.socioSpinner)
-     //   fechaInicioEditText = findViewById(R.id.fechaInicioEditText)
         fechaInicioButton = findViewById(R.id.fechaInicioButton)
         socioLabelTextView= findViewById(R.id.socioLabelTextView)
         articuloLabelTextView = findViewById(R.id.articuloLabelTextView)
@@ -66,8 +64,6 @@ class PrestamoAddActivity : AppCompatActivity() {
         homeButton = findViewById(R.id.homeButton)
 
         volverButton.setOnClickListener { finish() }
-
-        //fechaInicioEditText.setOnClickListener { mostrarDatePicker(fechaInicioEditText)}
 
 
 

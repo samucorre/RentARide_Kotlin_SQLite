@@ -46,6 +46,8 @@ class SocioDetalleActivity : AppCompatActivity() {
     private lateinit var articulosTextView: TextView
 
     private var socioId: Int = -1
+    private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+
 
     private val editSocioLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -167,8 +169,8 @@ class SocioDetalleActivity : AppCompatActivity() {
         numeroSocioTextView.text = "${socio.numeroSocio}"
         telefonoTextView.text = "${socio.telefono}"
         emailTextView.text = "${socio.email}"
-        fechaNacimientoTextView.text = "Fecha de nacimiento: ${dateFormat.format(socio.fechaNacimiento)}"
-        fechaIngresoSocioTextView.text = "Fecha de ingreso: ${dateFormat.format(socio.fechaIngresoSocio)}"
+        fechaNacimientoTextView.text = "Fecha de nacimiento: ${socio.fechaNacimiento}"
+        fechaIngresoSocioTextView.text = "Fecha de ingreso: ${socio.fechaIngresoSocio}"
         generoTextView.text = "Género: ${socio.genero}"
 
         val prestamos = socio.idSocio?.let { prestamosDbHelper.obtenerPrestamosPorSocio(it) }

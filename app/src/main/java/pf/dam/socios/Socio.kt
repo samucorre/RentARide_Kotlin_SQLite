@@ -11,8 +11,8 @@ open class Socio(
     val numeroSocio: Int? = null,
     val telefono: Int? = null,
     val email: String? = null,
-    val fechaNacimiento: Date? = null,
-    val fechaIngresoSocio: Date? = null,
+    val fechaNacimiento: Date ,
+    val fechaIngresoSocio: Date,
     val genero: Genero? = null
 
 ) : Serializable

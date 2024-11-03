@@ -205,6 +205,7 @@ class PrestamoDetalleActivity : AppCompatActivity() {
 
         }
     }
+    @SuppressLint("SetTextI18n")
     private fun mostrarPrestamo(prestamo: Prestamo) {
         //artículo
         val articulo = articulosDbHelper.obtenerArticuloPorId(prestamo.idArticulo)
