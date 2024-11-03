@@ -18,7 +18,7 @@
         android:id="@+id/apellidoEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Apellido"
+        android:hint="Apellidos"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,26 +56,45 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/telefonoEditText" />
-    <Button
-        android:id="@+id/fechaNacimientoButton"
+    <TextView
+        android:id="@+id/fechaNacimientoLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fecha de nacimiento:"
+        app:layout_constraintBottom_toBottomOf="@id/fechaNacimientoEditText"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="8dp" />
+
+    <EditText
+        android:id="@+id/fechaNacimientoEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Fecha de nacimiento"
-        android:layout_marginTop="8dp"
+        android:focusable="false"
+        app:layout_constraintTop_toBottomOf="@id/emailEditText"
+        app:layout_constraintStart_toEndOf="@id/fechaNacimientoLabel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailEditText" />
+        android:layout_marginTop="16dp" />
 
-    <Button
-        android:id="@+id/fechaIngresoSocioButton"
+    <TextView
+        android:id="@+id/fechaIngresoSocioLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fecha de ingreso:"
+        app:layout_constraintBottom_toBottomOf="@id/fechaIngresoSocioEditText"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="8dp" />
+
+    <EditText
+        android:id="@+id/fechaIngresoSocioEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Fecha de ingreso"
-        android:layout_marginTop="8dp"
+        android:focusable="false"
+        app:layout_constraintTop_toBottomOf="@id/fechaNacimientoEditText"
+        app:layout_constraintStart_toEndOf="@id/fechaIngresoSocioLabel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fechaNacimientoButton" />
-
+        android:layout_marginTop="16dp" />
     <RadioGroup
         android:id="@+id/generoRadioGroup"
         android:layout_width="0dp"
@@ -84,7 +103,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fechaIngresoSocioButton">
+        app:layout_constraintTop_toBottomOf="@id/fechaIngresoSocioEditText">
 
         <RadioButton
             android:id="@+id/hombreRadioButton"

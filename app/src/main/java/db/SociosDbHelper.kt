@@ -3,6 +3,7 @@ package db
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.icu.util.Calendar
 import android.util.Log
 
 import pf.dam.socios.Genero
@@ -87,7 +88,7 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
     // Funciones auxiliares para formatear y parsear fechas
     private fun formatearFecha(fecha: Date?): String? {
         return if (fecha != null) {
-            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(fecha)
+            SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(fecha)
         } else {
             null
         }
@@ -107,6 +108,40 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
             Genero.valueOf(generoString)
         } else {
             null
+        }
+    }
+
+    //Función auxliar para obtener los socios que cumplen años en el mes actual
+    fun obtenerSociosCumplenAnosMesActual(db: SQLiteDatabase): List<Pair<String, Date>> {
+        val listaSociosCumpleaneros = mutableListOf<Pair<String, Date>>()
+        val mesActual = Calendar.getInstance().get(Calendar.MONTH) + 1 // Mes actual (1-12)
+
+        db.rawQuery("SELECT nombre, apellido, fechaNacimiento FROM socios", null).use { cursor ->
+            if (cursor.moveToFirst()) {
+                do {
+                    val fechaNacimiento = parsearFecha(cursor.getString(cursor.getColumnIndexOrThrow("fechaNacimiento")))
+                    fechaNacimiento?.let {
+                        val mesNacimiento = Calendar.getInstance().apply { time = it }.get(Calendar.MONTH) + 1
+                        if (mesNacimiento == mesActual) {
+                            val nombreCompleto = "${cursor.getString(cursor.getColumnIndexOrThrow("nombre"))} ${cursor.getString(cursor.getColumnIndexOrThrow("apellido"))} ${formatearFecha(it)}"
+                            listaSociosCumpleaneros.add(Pair(nombreCompleto, it))
+                        }
+                    }
+                } while (cursor.moveToNext())
+            }
+        }
+
+        return listaSociosCumpleaneros
+    }
+
+    //Función auxiliar para obtener el último socio registrado
+    fun obtenerUltimoSocioRegistrado(db: SQLiteDatabase): Socio? {
+        return db.rawQuery("SELECT * FROM socios ORDER BY idSocio DESC LIMIT 1", null).use { cursor ->
+            if (cursor.moveToFirst()) {
+                cursor.toSocio()
+            } else {
+                null
+            }
         }
     }
 }

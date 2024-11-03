@@ -1,6 +1,8 @@
 package pf.dam.socios
 
 import android.content.Intent
+import java.util.Locale
+
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -12,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.semantics.text
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.PrestamosSQLite
 import db.SociosSQLite
@@ -21,6 +22,8 @@ import pf.dam.R
 import pf.dam.articulos.Articulo
 import pf.dam.prestamos.PrestamoAddSocioActivity
 import pf.dam.utils.ShowDeleteConfirmationDialog
+import java.text.SimpleDateFormat
+import kotlin.text.format
 
 class SocioDetalleActivity : AppCompatActivity() {
     private lateinit var editSocioButton: FloatingActionButton
@@ -157,13 +160,15 @@ class SocioDetalleActivity : AppCompatActivity() {
 
 
     private fun mostrarSocio(socio: Socio) {
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+
         nombreTextView.text = "${socio.nombre}"
         apellidoTextView.text = "${socio.apellido}"
         numeroSocioTextView.text = "${socio.numeroSocio}"
         telefonoTextView.text = "${socio.telefono}"
         emailTextView.text = "${socio.email}"
-        fechaNacimientoTextView.text = "Fecha de nacimiento: ${socio.fechaNacimiento}"
-        fechaIngresoSocioTextView.text = "Fecha de ingreso: ${socio.fechaIngresoSocio}"
+        fechaNacimientoTextView.text = "Fecha de nacimiento: ${dateFormat.format(socio.fechaNacimiento)}"
+        fechaIngresoSocioTextView.text = "Fecha de ingreso: ${dateFormat.format(socio.fechaIngresoSocio)}"
         generoTextView.text = "Género: ${socio.genero}"
 
         val prestamos = socio.idSocio?.let { prestamosDbHelper.obtenerPrestamosPorSocio(it) }
@@ -183,8 +188,9 @@ class SocioDetalleActivity : AppCompatActivity() {
         }
 
         // Muestra la cantidad de préstamos y los artículos en los TextViews
-        cantidadPrestamosTextView.text = "Cantidad de préstamos: $cantidadPrestamos"
-        articulosTextView.text = "Artículos: ${articulos.joinToString { it.nombre.toString() + " " + it.categoria.toString() }}\n"
+        cantidadPrestamosTextView.text = "Cantidad de préstamos: \t$cantidadPrestamos"
+        articulosTextView.text = "Artículos usados:"+
+                "\n${articulos.joinToString (separator = "")  {"${it.nombre.toString()}\n"}}"
     }
 
 

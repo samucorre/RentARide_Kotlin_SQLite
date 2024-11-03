@@ -3,26 +3,22 @@ package pf.dam
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
+import java.util.Locale
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import androidx.compose.ui.semantics.text
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.PrestamosSQLite
 import db.SociosSQLite
-import pf.dam.articulos.ArticuloAddActivity
 import pf.dam.articulos.ArticulosActivity
 import pf.dam.articulos.EstadoArticulo
 import pf.dam.prestamos.EstadoPrestamo
-import pf.dam.prestamos.PrestamoAddActivity
 import pf.dam.prestamos.PrestamosActivity
-import pf.dam.socios.SocioAddActivity
 import pf.dam.socios.SociosActivity
-import pf.dam.utils.ArticulosGraphs
+import pf.dam.utils.InsertarDatosIniciales
 import pf.dam.utils.GraficosActivity
 import pf.dam.utils.ImportExportActivity
-import pf.dam.utils.PrestamosGraphs
+import java.text.SimpleDateFormat
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bdBtton: FloatingActionButton
   //  private lateinit var graphButton: FloatingActionButton
     private lateinit var cerrarAppButton: FloatingActionButton
+    private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
 //    private lateinit var zona1TextView: TextView
 //    private lateinit var zona2TextView: TextView
@@ -58,6 +55,17 @@ class MainActivity : AppCompatActivity() {
         dbArticulos = ArticulosSQLite(this)
         dbSocios = SociosSQLite(this)
         dbPrestamos = PrestamosSQLite(this)
+
+            if (dbSocios.obtenerSocios().isEmpty()) {
+             InsertarDatosIniciales().insertarSociosIniciales(dbSocios)
+             }
+        if (dbArticulos.obtenerArticulos().isEmpty()) {
+            InsertarDatosIniciales().insertarArticulosIniciales(dbArticulos)
+            }
+        if (dbPrestamos.obtenerPrestamos().isEmpty()) {
+            InsertarDatosIniciales().insertarPrestamosIniciales(dbPrestamos)
+        }
+
 
         // Inicializar botones
 //        verArticulosButton = findViewById(R.id.verArticulosButton)
@@ -193,4 +201,6 @@ class MainActivity : AppCompatActivity() {
 //                "Activos: $totalPrestamosActivos\n" +
 //                "Cerrados: $totalCerrados\n"
     }
+
+
 }

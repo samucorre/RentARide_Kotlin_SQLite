@@ -150,6 +150,7 @@
 
             </androidx.cardview.widget.CardView>
         </LinearLayout>
+
     </ScrollView>
 
     <LinearLayout
@@ -171,6 +172,11 @@
             app:backgroundTint="#FFC107"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/volverButton" />
-
+        <Button
+            android:id="@+id/btnEjemploGraficos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="Ejemplo Gráficos" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

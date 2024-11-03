@@ -52,8 +52,12 @@
             android:name=".utils.PrestamosGraphs"
             android:exported="false" />
         <activity
-            android:name=".utils.SocioGraphs"
+            android:name=".utils.SociosGraphs"
             android:exported="false" />
+        <activity
+            android:name=".utils.EjemploGraficos"
+            android:exported="false" />
+
 
 
     </application>

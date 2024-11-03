@@ -232,8 +232,8 @@ class ArticuloDetalleActivity : AppCompatActivity() {
         }
 
         // Muestra la cantidad de préstamos y los socios en los TextViews
-        cantidadPrestamosTextView.text = "Cantidad de préstamos: $cantidadPrestamos"
-        sociosTextView.text = "Socios: ${socios.joinToString { "${it.nombre} ${it.apellido}\n" }}"
+        cantidadPrestamosTextView.text = "Cantidad de préstamos: \t$cantidadPrestamos"
+        sociosTextView.text = "Usado por los socios:\n \t${socios.joinToString(separator = "\n") { "${it.nombre} ${it.apellido}" }}"
 
     }
 }

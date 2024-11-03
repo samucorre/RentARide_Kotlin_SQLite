@@ -91,8 +91,7 @@
         android:layout_marginBottom="8dp"
         android:background="#FFC107"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addPrestamoButton" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -152,6 +151,31 @@
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="#FFC107"
+            />
+        <Button
+            android:id="@+id/addPrestamoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_marginTop="100dp"
+            android:drawableStart="@drawable/ico_add_prestamo"
+            android:gravity="center"
+            android:text="Añadir préstamo"
+            app:backgroundTint="#FFC107"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/emailTextView"
+            app:layout_constraintVertical_bias="0.045" />
+
         <TextView
             android:id="@+id/cantidadPrestamosTextView"
             android:layout_width="match_parent"
@@ -170,22 +194,7 @@
             android:textSize="18sp"
             android:gravity="center"/>
 
-        <Button
-            android:id="@+id/addPrestamoButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:layout_marginTop="100dp"
-            android:drawableStart="@drawable/ico_add_prestamo"
-            android:gravity="center"
-            android:text="Añadir préstamo"
-            app:backgroundTint="#FFC107"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/emailTextView"
-            app:layout_constraintVertical_bias="0.045" />
+
 
     </LinearLayout>
 

@@ -1,5 +1,6 @@
 package pf.dam.socios
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -17,19 +18,23 @@ import java.text.ParseException
 
 class SocioAddActivity : AppCompatActivity() {
     private lateinit var dbSocios: SociosSQLite
-    private  lateinit var dateUtil : DateUtil
+    private lateinit var dateUtil: DateUtil
     private lateinit var nombreEditText: EditText
     private lateinit var apellidoEditText: EditText
     private lateinit var numeroSocioEditText: EditText
     private lateinit var telefonoEditText: EditText
     private lateinit var emailEditText: EditText
-    private lateinit var fechaNacimientoButton: Button
-    private lateinit var fechaIngresoSocioButton: Button
+    private lateinit var fechaNacimientoEditText: EditText
+    private lateinit var fechaIngresoSocioEditText: EditText
+
+    //    private lateinit var addFechaNacimientoButton: Button
+//    private lateinit var addFechaIngresoSocioButton: Button
     private lateinit var generoRadioGroup: RadioGroup
     private lateinit var guardarButton: FloatingActionButton
     private lateinit var volverButton: FloatingActionButton
     private lateinit var homeButton: FloatingActionButton
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_socio_add)
@@ -45,8 +50,11 @@ class SocioAddActivity : AppCompatActivity() {
         guardarButton = findViewById(R.id.guardarButton)
         volverButton = findViewById(R.id.volverButton)
         homeButton = findViewById(R.id.homeButton)
-        fechaNacimientoButton = findViewById(R.id.fechaNacimientoButton)
-        fechaIngresoSocioButton = findViewById(R.id.fechaIngresoSocioButton)
+        emailEditText = findViewById(R.id.emailEditText)
+        fechaNacimientoEditText = findViewById(R.id.fechaNacimientoEditText)
+        fechaIngresoSocioEditText = findViewById(R.id.fechaIngresoSocioEditText)
+//        addFechaNacimientoButton = findViewById(R.id.addFechaNacimientoButton)
+//        addFechaIngresoSocioButton = findViewById(R.id.addFechaIngresoSocioButton)
         generoRadioGroup = findViewById(R.id.generoRadioGroup)
 
         volverButton.setOnClickListener { finish() }
@@ -55,11 +63,17 @@ class SocioAddActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        fechaNacimientoButton.setOnClickListener {
-            dateUtil.mostrarDatePicker(this, fechaNacimientoButton)
+//        addFechaNacimientoButton.setOnClickListener {
+//            dateUtil.mostrarDatePicker(this, addFechaNacimientoButton)
+//        }
+//        addFechaIngresoSocioButton.setOnClickListener {
+//            dateUtil.mostrarDatePicker(this, addFechaIngresoSocioButton)
+//        }
+        fechaNacimientoEditText.setOnClickListener {
+            dateUtil.mostrarDatePickerEditText(this, fechaNacimientoEditText)
         }
-        fechaIngresoSocioButton.setOnClickListener {
-            dateUtil.mostrarDatePicker(this, fechaIngresoSocioButton)
+        fechaIngresoSocioEditText.setOnClickListener {
+            dateUtil.mostrarDatePickerEditText(this, fechaIngresoSocioEditText)
         }
 
         guardarButton.setOnClickListener {
@@ -69,38 +83,43 @@ class SocioAddActivity : AppCompatActivity() {
             val numeroSocio = numeroSocioEditText.text.toString().toIntOrNull()
             val telefono = telefonoEditText.text.toString().toIntOrNull()
             val email = emailEditText.text.toString()
-            val genero = when (generoRadioGroup.checkedRadioButtonId) {
-                R.id.hombreRadioButton -> Genero.HOMBRE
-                R.id.mujerRadioButton -> Genero.MUJER
-                else -> null
+            val fechaNacimientoString = fechaNacimientoEditText.text.toString()
+            val fechaIngresoSocioString = fechaIngresoSocioEditText.text.toString()
+
+
+                val fechaNacimiento = dateUtil.dateFormat.parse(fechaNacimientoString)
+                val fechaIngresoSocio = dateUtil.dateFormat.parse(fechaIngresoSocioString)
+                val genero = when (generoRadioGroup.checkedRadioButtonId) {
+                    R.id.hombreRadioButton -> Genero.HOMBRE
+                    R.id.mujerRadioButton -> Genero.MUJER
+                    else -> null
+                }
+//            val fechaNacimientoString = addFechaNacimientoButton.text.toString()
+//            val fechaIngresoSocioString = addFechaIngresoSocioButton.text.toString()
+
+
+                try {
+                    val fechaNacimientoDate = dateUtil.dateFormat.parse(fechaNacimientoString)
+                    val fechaIngresoSocioDate = dateUtil.dateFormat.parse(fechaIngresoSocioString)
+                    val nuevoSocio = Socio(
+                        nombre = nombre,
+                        apellido = apellido,
+                        numeroSocio = numeroSocio,
+                        telefono = telefono,
+                        email = email,
+                        fechaNacimiento = fechaNacimientoDate,
+                        fechaIngresoSocio = fechaIngresoSocioDate,
+                        genero = genero
+                    )
+                    dbSocios.insertarSocio(nuevoSocio)
+                    Toast.makeText(this, "Socio añadido", Toast.LENGTH_SHORT).show()
+                    finish()
+                } catch (e: ParseException) {
+                    Log.e("Error", "Error al analizar la fecha: ${e.message}")
+                    Toast.makeText(this, "Formato de fecha incorrecto", Toast.LENGTH_SHORT).show()
+
+
             }
-            val fechaNacimientoString = fechaNacimientoButton.text.toString()
-            val fechaIngresoSocioString = fechaIngresoSocioButton.text.toString()
-            if (fechaNacimientoString.isEmpty()|| fechaIngresoSocioString.isEmpty()) {
-                // Mostrar un mensaje de error al usuario
-                Toast.makeText(this, "La fechas fechas son obligatori", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            try {
-            val fechaNacimientoDate = dateUtil.dateFormat.parse(fechaNacimientoString)
-            val fechaIngresoSocioDate = dateUtil.dateFormat.parse(fechaIngresoSocioString)
-            val nuevoSocio = Socio(
-                nombre = nombre,
-                apellido = apellido,
-                numeroSocio = numeroSocio,
-                telefono = telefono,
-                email = email,
-                fechaNacimiento = fechaNacimientoDate,
-                fechaIngresoSocio = fechaIngresoSocioDate,
-                genero = genero
-            )
-            dbSocios.insertarSocio(nuevoSocio)
-            Toast.makeText(this, "Socio añadido", Toast.LENGTH_SHORT).show()
-            finish()
-        } catch (e: ParseException) {
-            Log.e("Error", "Error al analizar la fecha: ${e.message}")
-            Toast.makeText(this, "Formato de fecha incorrecto", Toast.LENGTH_SHORT).show()
-        }
         }
     }
 }

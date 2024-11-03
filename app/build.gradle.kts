@@ -52,7 +52,8 @@ android {
 dependencies {
 
 
-    implementation("androidx.activity:activity-ktx:1.9.2")
+    implementation(libs.androidx.activity.ktx.v193)
+    implementation(libs.androidx.core.ktx.v190)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -76,7 +77,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.recyclerview.v121)
-    implementation("com.google.android.material:material:1.9.0")
-    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation(libs.material)
+    implementation (libs.mpandroidchart)
 
 }

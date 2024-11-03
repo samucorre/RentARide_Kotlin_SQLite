@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import pf.dam.socios.Socio
+import java.util.Date
 
 class SociosSQLite(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -56,4 +57,15 @@ class SociosSQLite(context: Context) :
     fun borrarSocio(idSocio: Int): Int {
         return writableDatabase.use { db -> socioDbHelper.borrarSocio(db, idSocio) }
     }
+
+    fun obtenerSociosCumplenAnosMesActual(): List<Pair<String, Date>> {
+        return readableDatabase.use { db -> socioDbHelper.obtenerSociosCumplenAnosMesActual(db) }
+    }
+
+    fun obtenerUltimoSocioRegistrado(): Socio? {
+        return readableDatabase.use { db -> socioDbHelper.obtenerUltimoSocioRegistrado(db) }
+    }
+
+
+
 }
