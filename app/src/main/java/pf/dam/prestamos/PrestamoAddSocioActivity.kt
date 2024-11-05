@@ -63,7 +63,7 @@ class PrestamoAddSocioActivity : AppCompatActivity() {
         val idSocioIntent = intent.getIntExtra("idSocio", -1)
 
         fechaInicioButton.setOnClickListener {
-            dateUtil.mostrarDatePicker(this,fechaInicioButton)
+            dateUtil.mostrarDatePickerPrestamos(this,fechaInicioButton)
         }
 
         // Obtener la lista de artículos y configurar el adaptador del Spinner

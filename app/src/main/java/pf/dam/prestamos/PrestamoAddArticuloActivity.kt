@@ -61,7 +61,7 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
         val idArticuloIntent = intent.getIntExtra("idArticulo", -1)
 
         fechaInicioButton.setOnClickListener {
-            dateUtil.mostrarDatePicker(this,fechaInicioButton)
+            dateUtil.mostrarDatePickerPrestamos(this,fechaInicioButton)
         }
 
         // Crear el adaptador con los nombres de los socios

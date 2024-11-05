@@ -71,7 +71,7 @@ class PrestamoAddActivity : AppCompatActivity() {
         val socios = dbSocios.obtenerSocios()
 
         fechaInicioButton.setOnClickListener {
-            dateUtil.mostrarDatePicker(this, fechaInicioButton)
+            dateUtil.mostrarDatePickerPrestamos(this, fechaInicioButton)
         }
 
         val articulosAdapter = ArrayAdapter(
