@@ -1,10 +1,12 @@
 package pf.dam.utils
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.icu.util.Calendar
 import android.widget.Button
 import android.widget.EditText
+import androidx.compose.ui.semantics.text
 import pf.dam.R
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -31,22 +33,54 @@ class DateUtil (context: Context){
         datePicker.show()
     }
 
-    fun mostrarDatePicker(context: Context, editText: Button) {
-        val datePicker = DatePickerDialog(
-            context, // Usa el contexto pasado como parámetro
-            R.style.MyDatePickerDialogTheme,
-            { _, year, month, dayOfMonth ->
-                calendar.set(java.util.Calendar.YEAR, year)
-                calendar.set(Calendar.MONTH, month)
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                editText.text = dateFormat.format(calendar.time)
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        )
-        datePicker.show()
-    }
+//    fun mostrarDatePicker(context: Context, editText: Button) {
+//        val datePicker = DatePickerDialog(
+//            context, // Usa el contexto pasado como parámetro
+//            R.style.MyDatePickerDialogTheme,
+//            { _, year, month, dayOfMonth ->
+//                calendar.set(java.util.Calendar.YEAR, year)
+//                calendar.set(Calendar.MONTH, month)
+//                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+//                editText.text = dateFormat.format(calendar.time)
+//            },
+//            calendar.get(Calendar.YEAR),
+//            calendar.get(Calendar.MONTH),
+//            calendar.get(Calendar.DAY_OF_MONTH)
+//        )
+//        datePicker.show()
+//    }
+fun mostrarDatePicker(context: Context, button: Button) {
+    val calendar = Calendar.getInstance()
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+    R.style.MyDatePickerDialogTheme
+
+    val datePickerDialog = DatePickerDialog(
+
+        context,
+        R.style.MyDatePickerDialogTheme,
+
+        { _, year, month, dayOfMonth ->
+            val selectedDate = Calendar.getInstance().apply {
+                set(Calendar.YEAR, year)
+                set(Calendar.MONTH, month)
+                set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            }.time
+            // Formatear la fecha seleccionada y establecerla en el botón
+            button.text = dateFormat.format(selectedDate)
+        },
+        year,
+        month,
+        day
+    )
+
+    // Restringir las fechas seleccionables
+    datePickerDialog.datePicker.minDate = System.currentTimeMillis()
+
+    datePickerDialog.show()
+}
+
 
     companion object {
         fun mostrarDatePicker(fechaInicioButton: Button?) {
