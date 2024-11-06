@@ -1,5 +1,6 @@
 package pf.dam.articulos
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -13,12 +14,10 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.add
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.semantics.text
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.PrestamosSQLite
@@ -35,8 +34,8 @@ class ArticuloDetalleActivity : AppCompatActivity() {
     private lateinit var backButton: FloatingActionButton
     private lateinit var homeButton: FloatingActionButton
     private lateinit var addPrestamoButton: Button
-    private lateinit var dbHelper: ArticulosSQLite
-    private lateinit var dbHelperPrestamos: PrestamosSQLite
+    private lateinit var dbArticulos: ArticulosSQLite
+    private lateinit var dbPrestamos: PrestamosSQLite
     private lateinit var nombreTextView: TextView
     private lateinit var categoriaTextView: TextView
     private lateinit var tipoTextView: TextView
@@ -48,12 +47,16 @@ class ArticuloDetalleActivity : AppCompatActivity() {
 
     private var articuloId: Int = -1
 
+    companion object {
+        const val REQUEST_ADD_PRESTAMO = 1
+    }
+
     private val editArticuloLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
             val dbHelper = ArticulosSQLite(this)
-            val articuloActualizado= dbHelper.obtenerArticuloPorId(articuloId)
+            val articuloActualizado = dbHelper.obtenerArticuloPorId(articuloId)
             if (articuloActualizado != null) {
                 mostrarArticulo(articuloActualizado)
             }
@@ -64,7 +67,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             // Actualiza la vista del artículo
-            val articuloActualizado = dbHelper.obtenerArticuloPorId(articuloId)
+            val articuloActualizado = dbArticulos.obtenerArticuloPorId(articuloId)
             if (articuloActualizado != null) {
                 mostrarArticulo(articuloActualizado)
             }
@@ -76,8 +79,8 @@ class ArticuloDetalleActivity : AppCompatActivity() {
         setContentView(R.layout.activity_articulo_detail)
         supportActionBar?.title = "RR - Artículo detalle"
 
-        dbHelper = ArticulosSQLite(this)
-        dbHelperPrestamos = PrestamosSQLite(this)
+        dbArticulos = ArticulosSQLite(this)
+        dbPrestamos = PrestamosSQLite(this)
 
         editArticuloButton = findViewById(R.id.editArticuloButton)
         deleteArticuloButton = findViewById(R.id.deleteArticuloButton)
@@ -95,8 +98,8 @@ class ArticuloDetalleActivity : AppCompatActivity() {
         sociosTextView = findViewById(R.id.sociosTextView)
 
         articuloId = intent.getIntExtra("idArticulo", -1)
-        val articulo = dbHelper.obtenerArticuloPorId(articuloId)
-        val prestamos = dbHelperPrestamos.obtenerPrestamosPorArticulo(articuloId)
+        val articulo = dbArticulos.obtenerArticuloPorId(articuloId)
+        val prestamos = dbPrestamos.obtenerPrestamosPorArticulo(articuloId)
         // Log.e("ArticuloDetalleActivity", "ArticuloId: $articuloId")
         if (articulo != null) {
             mostrarArticulo(articulo)
@@ -122,10 +125,10 @@ class ArticuloDetalleActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             editArticuloButton.setOnClickListener {
-                val idArticulo = dbHelper.obtenerIdArticuloBD(articulo)
+                val idArticulo = dbArticulos.obtenerIdArticuloBD(articulo)
                 if (idArticulo != -1) {
                     val articulo =
-                        dbHelper.obtenerArticuloPorId(idArticulo) // Obtener el artículo por ID
+                        dbArticulos.obtenerArticuloPorId(idArticulo) // Obtener el artículo por ID
 
                     if (articulo?.estado == EstadoArticulo.PRESTADO) {
                         Toast.makeText(
@@ -142,10 +145,10 @@ class ArticuloDetalleActivity : AppCompatActivity() {
 
             }
             deleteArticuloButton.setOnClickListener {
-                val idArticulo = dbHelper.obtenerIdArticuloBD(articulo)
+                val idArticulo = dbArticulos.obtenerIdArticuloBD(articulo)
                 if (idArticulo != -1) {
                     val articulo =
-                        dbHelper.obtenerArticuloPorId(idArticulo) // Obtener el artículo por ID
+                        dbArticulos.obtenerArticuloPorId(idArticulo) // Obtener el artículo por ID
 
                     if (articulo?.estado == EstadoArticulo.PRESTADO) {
                         Toast.makeText(
@@ -161,7 +164,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
                                 title = "Eliminar artículo",
                                 message = "¿Estás seguro de que quieres eliminar este artículo?",
                                 onPositiveButtonClick = {
-                                    dbHelper.borrarArticulo(articuloId)
+                                    dbArticulos.borrarArticulo(articuloId)
 
 
 
@@ -196,6 +199,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun mostrarArticulo(articulo: Articulo) {
         nombreTextView.text = articulo.nombre ?: ""
         categoriaTextView.text = articulo.categoria ?: ""
@@ -215,7 +219,8 @@ class ArticuloDetalleActivity : AppCompatActivity() {
             imagenImageView.setImageResource(R.drawable.ico_imagen)
         }
         // Obtén los préstamos del artículo
-        val prestamos = articulo.idArticulo?.let { dbHelperPrestamos.obtenerPrestamosPorArticulo(it) }
+        val prestamos =
+            articulo.idArticulo?.let { dbPrestamos.obtenerPrestamosPorArticulo(it) }
 
         // Obtén la cantidad de préstamos
         val cantidadPrestamos = prestamos?.size
@@ -224,7 +229,8 @@ class ArticuloDetalleActivity : AppCompatActivity() {
         val socios = mutableSetOf<Socio>()
         if (prestamos != null) {
             for (prestamo in prestamos) {
-                val socio = dbHelperPrestamos.obtenerSocioPrestamoId(prestamo.idSocio) // Usa dbHelperPrestamos para obtener el socio
+                val socio =
+                    dbPrestamos.obtenerSocioPrestamoId(prestamo.idSocio) // Usa dbHelperPrestamos para obtener el socio
                 if (socio != null) {
                     socios.add(socio)
                 }
@@ -233,7 +239,25 @@ class ArticuloDetalleActivity : AppCompatActivity() {
 
         // Muestra la cantidad de préstamos y los socios en los TextViews
         cantidadPrestamosTextView.text = "Cantidad de préstamos: \t$cantidadPrestamos"
-        sociosTextView.text = "Usado por los socios:\n \t${socios.distinctBy { it.idSocio }.take(3).joinToString(separator = "\n") { "${it.nombre} ${it.apellido}" }}"
-
+        sociosTextView.text = "Usado por los socios:\n \t${
+            socios.distinctBy { it.idSocio }.takeLast(3)
+                .joinToString(separator = "\n") { "${it.nombre} ${it.apellido}" }}"
+        if (articulo.estado == EstadoArticulo.DISPONIBLE) {
+            addPrestamoButton.visibility = View.VISIBLE
+        } else {
+            addPrestamoButton.visibility = View.GONE
+        }
     }
+
+        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+            super.onActivityResult(requestCode, resultCode, data)
+            if (requestCode == REQUEST_ADD_PRESTAMO && resultCode == Activity.RESULT_OK) {
+                // Actualiza la información del préstamo en la pantalla
+                val articuloActualizado = dbArticulos.obtenerArticuloPorId(articuloId)
+                if (articuloActualizado != null) {
+                    mostrarArticulo(articuloActualizado)
+
+                }
+            }
+        }
 }

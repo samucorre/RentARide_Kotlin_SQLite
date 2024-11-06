@@ -17,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.semantics.text
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.PrestamosSQLite
@@ -103,7 +102,7 @@ class PrestamoDetalleActivity : AppCompatActivity() {
         datosArticuloTextView = findViewById(R.id.datosArticuloTextView)
         datos1ArticuloTextView = findViewById(R.id.datos1ArticuloTextView)
         datos2ArticuloTextView = findViewById(R.id.datos2ArticuloTextView)
-        datos3ArticuloTextView = findViewById(R.id.datos3ArticuloTextView)
+      //  datos3ArticuloTextView = findViewById(R.id.datos3ArticuloTextView)
         datosSocioTextView= findViewById(R.id.datosSocioTextView)
         datos1SocioTextView= findViewById(R.id.datos1SocioTextView)
         datos2SocioTextView= findViewById(R.id.datos2SocioTextView)
@@ -227,21 +226,27 @@ class PrestamoDetalleActivity : AppCompatActivity() {
 
         // Actualizar TextViews
         prestamoIdTextView.text = "ID del préstamo: $prestamoId"
-        prestamoIdTextView.text = "ID del préstamo: $prestamoId"
+      //  prestamoIdTextView.text = "ID del préstamo: $prestamoId"
         datosArticuloTextView.text ="Artículo: $nombreArticulo"
         datos1ArticuloTextView.text = categoriaArticulo
         datos2ArticuloTextView.text = tipoArticulo
-        datos3ArticuloTextView.text = "ID:${prestamo.idArticulo}"
+//        datos3ArticuloTextView.text = "ID:${prestamo.idArticulo}"
         datosSocioTextView.text = "Socio: $nombreSocio $apellidoSocio"
         datos1SocioTextView.text = "$numeroSocio"
         datos2SocioTextView.text = " $telefonoSocio"
         fechaInicioTextView.text = "Fecha inicio: ${dateFormat.format(prestamo.fechaInicio)}"
-            val fechaFinString = if (prestamo.fechaFin != null) {
-            dateFormat.format(prestamo.fechaFin)
+        // Condición para mostrar u ocultar la fecha fin
+        if (prestamo.estado == EstadoPrestamo.ACTIVO) {
+            fechaFinTextView.visibility = View.GONE // Ocultar el TextView
         } else {
-            "  " // O "" para dejarlo vacío
+            fechaFinTextView.visibility = View.VISIBLE // Mostrar el TextView
+            val fechaFinString = if (prestamo.fechaFin != null) {
+                dateFormat.format(prestamo.fechaFin)
+            } else {
+                "  " // O "" para dejarlo vacío
+            }
+            fechaFinTextView.text = "Fecha fin: ${fechaFinString}"
         }
-        fechaFinTextView.text =  "Fecha fin: ${fechaFinString}"
         infoTextView.text = "Información Adicional: ${prestamo.info}"
         estadoTextView.text = "Estado: ${prestamo.estado}"
 

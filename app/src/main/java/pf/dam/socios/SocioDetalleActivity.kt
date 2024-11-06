@@ -191,8 +191,8 @@ class SocioDetalleActivity : AppCompatActivity() {
 
         // Muestra la cantidad de préstamos y los artículos en los TextViews
         cantidadPrestamosTextView.text = "Cantidad de préstamos: \t$cantidadPrestamos"
-        articulosTextView.text = "Artículos usados:"+
-                "\n${articulos.distinctBy { it.idArticulo }.take(3).joinToString (separator = "")  {"${it.nombre.toString()}\n"}}"
+        articulosTextView.text = "Últimos artículos usados:"+
+                "\n${articulos.distinctBy { it.idArticulo }.takeLast(3).joinToString (separator = "")  {"${it.nombre.toString()}\n"}}"
     }
 
 

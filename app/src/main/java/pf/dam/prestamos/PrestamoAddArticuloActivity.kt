@@ -25,9 +25,9 @@ import java.util.Date
 
 class PrestamoAddArticuloActivity : AppCompatActivity() {
 
-    private lateinit var dbHelper: PrestamosSQLite
-    private lateinit var articulosDbHelper: ArticulosSQLite
-    private lateinit var sociosDbHelper: SociosSQLite
+    private lateinit var dbPrestamos: PrestamosSQLite
+    private lateinit var dbArticulos: ArticulosSQLite
+    private lateinit var dbSocios: SociosSQLite
     private  lateinit var dateUtil : DateUtil
     private lateinit var socioAutoCompleteTextView: AutoCompleteTextView
     private lateinit var fechaInicioButton: Button
@@ -39,6 +39,9 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
     private var articuloId: Int = -1
     private var idSocioSeleccionado: Int? = null
     private lateinit var adapter: ArrayAdapter<String>
+    companion object {
+        const val REQUEST_ADD_PRESTAMO = 1
+    }
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,9 +49,9 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
         setContentView(R.layout.activity_prestamo_add_articulo)
         supportActionBar?.title = "RR - Préstamo nuevo"
 
-        dbHelper = PrestamosSQLite(this)
-        articulosDbHelper = ArticulosSQLite(this)
-        sociosDbHelper = SociosSQLite(this)
+        dbPrestamos = PrestamosSQLite(this)
+        dbArticulos = ArticulosSQLite(this)
+        dbSocios = SociosSQLite(this)
         dateUtil = DateUtil(this)
 
         socioAutoCompleteTextView = findViewById(R.id.socioAutoCompleteTextView)
@@ -68,13 +71,13 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
         adapter = ArrayAdapter(
             this,
             android.R.layout.simple_dropdown_item_1line,
-            sociosDbHelper.obtenerSocios().map { "${it.nombre} ${it.apellido}" })
+            dbSocios.obtenerSocios().map { "${it.nombre} ${it.apellido}" })
         socioAutoCompleteTextView.setAdapter(adapter)
 
         // Manejar la selección de un socio
         socioAutoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
             val socioSeleccionado = adapter.getItem(position)
-            idSocioSeleccionado = sociosDbHelper.obtenerSocios()
+            idSocioSeleccionado = dbSocios.obtenerSocios()
                 .find { "${it.nombre} ${it.apellido}" == socioSeleccionado }?.idSocio
         }
         homeButton.setOnClickListener {
@@ -100,8 +103,8 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
                         info,
                         EstadoPrestamo.ACTIVO
                     )
-                    dbHelper.insertarPrestamo(nuevoPrestamo)
-                    articulosDbHelper.actualizarEstadoArticulo(
+                    dbPrestamos.insertarPrestamo(nuevoPrestamo)
+                    dbArticulos.actualizarEstadoArticulo(
                         idArticuloIntent,
                         EstadoArticulo.PRESTADO
                     )
@@ -132,7 +135,7 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
 
 
     private fun buscarSocio(textoBusqueda: String): Socio? {
-        val socios = sociosDbHelper.obtenerSocios()
+        val socios = dbSocios.obtenerSocios()
         return socios.find { socio ->
             val valoresSocio = listOfNotNull(
                 socio.nombre,

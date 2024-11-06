@@ -83,17 +83,17 @@
         app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/datos1ArticuloTextView" />
 
-    <TextView
-        android:id="@+id/datos3ArticuloTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+<!--    <TextView-->
+<!--        android:id="@+id/datos3ArticuloTextView"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="8dp"-->
+<!--        android:layout_marginTop="8dp"-->
 
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/guideline"
-        app:layout_constraintTop_toBottomOf="@id/datos2ArticuloTextView" />
+<!--        android:textSize="18sp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toEndOf="@id/guideline"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/datos2ArticuloTextView" />-->
 
     <TextView
         android:id="@+id/datosSocioTextView"
@@ -106,7 +106,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/guideline"
-        app:layout_constraintTop_toBottomOf="@id/datos3ArticuloTextView" />
+        app:layout_constraintTop_toBottomOf="@id/datos2ArticuloTextView" />
 
     <TextView
         android:id="@+id/datos1SocioTextView"
