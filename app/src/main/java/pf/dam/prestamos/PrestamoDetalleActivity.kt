@@ -227,13 +227,13 @@ class PrestamoDetalleActivity : AppCompatActivity() {
         // Actualizar TextViews
         prestamoIdTextView.text = "ID del préstamo: $prestamoId"
       //  prestamoIdTextView.text = "ID del préstamo: $prestamoId"
-        datosArticuloTextView.text ="Artículo: $nombreArticulo"
+        datosArticuloTextView.text ="$nombreArticulo"
         datos1ArticuloTextView.text = categoriaArticulo
         datos2ArticuloTextView.text = tipoArticulo
 //        datos3ArticuloTextView.text = "ID:${prestamo.idArticulo}"
-        datosSocioTextView.text = "Socio: $nombreSocio $apellidoSocio"
-        datos1SocioTextView.text = "$numeroSocio"
-        datos2SocioTextView.text = " $telefonoSocio"
+        datosSocioTextView.text = "Socio nº: $numeroSocio"
+        datos1SocioTextView.text = "$nombreSocio $apellidoSocio"
+        datos2SocioTextView.text = "$telefonoSocio"
         fechaInicioTextView.text = "Fecha inicio: ${dateFormat.format(prestamo.fechaInicio)}"
         // Condición para mostrar u ocultar la fecha fin
         if (prestamo.estado == EstadoPrestamo.ACTIVO) {

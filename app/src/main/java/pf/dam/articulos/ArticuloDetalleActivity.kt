@@ -42,6 +42,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
     private lateinit var descripcionTextView: TextView
     private lateinit var estadoTextView: TextView
     private lateinit var imagenImageView: ImageView
+    private lateinit var socioUsandoTextView: TextView
     private lateinit var cantidadPrestamosTextView: TextView
     private lateinit var sociosTextView: TextView
 
@@ -94,6 +95,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
         descripcionTextView = findViewById(R.id.descripcionTextView)
         estadoTextView = findViewById(R.id.estadoTextView)
         imagenImageView = findViewById(R.id.imagenImageView)
+        socioUsandoTextView = findViewById(R.id.socioUsandoTextView)
         cantidadPrestamosTextView = findViewById(R.id.cantidadPrestamosTextView)
         sociosTextView = findViewById(R.id.sociosTextView)
 
@@ -206,7 +208,6 @@ class ArticuloDetalleActivity : AppCompatActivity() {
         tipoTextView.text = articulo.tipo ?: ""
         descripcionTextView.text = articulo.descripcion ?: ""
         estadoTextView.text = articulo.estado?.name ?: ""
-
         if (articulo.rutaImagen != null && articulo.rutaImagen.isNotEmpty()) {
             try {
                 val imagenBitmap = BitmapFactory.decodeFile(articulo.rutaImagen)
@@ -219,9 +220,7 @@ class ArticuloDetalleActivity : AppCompatActivity() {
             imagenImageView.setImageResource(R.drawable.ico_imagen)
         }
         // Obtén los préstamos del artículo
-        val prestamos =
-            articulo.idArticulo?.let { dbPrestamos.obtenerPrestamosPorArticulo(it) }
-
+        val prestamos = articulo.idArticulo?.let { dbPrestamos.obtenerPrestamosPorArticulo(it) }
         // Obtén la cantidad de préstamos
         val cantidadPrestamos = prestamos?.size
 
@@ -239,9 +238,31 @@ class ArticuloDetalleActivity : AppCompatActivity() {
 
         // Muestra la cantidad de préstamos y los socios en los TextViews
         cantidadPrestamosTextView.text = "Cantidad de préstamos: \t$cantidadPrestamos"
-        sociosTextView.text = "Usado por los socios:\n \t${
-            socios.distinctBy { it.idSocio }.takeLast(3)
-                .joinToString(separator = "\n") { "${it.nombre} ${it.apellido}" }}"
+//        sociosTextView.text = "Usado por los socios:\n \t${
+//            socios.distinctBy { it.idSocio }.takeLast(3)
+//                .joinToString(separator = "\n") { "${it.nombre} ${it.apellido}" }}"
+//        if (articulo.estado == EstadoArticulo.DISPONIBLE) {
+//            addPrestamoButton.visibility = View.VISIBLE
+//        } else {
+//            addPrestamoButton.visibility = View.GONE
+//        }
+//    }
+        if (articulo.estado == EstadoArticulo.PRESTADO) {
+            val idSocio = articulo.idArticulo?.let { dbPrestamos.obtenerIdSocioPrestamoActivo(it) }
+            if (idSocio != null) {
+                Log.d("ArticuloDetalleActivity", "ID del socio que tiene el artículo prestado: $idSocio")
+            }
+            val socio = idSocio?.let { dbPrestamos.obtenerSocioPrestamoId(it) }
+            val nombreSocio = socio?.nombre ?: "Socio no encontrado"
+            val apellidoSocio = socio?.apellido ?: ""
+            socioUsandoTextView.text = "Artículo prestado a: $nombreSocio $apellidoSocio"
+            socioUsandoTextView.visibility = View.VISIBLE // Mostrar socioUsandoTextView
+        } else {
+            socioUsandoTextView.visibility = View.GONE // Ocultar socioUsandoTextView
+        }
+            sociosTextView.text = "Usado por los socios:\n \t${
+                socios.distinctBy { it.idSocio }.takeLast(3)
+                    .joinToString(separator = "\n") { "${it.nombre} ${it.apellido}" }}"
         if (articulo.estado == EstadoArticulo.DISPONIBLE) {
             addPrestamoButton.visibility = View.VISIBLE
         } else {

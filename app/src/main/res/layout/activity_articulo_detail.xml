@@ -92,6 +92,12 @@
         android:background="#FFC107"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/backButton"
+        app:layout_constraintTop_toBottomOf="@id/divider1">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -144,6 +150,7 @@
             android:textSize="18sp"
             android:gravity="center"/>
 
+
             <ImageView
                 android:id="@+id/imagenImageView"
                 android:layout_width="match_parent"
@@ -159,6 +166,7 @@
             android:layout_marginBottom="8dp"
             android:background="#FFC107"
             />
+
         <Button
             android:id="@+id/addPrestamoButton"
             android:layout_width="wrap_content"
@@ -176,6 +184,14 @@
             app:layout_constraintTop_toBottomOf="@id/emailTextView"
             app:layout_constraintVertical_bias="0.045" />
 
+        <TextView
+            android:id="@+id/socioUsandoTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="En uso por: "
+            android:textSize="18sp"
+            android:gravity="center"/>
         <TextView
             android:id="@+id/cantidadPrestamosTextView"
             android:layout_width="match_parent"
@@ -197,7 +213,7 @@
 
 
     </LinearLayout>
-
+    </ScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/backButton"

@@ -106,6 +106,10 @@ class PrestamosSQLite(context: Context) :
         return articulo?.categoria
     }
 
+    fun obtenerUltimoPrestamoPorArticulo(idArticulo: Int): Prestamo? {
+        return readableDatabase.use { db -> prestamoDbHelper.obtenerUltimoPrestamoPorArticulo(db, idArticulo) }
+    }
+
     fun obtenerIdSocioPrestamoActivo(idArticulo: Int): Int? {
         val dbHelper = PrestamosDbHelper(this)
         return dbHelper.obtenerIdSocioPrestamoActivo(writableDatabase, idArticulo)

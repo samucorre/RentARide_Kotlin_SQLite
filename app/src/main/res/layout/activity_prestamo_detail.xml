@@ -6,7 +6,17 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <TextView
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/backButton"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
         android:id="@+id/prestamoIdTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -59,7 +69,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintTop_toTopOf="@id/articuloImageView" />
-
     <TextView
         android:id="@+id/datos1ArticuloTextView"
         android:layout_width="0dp"
@@ -71,7 +80,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/datosArticuloTextView" />
-
     <TextView
         android:id="@+id/datos2ArticuloTextView"
         android:layout_width="0dp"
@@ -82,19 +90,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/datos1ArticuloTextView" />
-
-<!--    <TextView-->
-<!--        android:id="@+id/datos3ArticuloTextView"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="8dp"-->
-<!--        android:layout_marginTop="8dp"-->
-
-<!--        android:textSize="18sp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toEndOf="@id/guideline"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/datos2ArticuloTextView" />-->
-
     <TextView
         android:id="@+id/datosSocioTextView"
         android:layout_width="0dp"
@@ -107,7 +102,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/datos2ArticuloTextView" />
-
     <TextView
         android:id="@+id/datos1SocioTextView"
         android:layout_width="0dp"
@@ -119,14 +113,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/datosSocioTextView" />
-
     <TextView
         android:id="@+id/datos2SocioTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-
+        android:drawableStart="@drawable/ico_phone"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/guideline"
@@ -159,7 +152,6 @@
             android:text="Fecha de Inicio: "
             android:textSize="18sp"
             android:gravity="center"/>
-
         <TextView
             android:id="@+id/fechaFinTextView"
             android:layout_width="match_parent"
@@ -168,7 +160,6 @@
             android:text="Fecha de Fin: "
             android:textSize="18sp"
             android:gravity="center"/>
-
         <TextView
             android:id="@+id/infoTextView"
             android:layout_width="match_parent"
@@ -177,7 +168,6 @@
             android:text="Información Adicional: "
             android:textSize="18sp"
             android:gravity="center"/>
-
         <TextView
             android:id="@+id/estadoTextView"
             android:layout_width="match_parent"
@@ -202,6 +192,8 @@
             app:layout_constraintTop_toBottomOf="@id/estadoTextView" />
 
     </LinearLayout>
+   </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/backButton"
@@ -214,7 +206,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/homeButton"
         app:layout_constraintHorizontal_chainStyle="spread" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/homeButton"
         android:layout_width="wrap_content"
@@ -225,7 +216,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/backButton"
         app:layout_constraintEnd_toStartOf="@id/editPrestamoButton" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/editPrestamoButton"
         android:layout_width="wrap_content"
@@ -236,7 +226,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/homeButton"
         app:layout_constraintEnd_toStartOf="@id/deletePrestamoButton" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/deletePrestamoButton"
         android:layout_width="wrap_content"
@@ -247,8 +236,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/editPrestamoButton"
         app:layout_constraintEnd_toEndOf="parent" />
-
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

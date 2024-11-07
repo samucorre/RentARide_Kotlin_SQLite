@@ -167,6 +167,19 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
         }
     }
 
+    fun obtenerUltimoPrestamoPorArticulo(db: SQLiteDatabase, idArticulo: Int): Prestamo? {
+        return db.rawQuery(
+            "SELECT * FROM prestamos WHERE idArticulo = ? ORDER BY fechaInicio DESC LIMIT 1",
+            arrayOf(idArticulo.toString())
+        ).use { cursor ->
+            if (cursor.moveToFirst()) {
+                cursor.toPrestamo()
+            } else {
+                null
+            }
+        }
+    }
+
 
     @SuppressLint("Range")
     private fun Cursor.toPrestamo(): Prestamo {
