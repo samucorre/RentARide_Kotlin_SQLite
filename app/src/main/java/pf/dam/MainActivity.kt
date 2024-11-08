@@ -3,6 +3,8 @@ package pf.dam
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import java.util.Locale
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -36,9 +38,9 @@ class MainActivity : AppCompatActivity() {
 //    private lateinit var button1: FloatingActionButton
 //            private lateinit var button2: FloatingActionButton
 //                    private lateinit var button3: FloatingActionButton
-    private lateinit var bdBtton: FloatingActionButton
+ //   private lateinit var bdBtton: FloatingActionButton
   //  private lateinit var graphButton: FloatingActionButton
-    private lateinit var cerrarAppButton: FloatingActionButton
+ //   private lateinit var cerrarAppButton: FloatingActionButton
     private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
 //    private lateinit var zona1TextView: TextView
@@ -71,14 +73,14 @@ class MainActivity : AppCompatActivity() {
 //        verArticulosButton = findViewById(R.id.verArticulosButton)
 //        verSociosButton = findViewById(R.id.verSociosButton)
 //        verPrestamosButton = findViewById(R.id.verPrestamosButton)
-        bdBtton = findViewById(R.id.bdButton)
+        //bdBtton = findViewById(R.id.bdButton)
        // graphButton = findViewById(R.id.graphButton)
 //        articuloGraficos = findViewById(R.id.articuloGraficos)
 //        articuloNuevo = findViewById(R.id.articuloNuevo)
 //        prestamoGraficos = findViewById(R.id.prestamoGraficos)
 //        prestamoNuevo = findViewById(R.id.prestamoNuevo)
 //        socioNuevo = findViewById(R.id.socioNuevo)
-        cerrarAppButton = findViewById(R.id.cerrarAppButton)
+      //  cerrarAppButton = findViewById(R.id.cerrarAppButton)
 //        button1 = findViewById(R.id.button1)
 //        button2 = findViewById(R.id.button2)
 //        button3 = findViewById(R.id.button3)
@@ -126,10 +128,10 @@ class MainActivity : AppCompatActivity() {
 //            startActivity(intent)
 //        }
 
-        bdBtton.setOnClickListener {
-            val intent = Intent(this, ImportExportActivity::class.java)
-            startActivity(intent)
-        }
+     //   bdBtton.setOnClickListener {
+       //     val intent = Intent(this, ImportExportActivity::class.java)
+     //       startActivity(intent)
+     //   }
 
 //        graphButton.setOnClickListener {
 //            val intent = Intent(this, GraficosActivity::class.java)
@@ -137,26 +139,25 @@ class MainActivity : AppCompatActivity() {
 //        }
 
         // Configurar listener para cerrar la aplicación
-        cerrarAppButton.setOnClickListener {
-            finishAffinity()
-        }
+      //  cerrarAppButton.setOnClickListener {
+       //     finishAffinity()
+      //  }
 
         // Configurar listeners para las CardViews
         val cardView1 = findViewById<CardView>(R.id.cardView1)
         val cardView2 = findViewById<CardView>(R.id.cardView2)
         val cardView3 = findViewById<CardView>(R.id.cardView3)
         val cardView4 = findViewById<CardView>(R.id.cardView4)
+        val cardView5 = findViewById<CardView>(R.id.cardView5)
 
         cardView1.setOnClickListener {
             val intent = Intent(this, ArticulosActivity::class.java)
             startActivity(intent)
         }
-
         cardView2.setOnClickListener {
             val intent = Intent(this, SociosActivity::class.java)
             startActivity(intent)
         }
-
         cardView3.setOnClickListener {
             val intent = Intent(this, PrestamosActivity::class.java)
             startActivity(intent)
@@ -164,7 +165,26 @@ class MainActivity : AppCompatActivity() {
         cardView4.setOnClickListener{
             val intent = Intent(this, GraficosActivity::class.java)
             startActivity(intent)
-        }    }
+        }
+    cardView5.setOnClickListener    {
+        val intent = Intent(this, ImportExportActivity::class.java)
+        startActivity(intent)
+    }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_close, menu)
+        return true
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_cerrar_app -> {
+                finish() // Cerrar la actividad
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     override fun onResume() {
         super.onResume()

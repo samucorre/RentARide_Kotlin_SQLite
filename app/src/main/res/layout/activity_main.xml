@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -146,7 +147,7 @@
         android:layout_margin="8dp"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/cardView4"
+        app:layout_constraintBottom_toTopOf="@+id/horizontalLinearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView2">
@@ -158,8 +159,9 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/background_card3"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/background_card3" />
+
             <TextView
                 android:id="@+id/cardLabel3"
                 android:layout_width="wrap_content"
@@ -172,52 +174,26 @@
                 android:textStyle="bold"
                 />
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:orientation="horizontal">-->
-
-<!--                <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                    android:id="@+id/verPrestamosButton"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_margin="6dp"-->
-<!--                    app:backgroundTint="#FFC107"-->
-<!--                    app:srcCompat="@drawable/ico_ver"-->
-<!--                    app:fabSize="mini" />-->
-
-<!--                <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                    android:id="@+id/prestamoNuevo"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_margin="6dp"-->
-<!--                    app:backgroundTint="#FFC107"-->
-<!--                    app:srcCompat="@drawable/ico_nuevo"-->
-<!--                    app:fabSize="mini" />-->
-
-<!--                <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                    android:id="@+id/prestamoGraficos"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_margin="6dp"-->
-<!--                    app:backgroundTint="#FFC107"-->
-<!--                    app:srcCompat="@drawable/ico_graf"-->
-<!--                    app:fabSize="mini" />-->
-<!--            </LinearLayout>-->
         </FrameLayout>
     </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView4"
+    <LinearLayout
+        android:id="@+id/horizontalLinearLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView3">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -240,41 +216,42 @@
             android:textStyle="bold"
             />
 
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:orientation="horizontal">-->
-
-<!--                <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                    android:id="@+id/button1"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_margin="6dp"-->
-<!--                    app:backgroundTint="#FFC107"-->
-<!--                    app:srcCompat="@drawable/ico_ver"-->
-<!--                    app:fabSize="mini" />-->
-
-<!--                <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                    android:id="@+id/button2"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_margin="6dp"-->
-<!--                    app:backgroundTint="#FFC107"-->
-<!--                    app:srcCompat="@drawable/ico_nuevo"-->
-<!--                    app:fabSize="mini" />-->
-
-<!--                <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                    android:id="@+id/button3"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_margin="6dp"-->
-<!--                    app:backgroundTint="#FFC107"-->
-<!--                    app:srcCompat="@drawable/ico_graf"-->
-<!--                    app:fabSize="mini" />-->
-<!--            </LinearLayout>-->
         </FrameLayout>
     </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/background_card5"
+                android:scaleType="centerCrop" />
+            <TextView
+                android:id="@+id/cardLabel5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|start"
+                android:layout_margin="16dp"
+                android:text="Datos"
+                android:textColor="@color/yellowRRR"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
+
+        </FrameLayout>
+    </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
     <!-- Botones -->
     <LinearLayout
@@ -287,20 +264,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/cerrarAppButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:src="@drawable/ico_close"
-            app:backgroundTint="#FFC107" />
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/bdButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:src="@drawable/ico_tool"
-            app:backgroundTint="#FFC107" />
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/cerrarAppButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="16dp"-->
+<!--            android:src="@drawable/ico_close"-->
+<!--            app:backgroundTint="#FFC107" />-->
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/bdButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="16dp"-->
+<!--            android:src="@drawable/ico_tool"-->
+<!--            app:backgroundTint="#FFC107" />-->
 
 <!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
 <!--            android:id="@+id/graphButton"-->

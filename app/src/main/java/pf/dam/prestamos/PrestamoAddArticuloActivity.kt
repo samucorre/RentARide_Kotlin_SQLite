@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.PrestamosSQLite
@@ -48,7 +49,7 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_prestamo_add_articulo)
         supportActionBar?.title = "RR - Préstamo nuevo"
-
+        val actionBar = supportActionBar
         dbPrestamos = PrestamosSQLite(this)
         dbArticulos = ArticulosSQLite(this)
         dbSocios = SociosSQLite(this)

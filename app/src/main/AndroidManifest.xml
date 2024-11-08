@@ -9,34 +9,29 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+        android:theme="@style/AppTheme"
         tools:targetApi="31"
         android:screenOrientation="portrait">
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            android:theme="@style/AppTheme"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".utils.ImportExportActivity" />
-
         <activity android:name=".articulos.ArticulosActivity"        />
         <activity android:name=".articulos.ArticuloDetalleActivity" />
         <activity android:name=".articulos.ArticuloEditActivity" />
         <activity android:name=".articulos.ArticuloAddActivity" />
-
         <activity android:name=".socios.SociosActivity" />
         <activity android:name=".socios.SocioDetalleActivity" />
         <activity android:name=".socios.SocioEditActivity" />
         <activity android:name=".socios.SocioAddActivity" />
-
         <activity android:name=".prestamos.PrestamosActivity" />
            <activity android:name=".prestamos.PrestamoDetalleActivity" />
           <activity android:name=".prestamos.PrestamoEditActivity" />
