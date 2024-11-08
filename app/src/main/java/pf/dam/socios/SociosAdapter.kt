@@ -5,9 +5,11 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.compose.ui.semantics.text
 import androidx.recyclerview.widget.RecyclerView
+import db.PrestamosDbHelper
+import db.PrestamosSQLite
 import db.SociosSQLite
 import pf.dam.R
 import java.text.SimpleDateFormat
@@ -32,6 +34,8 @@ class SociosAdapter(socios: List<Socio>) :
         val fechaNacimientoTextView: TextView = itemView.findViewById(R.id.fechaNacimientoTextView)
         val fechaIngresoSocioTextView: TextView = itemView.findViewById(R.id.fechaIngresoSocioTextView)
         val generoTextView: TextView = itemView.findViewById(R.id.generoTextView)
+        val iconoPrestamoActivo: ImageView = itemView.findViewById(R.id.iconoPrestamoActivo)
+        val dbPrestamos = PrestamosSQLite(itemView.context)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SocioViewHolder {
@@ -51,6 +55,17 @@ class SociosAdapter(socios: List<Socio>) :
         holder.fechaNacimientoTextView.text = "Fecha de nacimiento: ${dateFormat.format(socio.fechaNacimiento)}"
         holder.fechaIngresoSocioTextView.text = "Fecha de ingreso: ${dateFormat.format(socio.fechaIngresoSocio)}"
         holder.generoTextView.text = "Género: ${socio.genero}"
+        val db = holder.dbPrestamos.readableDatabase // Obtener una base de datos legible
+        val tienePrestamoActivo =
+            socio.idSocio?.let { holder.dbPrestamos.estaSocioEnPrestamoActivo(it) } // Llamar a la función estaSocioEnPrestamoActivo
+        db.close() // Cerrar la base de datos
+
+        if (tienePrestamoActivo == true) {
+            holder.iconoPrestamoActivo.visibility = View.VISIBLE
+        } else {
+            holder.iconoPrestamoActivo.visibility = View.GONE
+        }
+
 
     holder.itemView.setOnClickListener {
         val context = holder.itemView.context

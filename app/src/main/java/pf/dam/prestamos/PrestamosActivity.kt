@@ -72,6 +72,7 @@ class PrestamosActivity : AppCompatActivity() {
 
         estadoRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             val estadoSeleccionado = when (checkedId) {
+                R.id.todosRadioButton -> null
                 R.id.disponibleRadioButton -> EstadoPrestamo.ACTIVO
                 R.id.prestadoRadioButton -> EstadoPrestamo.CERRADO
                                else -> null

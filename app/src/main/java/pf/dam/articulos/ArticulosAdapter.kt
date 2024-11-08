@@ -11,8 +11,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.green
-import androidx.core.graphics.red
+
+
 import androidx.recyclerview.widget.RecyclerView
 import db.ArticulosSQLite
 import db.SociosSQLite
@@ -20,7 +20,6 @@ import pf.dam.R
 
 class ArticulosAdapter(articulos: List<Articulo>) :
     RecyclerView.Adapter<ArticulosAdapter.ArticuloViewHolder>() {
-
     var articulos: List<Articulo> = articulos
         set(value) {
             field = value
@@ -34,7 +33,6 @@ class ArticulosAdapter(articulos: List<Articulo>) :
         val descripcionTextView: TextView = itemView.findViewById(R.id.descripcionTextView)
         //val estadoTextView: TextView = itemView.findViewById(R.id.estadoTextView)
         val imagenImageView: ImageView = itemView.findViewById(R.id.imagenImageView)
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticuloViewHolder {
@@ -50,31 +48,40 @@ class ArticulosAdapter(articulos: List<Articulo>) :
         holder.tipoTextView.text = articulo.tipo ?: ""
         holder.descripcionTextView.text = articulo.descripcion ?: ""
       //  holder.estadoTextView.text = articulo.estado?.name ?: ""
-
         if (articulo.rutaImagen.isNullOrEmpty()) {
-
             holder.imagenImageView.setImageResource(R.drawable.ico_imagen)
-
         } else {
             // Mostrar una imagen por defecto si no hay rutaImagen
             val imagenBitmap = BitmapFactory.decodeFile(articulo.rutaImagen)
             holder.imagenImageView.setImageBitmap(imagenBitmap)
         }
+        val iconoEstado = holder.itemView.findViewById<ImageView>(R.id.iconoEstado)
+        val cardView = holder.itemView.findViewById<CardView>(R.id.cardView)
+        val context = holder.itemView.context
+
+        when (articulo.estado) {
+            EstadoArticulo.DISPONIBLE -> {
+                iconoEstado.setImageResource(R.drawable.ico_dispo)
+                iconoEstado.visibility = View.VISIBLE
+                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.dispo))
+            }
+            EstadoArticulo.PRESTADO -> {
+                iconoEstado.setImageResource(R.drawable.ico_prestado)
+                iconoEstado.visibility = View.VISIBLE
+                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.grey))
+            }
+            EstadoArticulo.NO_DISPONIBLE -> {
+                iconoEstado.setImageResource(R.drawable.ico_nodispo)
+                iconoEstado.visibility = View.VISIBLE
+                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.no_dispo))
+            }
+            else -> {
+                iconoEstado.visibility = View.GONE
+                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.yellowRRR))
+            }
+        }
 
 
-            val cardView = holder.itemView.findViewById<CardView>(R.id.cardView)
-            val context = holder.itemView.context
-            cardView.setCardBackgroundColor(
-                ContextCompat.getColor(
-                    context,
-                    when (articulo.estado) {
-                        EstadoArticulo.DISPONIBLE -> R.color.dispo // Color para estado disponible
-                        EstadoArticulo.PRESTADO -> R.color.grey // Color para estado prestado
-                        EstadoArticulo.NO_DISPONIBLE -> R.color.no_dispo // Color para estado no disponible
-                        else -> R.color.yellowRRR // Color por defecto
-                    }
-                )
-            )
 
 
         holder.itemView.setOnClickListener {

@@ -74,6 +74,7 @@ class ArticulosActivity : AppCompatActivity() {
 
         estadoRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             val estadoSeleccionado = when (checkedId) {
+                R.id.todosRadioButton -> null
                 R.id.disponibleRadioButton -> EstadoArticulo.DISPONIBLE
                 R.id.prestadoRadioButton -> EstadoArticulo.PRESTADO
                 R.id.noDisponibleRadioButton -> EstadoArticulo.NO_DISPONIBLE
