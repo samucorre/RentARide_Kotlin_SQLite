@@ -38,6 +38,7 @@ class ArticulosGraphs : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_articulos_graphs)
+        supportActionBar?.title = "RR - Gráficos artículos"
 
         pieChart = findViewById(R.id.pieChart)
         barChart = findViewById(R.id.barChart)

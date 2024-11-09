@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F0F0F0">
+    android:background="#FFF">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -35,19 +35,73 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/zona1"
+<!--                        <TextView-->
+<!--                            android:id="@+id/zona1"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:padding="16dp"-->
+<!--                            android:text="Artículos: " />-->
+
+                        <LinearLayout
+                            android:id="@+id/zona1Layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="16dp"
-                            android:text="Artículos: " />
+                            android:orientation="vertical">
 
-                        <Button
+                            <TextView
+                                android:id="@+id/zona1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ARTÍCULOS"
+                                android:layout_gravity="center"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/totalArticulosTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total de artículos: " />
+
+                            <TextView
+                                android:id="@+id/articulosDisponiblesTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Disponibles: " />
+
+                            <TextView
+                                android:id="@+id/articulosPrestadosTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Prestados: " />
+
+                            <TextView
+                                android:id="@+id/articulosNoDisponiblesTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="No disponibles: " />
+
+
+                        </LinearLayout>
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/btnArticulosGraphs"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="16dp"
-                            android:text="Datos Gráficos" />
+                            android:layout_gravity="center"
+                            android:src="@drawable/ico_graf"
+                            android:tooltipText="Ver más gráficos de artículos"
+                            app:backgroundTint="#FFC107"
+                            app:fabSize="mini"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="parent" />
+
+                        <!--                        <Button-->
+<!--                            android:id="@+id/btnArticulosGraphs"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_margin="16dp"-->
+<!--                            android:text="Datos Gráficos articulos" />-->
 
                     </LinearLayout>
 
@@ -72,19 +126,60 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:orientation="vertical">
-                <TextView
-                    android:id="@+id/zona2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:text="Socios: " />
-                <Button
-                    android:id="@+id/btnSocioGraphs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:text="Socios" />
+
+                    <TextView
+                        android:id="@+id/zona2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SOCIOS"
+                        android:layout_gravity="center"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/totalSociosTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+
+                        android:text="Número total de Socios: "
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tituloSociosTextView" />
+
+                    <TextView
+                        android:id="@+id/ultimoRegistroTextView"
+                        android:layout_gravity="center"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ultimo registro: "
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cumpleanerosTextView" />
+
+                    <TextView
+                        android:id="@+id/cumpleanerosTextView"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cumpleañer@s del mes: "
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/totalSociosTextView" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/btnSociosGraphs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="16dp"
+                        android:src="@drawable/ico_graf"
+                        android:tooltipText="Ver gráficos de socios"
+                        app:fabSize="mini"
+                        app:backgroundTint="#FFC107"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="parent" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -96,58 +191,98 @@
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp">
 
-                <LinearLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:padding="16dp">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:id="@+id/zona3Layout"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/pieChartPrestamosPorEstado">
 
                         <TextView
                             android:id="@+id/zona3"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:padding="16dp"
-                            android:text="Préstamos: " />
+                            android:text="PRÉSTAMOS"
+                            android:layout_gravity="center"
+                            android:textStyle="bold" />
 
-                        <Button
+                        <TextView
+                            android:id="@+id/totalPrestamosTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Préstamos totales: " />
+
+                        <TextView
+                            android:id="@+id/prestamosActivosTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Préstamos activos: " />
+
+                        <TextView
+                            android:id="@+id/prestamosCerradosTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Préstamos Cerrados: " />
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/btnPrestamosGraphs"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="16dp"
-                            android:text="Prestamos" />
-
+                            android:src="@drawable/ico_graf"
+                            android:layout_gravity="center"
+                            android:tooltipText="Ver más gráficos de préstamos"
+                            app:fabSize="mini"
+                            app:backgroundTint="#FFC107"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="parent" />
                     </LinearLayout>
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Préstamos por mes:"
-                        android:paddingTop="20dp"
+                        android:id="@+id/tituloPrestamosPorEstado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Préstamos por estado:"
                         android:textSize="12sp"
-                        android:textColor="@color/black"/>
-                    <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/lineChartPrestamosPorMes"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp" />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Estado de prestamos:"
-                        android:paddingTop="20dp"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/pieChartPrestamosPorEstado" />
+
                     <com.github.mikephil.charting.charts.PieChart
                         android:id="@+id/pieChartPrestamosPorEstado"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp" />
+                        android:layout_width="0dp"
+                        android:layout_height="200dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/zona3Layout"/>
 
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Préstamos por mes:"
+                    android:paddingTop="20dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/black"/>
 
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/lineChartPrestamosPorMes"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp" />
+
+            </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
 
@@ -172,11 +307,11 @@
             app:backgroundTint="#FFC107"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/volverButton" />
-        <Button
-            android:id="@+id/btnEjemploGraficos"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="Ejemplo Gráficos" />
+<!--        <Button-->
+<!--            android:id="@+id/btnEjemploGraficos"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="16dp"-->
+<!--            android:text="Ejemplo Gráficos" />-->
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

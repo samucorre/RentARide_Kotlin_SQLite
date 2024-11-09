@@ -39,6 +39,7 @@ class PrestamosGraphs : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_prestamos_graph)
+        supportActionBar?.title = "RR - Gráficos préstamos"
 
         barChartPrestamosPorMes = findViewById(R.id.barChartPrestamosPorMes)
         lineChartPrestamosPorMes = findViewById(R.id.lineChartPrestamosPorMes)

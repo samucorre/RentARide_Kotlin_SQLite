@@ -41,6 +41,7 @@ class SociosGraphs : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_socios_graphs)
+        supportActionBar?.title = "RR - Gráficos socios"
 
         pieChart = findViewById(R.id.pieChartSocios)
         bubbleChart = findViewById(R.id.bubbleChartSocios)
@@ -69,7 +70,7 @@ class SociosGraphs : AppCompatActivity() {
         val socios = SociosSQLite(this).obtenerSocios()
         crearGraficoPastelGenero(socios)
         crearGraficoBurbujasAnoNacimiento(socios)
-        crearGraficoBarrasSociosPorAno(socios)
+        crearGraficoBarrasSociosPorAno(socios, barChart)
 
     }
 
@@ -113,14 +114,24 @@ class SociosGraphs : AppCompatActivity() {
             Calendar.getInstance().apply { time = it }.get(Calendar.YEAR)
         }
     }
-    private fun crearGraficoBarrasSociosPorAno(socios: List<Socio>) {
+    fun crearGraficoBarrasSociosPorAno(socios: List<Socio>, barChart: BarChart) {
         val sociosPorAno = socios.groupingBy { obtenerAnoIngreso(it.fechaIngresoSocio) }.eachCount()
         val barEntries = sociosPorAno.entries.mapNotNull { entry ->
             entry.key?.let { BarEntry(it.toFloat(), entry.value.toFloat()) }
         }
-
+//        val colors = listOf(
+//            Color.RED,
+//            Color.GREEN,
+//            Color.BLUE,
+//            Color.YELLOW,
+//         Color.GRAY ,
+//            Color.MAGENTA,
+//
+//            // ... agrega más colores aquí ...
+//        )
         val barDataSet = BarDataSet(barEntries, "Socios Ingresados por Año")
-        barDataSet.colors = ColorTemplate.MATERIAL_COLORS.toList() // Puedes usar otros colores si lo prefieres
+//        barDataSet.colors = colors
+        barDataSet.colors = ColorTemplate.COLORFUL_COLORS.toList() // Puedes usar otros colores si lo prefieres
         barDataSet.setDrawValues(true) // Mostrar valores en las barras
 
         // Crear entradas de leyenda para cada año

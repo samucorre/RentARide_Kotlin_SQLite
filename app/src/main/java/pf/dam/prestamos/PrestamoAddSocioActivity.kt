@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
@@ -26,19 +27,21 @@ import java.util.Date
 class PrestamoAddSocioActivity : AppCompatActivity() {
 
     private lateinit var dbHelper: PrestamosSQLite
-    private lateinit var articulosDbHelper: ArticulosSQLite
-    private lateinit var sociosDbHelper: SociosSQLite
+    private lateinit var articulosDb: ArticulosSQLite
+    private lateinit var sociosDb: SociosSQLite
     private  lateinit var dateUtil : DateUtil
-    private lateinit var articuloSpinner: Spinner
-    private lateinit var busquedaArticuloEditText: EditText
+//    private lateinit var articuloSpinner: Spinner
+   private lateinit var articuloAutoCompleteTextView: AutoCompleteTextView
     private lateinit var fechaInicioButton: Button
     // private lateinit var fechaFinEditText: EditText
     private lateinit var infoEditText: EditText
     private lateinit var guardarButton: FloatingActionButton
     private lateinit var volverButton: FloatingActionButton
     private lateinit var homeButton: FloatingActionButton
+    private lateinit var adapter: ArrayAdapter<String>
 
     private var socioId: Int = -1
+    private var idArticuloleccionado: Int? = null
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,14 +50,13 @@ class PrestamoAddSocioActivity : AppCompatActivity() {
         supportActionBar?.title = "RR - Préstamo nuevo"
 
         dbHelper = PrestamosSQLite(this)
-        articulosDbHelper = ArticulosSQLite(this)
-        sociosDbHelper = SociosSQLite(this)
+        articulosDb = ArticulosSQLite(this)
+        sociosDb = SociosSQLite(this)
         dateUtil = DateUtil(this)
 
-        articuloSpinner = findViewById(R.id.articuloSpinner) // <-- Inicializa el Spinner
-        busquedaArticuloEditText = findViewById(R.id.busquedaArticuloEditText) // <-- Inicializa el EditText de búsqueda
+//        articuloSpinner = findViewById(R.id.articuloSpinner)
+        articuloAutoCompleteTextView = findViewById(R.id.articuloAutoCompleteTextView)
         fechaInicioButton = findViewById(R.id.fechaInicioButton)
-        // fechaFinEditText = findViewById(R.id.fechaFinEditText)
         infoEditText = findViewById(R.id.infoEditText)
         guardarButton = findViewById(R.id.guardarButton)
         volverButton = findViewById(R.id.volverButton)
@@ -66,25 +68,40 @@ class PrestamoAddSocioActivity : AppCompatActivity() {
             dateUtil.mostrarDatePickerPrestamos(this,fechaInicioButton)
         }
 
-        // Obtener la lista de artículos y configurar el adaptador del Spinner
-        val articulos = articulosDbHelper.obtenerArticulosDisponibles()
-        val articulosAdapter = ArrayAdapter(
+//        // Obtener la lista de artículos y configurar el adaptador del Spinner
+//        val articulos = articulosDb.obtenerArticulosDisponibles()
+//        val articulosAdapter = ArrayAdapter(
+//            this,
+//            android.R.layout.simple_spinner_item,
+//            articulos.map { "${it.categoria} - ${it.nombre}" }
+//        )
+//        articulosAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//        articuloSpinner.adapter = articulosAdapter
+
+//        busquedaArticuloEditText.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+//
+//            override fun afterTextChanged(s: Editable?) {
+//                filtrarArticulos(s.toString())
+//            }
+//        })
+//
+         adapter = ArrayAdapter(
             this,
-            android.R.layout.simple_spinner_item,
-            articulos.map { "${it.categoria} - ${it.nombre}" }
-        )
-        articulosAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        articuloSpinner.adapter = articulosAdapter
+            android.R.layout.simple_dropdown_item_1line,
+            articulosDb.obtenerArticulos().map { "${it.nombre} ${it.categoria}" })
+        articuloAutoCompleteTextView.setAdapter(adapter)
 
-        busquedaArticuloEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        // Manejar la selección de un socio
+        articuloAutoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
+            val socioSeleccionado = adapter.getItem(position)
+            idArticuloleccionado = articulosDb.obtenerArticulos()
+                .find { "${it.nombre} ${it.categoria}" == socioSeleccionado }?.idArticulo
+        }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
-            override fun afterTextChanged(s: Editable?) {
-                filtrarArticulos(s.toString())
-            }
-        })
 
         homeButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -92,11 +109,11 @@ class PrestamoAddSocioActivity : AppCompatActivity() {
         }
 
         guardarButton.setOnClickListener {
-            val posicionArticulo = articuloSpinner.selectedItemPosition // <-- Obtén el artículo seleccionado
+//            val posicionArticulo = articuloSpinner.selectedItemPosition // <-- Obtén el artículo seleccionado
             val fechaInicioString = fechaInicioButton.text.toString()
             // val fechaFin = dateFormat.parse(fechaFinEditText.text.toString())
             val info = infoEditText.text.toString()
-            val idArticulo = articulos.getOrNull(posicionArticulo)?.idArticulo
+            val idArticulo = idArticuloleccionado
 
             // Validar artículo y fechaInicio
             if (idArticulo != null && !fechaInicioString.isEmpty() && idSocioIntent != null) {
@@ -113,7 +130,7 @@ class PrestamoAddSocioActivity : AppCompatActivity() {
                         EstadoPrestamo.ACTIVO
                     )
                     dbHelper.insertarPrestamo(nuevoPrestamo)
-                    articulosDbHelper.actualizarEstadoArticulo(idArticulo, EstadoArticulo.PRESTADO)
+                    articulosDb.actualizarEstadoArticulo(idArticulo, EstadoArticulo.PRESTADO)
 
                     Toast.makeText(this, "Préstamo añadido", Toast.LENGTH_SHORT).show()
                     finish()
@@ -137,19 +154,19 @@ class PrestamoAddSocioActivity : AppCompatActivity() {
         volverButton.setOnClickListener { finish() }
     }
 
-    private fun filtrarArticulos(textoBusqueda: String) {
-        val textoBusqueda = textoBusqueda.trim()
-        val articulosFiltrados = articulosDbHelper.obtenerArticulosDisponibles()
-            .filter { articulo ->
-                articulo.nombre?.contains(textoBusqueda, ignoreCase = true) ?: false ||
-                        articulo.categoria?.contains(textoBusqueda, ignoreCase = true) ?: false
-            }
-        val articulosAdapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_spinner_item,
-            articulosFiltrados.map { "${it.categoria} - ${it.nombre}" }
-        )
-        articulosAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        articuloSpinner.adapter = articulosAdapter
-    }
+//    private fun filtrarArticulos(textoBusqueda: String) {
+//        val textoBusqueda = textoBusqueda.trim()
+//        val articulosFiltrados = articulosDb.obtenerArticulosDisponibles()
+//            .filter { articulo ->
+//                articulo.nombre?.contains(textoBusqueda, ignoreCase = true) ?: false ||
+//                        articulo.categoria?.contains(textoBusqueda, ignoreCase = true) ?: false
+//            }
+//        val articulosAdapter = ArrayAdapter(
+//            this,
+//            android.R.layout.simple_spinner_item,
+//            articulosFiltrados.map { "${it.categoria} - ${it.nombre}" }
+//        )
+//      //  articulosAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//      //  articuloSpinner.adapter = articulosAdapter
+//    }
 }

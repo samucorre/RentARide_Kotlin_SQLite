@@ -36,10 +36,11 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
     private lateinit var guardarButton: FloatingActionButton
     private lateinit var volverButton: FloatingActionButton
     private lateinit var homeButton: FloatingActionButton
+    private lateinit var adapter: ArrayAdapter<String>
+
 
     private var articuloId: Int = -1
     private var idSocioSeleccionado: Int? = null
-    private lateinit var adapter: ArrayAdapter<String>
     companion object {
         const val REQUEST_ADD_PRESTAMO = 1
     }
@@ -49,7 +50,7 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_prestamo_add_articulo)
         supportActionBar?.title = "RR - Préstamo nuevo"
-        val actionBar = supportActionBar
+
         dbPrestamos = PrestamosSQLite(this)
         dbArticulos = ArticulosSQLite(this)
         dbSocios = SociosSQLite(this)
