@@ -113,7 +113,9 @@ class PrestamosActivity : AppCompatActivity() {
 
                 // Buscar por datos del préstamo
                 val coincidePrestamo = prestamo.info?.contains(query, ignoreCase = true) ?: false ||
-                        prestamo.estado.toString().contains(query, ignoreCase = true)
+                        prestamo.estado.toString().contains(query, ignoreCase = true) ||
+                        prestamo.fechaInicio.toString().contains(query, ignoreCase = true) ||
+                        prestamo.fechaFin?.toString()?.contains(query, ignoreCase = true) ?: false
 
                 // Combinar los resultados de las búsquedas
                 coincideArticulo || coincideSocio || coincidePrestamo

@@ -114,4 +114,19 @@ class PrestamosSQLite(context: Context) :
         val dbHelper = PrestamosDbHelper(this)
         return dbHelper.obtenerIdSocioPrestamoActivo(writableDatabase, idArticulo)
     }
+    fun obtenerSociosConPrestamosActivos(context: Context): List<Socio> {
+        val sociosIds = readableDatabase.use { db -> prestamoDbHelper.obtenerSociosConPrestamosActivos(db) }
+        val sociosSQLite = SociosSQLite(context)
+        return sociosSQLite.obtenerSocios().filter { socio -> socio.idSocio in sociosIds }
+    }
+
+    fun obtenerSociosConPrestamosCerrados(context: Context): List<Socio> {
+        val sociosIds = readableDatabase.use { db -> prestamoDbHelper.obtenerSociosConPrestamosCerrados(db) }
+        val sociosSQLite = SociosSQLite(context)
+        return sociosSQLite.obtenerSocios().filter { socio -> socio.idSocio in sociosIds }
+    }
+
+//
+
+
 }

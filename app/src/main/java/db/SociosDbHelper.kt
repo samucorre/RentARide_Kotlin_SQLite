@@ -5,6 +5,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.icu.util.Calendar
 import android.util.Log
+import pf.dam.prestamos.EstadoPrestamo
 
 import pf.dam.socios.Genero
 import pf.dam.socios.Socio
@@ -148,4 +149,5 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
             }
         }
     }
+
 }

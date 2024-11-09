@@ -67,5 +67,4 @@ class SociosSQLite(context: Context) :
     }
 
 
-
 }

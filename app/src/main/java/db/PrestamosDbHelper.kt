@@ -180,6 +180,35 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
         }
     }
 
+    fun obtenerSociosConPrestamosActivos(db: SQLiteDatabase): List<Int> {
+        val sociosConPrestamosActivosIds = mutableListOf<Int>()
+        val cursor = db.rawQuery(
+            "SELECT DISTINCT idSocio FROM prestamos WHERE estado = ?",
+            arrayOf(EstadoPrestamo.ACTIVO.toString())
+        )
+
+        while (cursor.moveToNext()) {
+            sociosConPrestamosActivosIds.add(cursor.getInt(cursor.getColumnIndexOrThrow("idSocio")))
+        }
+
+        cursor.close()
+        return sociosConPrestamosActivosIds
+    }
+
+    fun obtenerSociosConPrestamosCerrados(db: SQLiteDatabase): List<Int> {
+        val sociosConPrestamosCerradosIds = mutableListOf<Int>()
+        val cursor = db.rawQuery(
+            "SELECT DISTINCT idSocio FROM prestamos WHERE estado = ?",
+            arrayOf(EstadoPrestamo.CERRADO.toString())
+        )
+
+        while (cursor.moveToNext()) {
+            sociosConPrestamosCerradosIds.add(cursor.getInt(cursor.getColumnIndexOrThrow("idSocio")))
+        }
+
+        cursor.close()
+        return sociosConPrestamosCerradosIds
+    }
 
     @SuppressLint("Range")
     private fun Cursor.toPrestamo(): Prestamo {
