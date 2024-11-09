@@ -1,4 +1,4 @@
-package pf.dam.utils
+package pf.dam.utils.graficos
 
 import android.annotation.SuppressLint
 import android.graphics.Color

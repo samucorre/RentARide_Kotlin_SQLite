@@ -40,6 +40,7 @@
                     android:layout_gravity="end"
                     android:layout_margin="8dp"
                     android:src="@drawable/ico_prestamo_activo"
+                    android:tooltipText="Préstamo activo"
                     android:visibility="gone" />
 
         </LinearLayout>

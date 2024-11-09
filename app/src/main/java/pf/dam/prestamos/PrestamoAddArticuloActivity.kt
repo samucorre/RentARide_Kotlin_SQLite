@@ -11,7 +11,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.PrestamosSQLite
@@ -20,7 +19,7 @@ import pf.dam.MainActivity
 import pf.dam.R
 import pf.dam.articulos.EstadoArticulo
 import pf.dam.socios.Socio
-import pf.dam.utils.DateUtil
+import pf.dam.utils.FechaUtil
 import java.text.ParseException
 import java.util.Date
 
@@ -29,7 +28,7 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
     private lateinit var dbPrestamos: PrestamosSQLite
     private lateinit var dbArticulos: ArticulosSQLite
     private lateinit var dbSocios: SociosSQLite
-    private  lateinit var dateUtil : DateUtil
+    private  lateinit var fechaUtil : FechaUtil
     private lateinit var socioAutoCompleteTextView: AutoCompleteTextView
     private lateinit var fechaInicioButton: Button
     private lateinit var infoEditText: EditText
@@ -54,7 +53,7 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
         dbPrestamos = PrestamosSQLite(this)
         dbArticulos = ArticulosSQLite(this)
         dbSocios = SociosSQLite(this)
-        dateUtil = DateUtil(this)
+        fechaUtil = FechaUtil(this)
 
         socioAutoCompleteTextView = findViewById(R.id.socioAutoCompleteTextView)
         fechaInicioButton = findViewById(R.id.fechaInicioButton)
@@ -66,7 +65,7 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
         val idArticuloIntent = intent.getIntExtra("idArticulo", -1)
 
         fechaInicioButton.setOnClickListener {
-            dateUtil.mostrarDatePickerPrestamos(this,fechaInicioButton)
+            fechaUtil.mostrarDatePickerPrestamos(this,fechaInicioButton)
         }
 
         // Crear el adaptador con los nombres de los socios
@@ -94,7 +93,7 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
             // Validar socio y fechaInicio
             if (idSocio != null && !fechaInicioString.isEmpty() && idArticuloIntent != null) {
                 try {
-                    val fechaInicio = dateUtil.dateFormat.parse(fechaInicioString)
+                    val fechaInicio = fechaUtil.dateFormat.parse(fechaInicioString)
                     val fechaFin: Date? = null
                     val nuevoPrestamo = Prestamo(
                         null,

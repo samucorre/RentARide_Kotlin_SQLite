@@ -3,14 +3,11 @@ package pf.dam.prestamos
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -20,7 +17,7 @@ import db.SociosSQLite
 import pf.dam.MainActivity
 import pf.dam.R
 import pf.dam.articulos.EstadoArticulo
-import pf.dam.utils.DateUtil
+import pf.dam.utils.FechaUtil
 import java.text.ParseException
 import java.util.Date
 
@@ -29,7 +26,7 @@ class PrestamoAddSocioActivity : AppCompatActivity() {
     private lateinit var dbHelper: PrestamosSQLite
     private lateinit var articulosDb: ArticulosSQLite
     private lateinit var sociosDb: SociosSQLite
-    private  lateinit var dateUtil : DateUtil
+    private  lateinit var fechaUtil : FechaUtil
 //    private lateinit var articuloSpinner: Spinner
    private lateinit var articuloAutoCompleteTextView: AutoCompleteTextView
     private lateinit var fechaInicioButton: Button
@@ -52,7 +49,7 @@ class PrestamoAddSocioActivity : AppCompatActivity() {
         dbHelper = PrestamosSQLite(this)
         articulosDb = ArticulosSQLite(this)
         sociosDb = SociosSQLite(this)
-        dateUtil = DateUtil(this)
+        fechaUtil = FechaUtil(this)
 
 //        articuloSpinner = findViewById(R.id.articuloSpinner)
         articuloAutoCompleteTextView = findViewById(R.id.articuloAutoCompleteTextView)
@@ -65,7 +62,7 @@ class PrestamoAddSocioActivity : AppCompatActivity() {
         val idSocioIntent = intent.getIntExtra("idSocio", -1)
 
         fechaInicioButton.setOnClickListener {
-            dateUtil.mostrarDatePickerPrestamos(this,fechaInicioButton)
+            fechaUtil.mostrarDatePickerPrestamos(this,fechaInicioButton)
         }
 
 //        // Obtener la lista de artículos y configurar el adaptador del Spinner
@@ -118,7 +115,7 @@ class PrestamoAddSocioActivity : AppCompatActivity() {
             // Validar artículo y fechaInicio
             if (idArticulo != null && !fechaInicioString.isEmpty() && idSocioIntent != null) {
                 try {
-                    val fechaInicio = dateUtil.dateFormat.parse(fechaInicioString)
+                    val fechaInicio = fechaUtil.dateFormat.parse(fechaInicioString)
                     val fechaFin: Date? = null
                     val nuevoPrestamo = Prestamo(
                         null,

@@ -32,7 +32,7 @@
             android:id="@+id/disponibleRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="En uso" />
+            android:text="Usando" />
 
 <!--        <RadioButton-->
 <!--            android:id="@+id/prestadoRadioButton"-->

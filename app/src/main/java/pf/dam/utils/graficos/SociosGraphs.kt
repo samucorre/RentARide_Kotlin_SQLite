@@ -1,22 +1,15 @@
-package pf.dam.utils
+package pf.dam.utils.graficos
 
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.add
-import androidx.compose.foundation.layout.size
-import androidx.compose.ui.tooling.data.position
-import androidx.core.text.color
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.BubbleChart
-import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.charts.ScatterChart
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.SociosSQLite
@@ -25,7 +18,6 @@ import pf.dam.R
 import pf.dam.socios.Socio
 import java.util.*
 import kotlin.collections.eachCount
-import kotlin.text.toFloat
 
 class SociosGraphs : AppCompatActivity() {
 
@@ -53,25 +45,20 @@ class SociosGraphs : AppCompatActivity() {
 
         homeButton = findViewById(R.id.homeButtonSocios)
         volverButton = findViewById(R.id.volverButtonSocios)
-
         configurarGraficos()
-
         homeButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
-
         volverButton.setOnClickListener {
             finish()
         }
     }
-
     private fun configurarGraficos() {
         val socios = SociosSQLite(this).obtenerSocios()
         crearGraficoPastelGenero(socios)
         crearGraficoBurbujasAnoNacimiento(socios)
         crearGraficoBarrasSociosPorAno(socios, barChart)
-
     }
 
     private fun crearGraficoPastelGenero(socios: List<Socio>) {
@@ -119,18 +106,8 @@ class SociosGraphs : AppCompatActivity() {
         val barEntries = sociosPorAno.entries.mapNotNull { entry ->
             entry.key?.let { BarEntry(it.toFloat(), entry.value.toFloat()) }
         }
-//        val colors = listOf(
-//            Color.RED,
-//            Color.GREEN,
-//            Color.BLUE,
-//            Color.YELLOW,
-//         Color.GRAY ,
-//            Color.MAGENTA,
-//
-//            // ... agrega más colores aquí ...
-//        )
+
         val barDataSet = BarDataSet(barEntries, "Socios Ingresados por Año")
-//        barDataSet.colors = colors
         barDataSet.colors = ColorTemplate.COLORFUL_COLORS.toList() // Puedes usar otros colores si lo prefieres
         barDataSet.setDrawValues(true) // Mostrar valores en las barras
 
@@ -170,6 +147,31 @@ class SociosGraphs : AppCompatActivity() {
             Calendar.getInstance().apply { time = it }.get(Calendar.YEAR)
         }
     }
+    //    fun crearGraficoDispersionSociosPorAnoNacimiento(socios: List<Socio>) {
+//        val sociosPorAnoNacimiento = socios.groupingBy { obtenerAnoNacimiento(it.fechaNacimiento) }.eachCount()
+//        val scatterEntries = sociosPorAnoNacimiento.entries.mapNotNull { entry ->
+//            entry.key?.let { Entry(it.toFloat(), entry.value.toFloat()) }
+//        }
+//
+//        val scatterDataSet = ScatterDataSet(scatterEntries, "Socios por Año de Nacimiento")
+//        scatterDataSet.color = ColorTemplate.MATERIAL_COLORS[0]
+//        scatterDataSet.scatterShapeSize = 10f
+//
+//        val scatterData = ScatterData(scatterDataSet)
+//        scatterChart.data = scatterData
+//        scatterChart.xAxis.granularity = 1f
+//        scatterChart.xAxis.valueFormatter = IndexAxisValueFormatter(sociosPorAnoNacimiento.keys.toList().mapNotNull { it?.toString() })
+//        scatterChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+//        scatterChart.description.isEnabled = false
+//        scatterChart.legend.isEnabled = true
+//        scatterChart.invalidate()
+//    }
+//
+//    fun obtenerAnoNacimiento(fechaNacimiento: Date?): Int? {
+//        return fechaNacimiento?.let {
+//            Calendar.getInstance().apply { time = it }.get(Calendar.YEAR)
+//        }
+//    }
 
 }
 

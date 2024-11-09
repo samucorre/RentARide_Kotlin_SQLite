@@ -1,46 +1,14 @@
-package pf.dam.utils
+package pf.dam.utils.graficos
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Color
 //import android.graphics.Color
 import android.os.Bundle
-import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.semantics.text
-import androidx.compose.ui.text.intl.Locale
-import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.charts.BubbleChart
-import com.github.mikephil.charting.charts.CandleStickChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.charts.RadarChart
-import com.github.mikephil.charting.charts.ScatterChart
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.data.BubbleData
-import com.github.mikephil.charting.data.BubbleDataSet
-import com.github.mikephil.charting.data.BubbleEntry
-import com.github.mikephil.charting.data.CandleData
-import com.github.mikephil.charting.data.CandleDataSet
-import com.github.mikephil.charting.data.CandleEntry
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.data.RadarData
-import com.github.mikephil.charting.data.RadarDataSet
-import com.github.mikephil.charting.data.RadarEntry
-import com.github.mikephil.charting.data.ScatterData
-import com.github.mikephil.charting.data.ScatterDataSet
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.PrestamosSQLite
@@ -56,19 +24,13 @@ import pf.dam.articulos.EstadoArticulo
 import pf.dam.prestamos.EstadoPrestamo
 import pf.dam.prestamos.PrestamosActivity
 import pf.dam.socios.SociosActivity
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import kotlin.collections.eachCount
-import kotlin.text.format
-import kotlin.text.toFloat
+import pf.dam.utils.FechaUtil
 
 class GraficosActivity : AppCompatActivity() {
     private lateinit var dbArticulos: ArticulosSQLite
     private lateinit var dbSocios: SociosSQLite
     private lateinit var dbPrestamos: PrestamosSQLite
-    private lateinit var dateUtil: DateUtil
+    private lateinit var fechaUtil: FechaUtil
         private lateinit var zona1TextView: TextView
         private lateinit var zona2TextView: TextView
     private lateinit var zona3TextView: TextView
@@ -89,7 +51,7 @@ class GraficosActivity : AppCompatActivity() {
         dbArticulos = ArticulosSQLite(this)
         dbSocios = SociosSQLite(this)
         dbPrestamos = PrestamosSQLite(this)
-        dateUtil = DateUtil(this)
+        fechaUtil = FechaUtil(this)
 
         zona1TextView = findViewById(R.id.zona1)
         zona2TextView = findViewById(R.id.zona2)
@@ -151,20 +113,20 @@ class GraficosActivity : AppCompatActivity() {
             val intent = Intent(this, SociosGraphs::class.java)
             startActivity(intent)
         }
-        cardView1.setOnClickListener {
-            val intent = Intent(this, ArticulosActivity::class.java)
-            startActivity(intent)
-        }
-
-        cardView2.setOnClickListener {
-            val intent = Intent(this, SociosActivity::class.java)
-            startActivity(intent)
-        }
-
-        cardView3.setOnClickListener {
-            val intent = Intent(this, PrestamosActivity::class.java)
-            startActivity(intent)
-        }
+//        cardView1.setOnClickListener {
+//            val intent = Intent(this, ArticulosActivity::class.java)
+//            startActivity(intent)
+//        }
+//
+//        cardView2.setOnClickListener {
+//            val intent = Intent(this, SociosActivity::class.java)
+//            startActivity(intent)
+//        }
+//
+//        cardView3.setOnClickListener {
+//            val intent = Intent(this, PrestamosActivity::class.java)
+//            startActivity(intent)
+//        }
 
     }
         override fun onResume() {
@@ -229,7 +191,7 @@ class GraficosActivity : AppCompatActivity() {
         val cumpleanerosTextView = findViewById<TextView>(R.id.cumpleanerosTextView)
         cumpleanerosTextView.text = "\nCumpleañer@s del mes: \n${sociosCumpleaneros.joinToString("\n") { it.first }}"
         val ultimoRegistroTextView = findViewById<TextView>(R.id.ultimoRegistroTextView)
-        ultimoRegistroTextView.text = "\nUltimo registro: ${ultimoSocioRegistrado?.nombre} ${ultimoSocioRegistrado?.apellido}  ${dateUtil.dateFormat.format(ultimoSocioRegistrado?.fechaIngresoSocio)}"
+        ultimoRegistroTextView.text = "\nUltimo registro: ${ultimoSocioRegistrado?.nombre} ${ultimoSocioRegistrado?.apellido}  ${fechaUtil.dateFormat.format(ultimoSocioRegistrado?.fechaIngresoSocio)}"
 
 
 

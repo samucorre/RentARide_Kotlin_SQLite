@@ -39,18 +39,18 @@
         <activity android:name=".prestamos.PrestamoAddSocioActivity"/>
         <activity android:name=".prestamos.PrestamoAddArticuloActivity"/>
 
-        <activity android:name=".utils.GraficosActivity"/>
+        <activity android:name=".utils.graficos.GraficosActivity"/>
         <activity
-            android:name=".utils.ArticulosGraphs"
+            android:name=".utils.graficos.ArticulosGraphs"
             android:exported="false" />
         <activity
-            android:name=".utils.PrestamosGraphs"
+            android:name=".utils.graficos.PrestamosGraphs"
             android:exported="false" />
         <activity
-            android:name=".utils.SociosGraphs"
+            android:name=".utils.graficos.SociosGraphs"
             android:exported="false" />
         <activity
-            android:name=".utils.EjemploGraficos"
+            android:name=".utils.graficos.EjemploGraficos"
             android:exported="false" />
 
 

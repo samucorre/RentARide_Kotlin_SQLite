@@ -18,7 +18,7 @@ import db.SociosSQLite
 import pf.dam.MainActivity
 import pf.dam.R
 import pf.dam.articulos.EstadoArticulo
-import pf.dam.utils.DateUtil
+import pf.dam.utils.FechaUtil
 import java.text.ParseException
 import java.util.Date
 
@@ -27,7 +27,7 @@ class PrestamoAddActivity : AppCompatActivity() {
     private lateinit var dbPrestamos: PrestamosSQLite
     private lateinit var dbArticulos: ArticulosSQLite
     private lateinit var dbSocios: SociosSQLite
-    private  lateinit var dateUtil : DateUtil
+    private  lateinit var fechaUtil : FechaUtil
     private lateinit var articuloSpinner: Spinner
     private lateinit var socioSpinner: Spinner
     private lateinit var fechaFinEditText: EditText
@@ -50,7 +50,7 @@ class PrestamoAddActivity : AppCompatActivity() {
         dbPrestamos = PrestamosSQLite(this)
         dbArticulos = ArticulosSQLite(this)
         dbSocios = SociosSQLite(this)
-        dateUtil = DateUtil(this)
+        fechaUtil = FechaUtil(this)
 
         articuloSpinner = findViewById(R.id.articuloSpinner)
         socioSpinner = findViewById(R.id.socioSpinner)
@@ -71,7 +71,7 @@ class PrestamoAddActivity : AppCompatActivity() {
         val socios = dbSocios.obtenerSocios()
 
         fechaInicioButton.setOnClickListener {
-            dateUtil.mostrarDatePickerPrestamos(this, fechaInicioButton)
+            fechaUtil.mostrarDatePickerPrestamos(this, fechaInicioButton)
         }
 
         val articulosAdapter = ArrayAdapter(
@@ -108,7 +108,7 @@ class PrestamoAddActivity : AppCompatActivity() {
 
             // Si fechaInicio está llena, crear el préstamo e insertarlo en la base de datos
             try {
-                val fechaInicio = dateUtil.dateFormat.parse(fechaInicioString)
+                val fechaInicio = fechaUtil.dateFormat.parse(fechaInicioString)
                 val idArticulo = articulos.getOrNull(posicionArticulo)?.idArticulo
                 val idSocio = socios.getOrNull(posicionSocio)?.idSocio
 

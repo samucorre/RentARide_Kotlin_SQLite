@@ -6,19 +6,16 @@ import android.database.sqlite.SQLiteException
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
-import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.semantics.setText
-import androidx.compose.ui.semantics.text
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.PrestamosSQLite
 import db.SociosSQLite
 import pf.dam.MainActivity
 import pf.dam.R
-import pf.dam.utils.DateUtil
+import pf.dam.utils.FechaUtil
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -28,7 +25,7 @@ class SocioEditActivity : AppCompatActivity() {
 
     private lateinit var dbSocios: SociosSQLite
     private lateinit var dbPrestamos: PrestamosSQLite
-    private lateinit var dateUtil: DateUtil
+    private lateinit var fechaUtil: FechaUtil
     private lateinit var nombreEditText: EditText
     private lateinit var apellidoEditText: EditText
     private lateinit var numeroSocioEditText: EditText
@@ -55,7 +52,7 @@ class SocioEditActivity : AppCompatActivity() {
 
         dbSocios = SociosSQLite(this)
         dbPrestamos = PrestamosSQLite(this)
-        dateUtil = DateUtil(this)
+        fechaUtil = FechaUtil(this)
 
         nombreEditText = findViewById(R.id.nombreEditText)
         apellidoEditText = findViewById(R.id.apellidoEditText)
@@ -81,12 +78,12 @@ class SocioEditActivity : AppCompatActivity() {
 //            dateUtil.mostrarDatePicker(this, addFechaIngresoSocioButton)
 //        }
         fechaNacimientoEditText.setOnClickListener {
-            dateUtil.mostrarDatePickerEditText(this, fechaNacimientoEditText)
+            fechaUtil.mostrarDatePickerEditText(this, fechaNacimientoEditText)
 
         }
 
         fechaIngresoSocioEditText.setOnClickListener {
-            dateUtil.mostrarDatePickerEditText(this, fechaIngresoSocioEditText)
+            fechaUtil.mostrarDatePickerEditText(this, fechaIngresoSocioEditText)
 
         }
 
@@ -98,12 +95,12 @@ class SocioEditActivity : AppCompatActivity() {
             telefonoEditText.setText(socio.telefono.toString())
             emailEditText.setText(socio.email)
             fechaNacimientoEditText.text = Editable.Factory.getInstance().newEditable(socio.fechaNacimiento?.let {
-                dateUtil.dateFormat.format(
+                fechaUtil.dateFormat.format(
                     it
                 )
             })
             fechaIngresoSocioEditText.text = Editable.Factory.getInstance().newEditable(socio.fechaIngresoSocio?.let {
-                dateUtil.dateFormat.format(
+                fechaUtil.dateFormat.format(
                     it
                 )
             })
@@ -138,8 +135,8 @@ class SocioEditActivity : AppCompatActivity() {
                     return@setOnClickListener
                 }
                 try {
-                    val fechaNacimiento = dateUtil.dateFormat.parse(fechaNacimientoString)
-                    val fechaIngresoSocio = dateUtil.dateFormat.parse(fechaIngresoSocioString)
+                    val fechaNacimiento = fechaUtil.dateFormat.parse(fechaNacimientoString)
+                    val fechaIngresoSocio = fechaUtil.dateFormat.parse(fechaIngresoSocioString)
 
                     // Manejar el caso nulo para genero
                     val genero = when (generoRadioGroup.checkedRadioButtonId) {

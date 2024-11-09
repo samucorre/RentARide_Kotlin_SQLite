@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
@@ -9,31 +10,45 @@
         android:id="@+id/tituloTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Exportar/Importar Base de Datos"
+        android:text="Exportar Base de Datos"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!--    <Button-->
+<!--        android:id="@+id/importarButton"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Importar Base de Datos"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/exportarButton" />-->
+
+    <TextView
+        android:id="@+id/tituloTextView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exporta a la carpeta Downloads del dispositivo, una copia de los datos contenidos en la base de datos de la App.
+
+Recomendable antes de desintalar la aplicación para salvar los datos."
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="-3dp"
+        tools:layout_editor_absoluteY="130dp" />
+
     <Button
         android:id="@+id/exportarButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="104dp"
         android:text="Exportar Base de Datos"
+        app:backgroundTint="#FFC107"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tituloTextView" />
-
-    <Button
-        android:id="@+id/importarButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Importar Base de Datos"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/exportarButton" />
+        app:layout_constraintTop_toBottomOf="@id/tituloTextView2" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/volverButton"

@@ -68,6 +68,14 @@ class ArticulosSQLite(context: Context) :
         writableDatabase.use { db -> articulosDbHelper.actualizarEstadoArticulo(db, idArticulo, nuevoEstado) }
     }
 
+
+    fun reiniciarBaseDeDatos() {
+        close() // Cierra la conexión actual a la base de datos
+        // Vuelve a abrir la conexión a la base de datos
+        // Esto forzará a la aplicación a utilizar la nueva base de datos importada
+        writableDatabase
+    }
+
 //    fun articuloEnPrestamo(idArticulo: Int): Boolean {
 //        return readableDatabase.use { db -> articuloDbHelper.articuloEnPrestamo(db, idArticulo) }
 //    }

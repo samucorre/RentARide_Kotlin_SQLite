@@ -69,9 +69,15 @@ class PrestamosAdapter(prestamos: List<Prestamo>) : RecyclerView.Adapter<Prestam
             ContextCompat.getColor(
                 context,
                 when (prestamo.estado) {
-                    EstadoPrestamo.ACTIVO -> R.color.dispo // Color para estado activo
-                    EstadoPrestamo.CERRADO -> yellowRRR // Color para estado finalizado
-                    else -> R.color.black // Color por defecto si el estado no coincide
+                    EstadoPrestamo.ACTIVO -> {
+                        R.color.dispo
+                    }
+                    EstadoPrestamo.CERRADO -> {
+                        yellowRRR }
+
+                    else -> {
+                        R.color.black
+                    }
                 }
             )
         )

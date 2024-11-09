@@ -354,8 +354,114 @@ class InsertarDatosIniciales {
                 Locale.getDefault()).parse("10-12-2024"),
                 null.toString(),
                 EstadoPrestamo.CERRADO
+            ),
+            Prestamo(10, 5, 1, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("05-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("15-09-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(11, 6, 2, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("06-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("20-09-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(12, 1, 3, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("07-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("17-09-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(13, 3, 4, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("08-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("18-09-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(14, 3, 5, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("09-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("19-09-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(15, 1, 6, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("10-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("20-09-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(16, 1, 1, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("11-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("21-09-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(17, 2, 2, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("12-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("22-09-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(18, 3, 3, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("13-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("23-09-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(19, 4, 4, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("14-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("24-09-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(20, 5, 5, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("15-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("25-09-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(21, 6, 6, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("20-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("30-09-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(22, 5, 7, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("21-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("01-10-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(23, 6, 8, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("22-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("02-10-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(24, 4, 9, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("23-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("03-10-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(25, 2, 10, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("24-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("04-10-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(26, 1, 11, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("25-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("05-10-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(27, 3, 1, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("26-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("06-10-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(28, 3, 2, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("27-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("07-10-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(29, 4, 3, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("28-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("08-10-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
+            ),
+            Prestamo(30, 5, 4, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse("29-09-2024"), SimpleDateFormat("dd-MM-yyyy",
+                Locale.getDefault()).parse("09-10-2024"),
+                null.toString(),
+                EstadoPrestamo.CERRADO
             )
         )
+
         prestamos.forEach { prestamo ->
             dbPrestamos.insertarPrestamo(prestamo)
 

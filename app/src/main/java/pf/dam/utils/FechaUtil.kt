@@ -1,18 +1,16 @@
 package pf.dam.utils
 
-import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.icu.util.Calendar
 import android.widget.Button
 import android.widget.EditText
-import androidx.compose.ui.semantics.text
 import pf.dam.R
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-class DateUtil (context: Context){
+class FechaUtil (context: Context){
     val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
     private val calendar = Calendar.getInstance()
 

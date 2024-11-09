@@ -35,7 +35,6 @@ class SocioDetalleActivity : AppCompatActivity() {
     private lateinit var prestamosDbHelper:PrestamosSQLite
 
     private lateinit var nombreTextView: TextView
-    private lateinit var apellidoTextView: TextView
     private lateinit var numeroSocioTextView: TextView
     private lateinit var telefonoTextView: TextView
     private lateinit var emailTextView: TextView
@@ -75,7 +74,6 @@ class SocioDetalleActivity : AppCompatActivity() {
         homeButton = findViewById(R.id.homeButton)
 
         nombreTextView = findViewById(R.id.nombreTextView)
-        apellidoTextView = findViewById(R.id.apellidoTextView)
         numeroSocioTextView = findViewById(R.id.numeroSocioTextView)
         telefonoTextView = findViewById(R.id.telefonoTextView)
         emailTextView = findViewById(R.id.emailTextView)
@@ -164,9 +162,8 @@ class SocioDetalleActivity : AppCompatActivity() {
     private fun mostrarSocio(socio: Socio) {
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
-        nombreTextView.text = "${socio.nombre}"
-        apellidoTextView.text = "${socio.apellido}"
-        numeroSocioTextView.text = "${socio.numeroSocio}"
+        nombreTextView.text = "${socio.nombre}"+" "+"${ socio.apellido}"
+        numeroSocioTextView.text = "Nº Socio: ${socio.numeroSocio}"
         telefonoTextView.text = "${socio.telefono}"
         emailTextView.text = "${socio.email}"
         fechaNacimientoTextView.text = "Fecha de nacimiento: ${dateFormat.format(socio.fechaNacimiento)}"

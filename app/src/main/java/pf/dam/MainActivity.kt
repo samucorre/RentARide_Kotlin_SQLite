@@ -8,7 +8,6 @@ import android.view.MenuItem
 import java.util.Locale
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.PrestamosSQLite
 import db.SociosSQLite
@@ -18,7 +17,7 @@ import pf.dam.prestamos.EstadoPrestamo
 import pf.dam.prestamos.PrestamosActivity
 import pf.dam.socios.SociosActivity
 import pf.dam.utils.InsertarDatosIniciales
-import pf.dam.utils.GraficosActivity
+import pf.dam.utils.graficos.GraficosActivity
 import pf.dam.utils.ImportExportActivity
 import java.text.SimpleDateFormat
 
@@ -58,15 +57,15 @@ class MainActivity : AppCompatActivity() {
         dbSocios = SociosSQLite(this)
         dbPrestamos = PrestamosSQLite(this)
 
-            if (dbSocios.obtenerSocios().isEmpty()) {
-             InsertarDatosIniciales().insertarSociosIniciales(dbSocios)
-             }
-        if (dbArticulos.obtenerArticulos().isEmpty()) {
-            InsertarDatosIniciales().insertarArticulosIniciales(dbArticulos)
-            }
-        if (dbPrestamos.obtenerPrestamos().isEmpty()) {
-            InsertarDatosIniciales().insertarPrestamosIniciales(dbPrestamos)
-        }
+//            if (dbSocios.obtenerSocios().isEmpty()) {
+//             InsertarDatosIniciales().insertarSociosIniciales(dbSocios)
+//             }
+//        if (dbArticulos.obtenerArticulos().isEmpty()) {
+//            InsertarDatosIniciales().insertarArticulosIniciales(dbArticulos)
+//            }
+//        if (dbPrestamos.obtenerPrestamos().isEmpty()) {
+//            InsertarDatosIniciales().insertarPrestamosIniciales(dbPrestamos)
+//        }
 
 
         // Inicializar botones
@@ -179,7 +178,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_cerrar_app -> {
-                finish() // Cerrar la actividad
+                finishAffinity()
                 true
             }
             else -> super.onOptionsItemSelected(item)

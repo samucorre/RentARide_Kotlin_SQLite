@@ -9,18 +9,17 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.semantics.error
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.SociosSQLite
 import pf.dam.MainActivity
 import pf.dam.R
-import pf.dam.utils.DateUtil
+import pf.dam.utils.FechaUtil
 import pf.dam.utils.ValidacionUtils
 import java.text.ParseException
 
 class SocioAddActivity : AppCompatActivity() {
     private lateinit var dbSocios: SociosSQLite
-    private lateinit var dateUtil: DateUtil
+    private lateinit var fechaUtil: FechaUtil
     private lateinit var nombreEditText: EditText
     private lateinit var apellidoEditText: EditText
     private lateinit var numeroSocioEditText: EditText
@@ -42,7 +41,7 @@ class SocioAddActivity : AppCompatActivity() {
         setContentView(R.layout.activity_socio_add)
 
         dbSocios = SociosSQLite(this)
-        dateUtil = DateUtil(this)
+        fechaUtil = FechaUtil(this)
 
         nombreEditText = findViewById(R.id.nombreEditText)
         apellidoEditText = findViewById(R.id.apellidoEditText)
@@ -72,10 +71,10 @@ class SocioAddActivity : AppCompatActivity() {
 //            dateUtil.mostrarDatePickerEditText(this, fechaIngresoSocioEditText)
 //        }
         fechaNacimientoButton.setOnClickListener {
-            dateUtil.mostrarDatePicker(this, fechaNacimientoButton)
+            fechaUtil.mostrarDatePicker(this, fechaNacimientoButton)
         }
         fechaIngresoSocioButton.setOnClickListener {
-            dateUtil.mostrarDatePicker(this, fechaIngresoSocioButton)
+            fechaUtil.mostrarDatePicker(this, fechaIngresoSocioButton)
         }
 
 
@@ -111,8 +110,8 @@ class SocioAddActivity : AppCompatActivity() {
             }
 
             try {
-                val fechaNacimiento = dateUtil.dateFormat.parse(fechaNacimientoString)
-                val fechaIngresoSocio = dateUtil.dateFormat.parse(fechaIngresoSocioString)
+                val fechaNacimiento = fechaUtil.dateFormat.parse(fechaNacimientoString)
+                val fechaIngresoSocio = fechaUtil.dateFormat.parse(fechaIngresoSocioString)
                 val nuevoSocio = Socio(
                     nombre = nombre,
                     apellido = apellido,

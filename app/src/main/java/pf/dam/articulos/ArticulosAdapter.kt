@@ -63,16 +63,19 @@ class ArticulosAdapter(articulos: List<Articulo>) :
             EstadoArticulo.DISPONIBLE -> {
                 iconoEstado.setImageResource(R.drawable.ico_dispo)
                 iconoEstado.visibility = View.VISIBLE
+                iconoEstado.tooltipText = "Articulo disponible"
                 cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.dispo))
             }
             EstadoArticulo.PRESTADO -> {
-                iconoEstado.setImageResource(R.drawable.ico_prestado)
+                iconoEstado.setImageResource(R.drawable.ico_prestamo_activo)
                 iconoEstado.visibility = View.VISIBLE
-                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.grey))
+                iconoEstado.tooltipText = "Préstamo activo"
+                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.yellowRRRbackGround ))
             }
             EstadoArticulo.NO_DISPONIBLE -> {
                 iconoEstado.setImageResource(R.drawable.ico_nodispo)
                 iconoEstado.visibility = View.VISIBLE
+                iconoEstado.tooltipText = "Artículo con problemas"
                 cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.no_dispo))
             }
             else -> {

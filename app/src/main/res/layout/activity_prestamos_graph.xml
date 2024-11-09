@@ -25,21 +25,23 @@
                 android:paddingTop="20dp"
                 android:textSize="9sp"
                 android:textColor="@color/black"/>
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/barChartPrestamosPorMes"
-        android:layout_width="match_parent"
-        android:layout_height="300dp" />
-            <TextView
+<!--    <com.github.mikephil.charting.charts.BarChart-->
+<!--        android:id="@+id/barChartPrestamosPorMes"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="300dp" />-->
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:text="Estado préstamos"-->
+<!--                android:paddingTop="20dp"-->
+<!--                android:textSize="9sp"-->
+<!--                android:textColor="@color/black"/>-->
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChartPrestamosPorEstado"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Estado préstamos"
-                android:paddingTop="20dp"
-                android:textSize="9sp"
-                android:textColor="@color/black"/>
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/pieChartPrestamosPorEstado"
-        android:layout_width="match_parent"
-        android:layout_height="300dp" />
+                android:layout_height="300dp" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -51,6 +53,28 @@
                 android:id="@+id/lineChartPrestamosPorMes"
                 android:layout_width="match_parent"
                 android:layout_height="300dp" />
+<!--            <com.github.mikephil.charting.charts.LineChart-->
+<!--                android:id="@+id/lineChartPrestamosPorMes2"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="300dp" />-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Socios con  más préstamos"
+                android:layout_gravity="center"
+                android:paddingTop="10dp"
+                android:textSize="16sp"
+                android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/textViewPrestamosPorSocio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="20dp"/>
+<!--            <com.github.mikephil.charting.charts.ScatterChart-->
+<!--                android:id="@+id/scatterChartPrestamosPorMesYEstado"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="300dp" />-->
 
     </LinearLayout>
 
