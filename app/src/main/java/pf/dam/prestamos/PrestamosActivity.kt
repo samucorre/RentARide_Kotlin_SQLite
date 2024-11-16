@@ -15,7 +15,6 @@ import db.SociosSQLite
 import pf.dam.MainActivity
 import pf.dam.PrestamosAdapter
 import pf.dam.R
-import pf.dam.articulos.EstadoArticulo
 import kotlin.text.contains
 
 class PrestamosActivity : AppCompatActivity() {
@@ -24,7 +23,6 @@ class PrestamosActivity : AppCompatActivity() {
     private lateinit var prestamosAdapter: PrestamosAdapter
     private lateinit var dbHelper: PrestamosSQLite
     private lateinit var addPrestamoButton: FloatingActionButton
-  //  private lateinit var backButton: FloatingActionButton
     private lateinit var homeButton: FloatingActionButton
     private lateinit var estadoRadioGroup: RadioGroup
     private lateinit var searchView: SearchView
@@ -32,17 +30,18 @@ class PrestamosActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_prestamos) // Asegúrate de tener este layout
+        setContentView(R.layout.prestamos_activity)
         supportActionBar?.title = "RR - Préstamos"
+
         dbHelper = PrestamosSQLite(this)
+
         recyclerView = findViewById(R.id.prestamosRecyclerView)
         addPrestamoButton = findViewById(R.id.addPrestamoButton)
-     //   backButton = findViewById(R.id.backButton)
         homeButton = findViewById(R.id.homeButton)
         estadoRadioGroup = findViewById(R.id.estadoRadioGroup)
         searchView = findViewById(R.id.searchView)
 
-        prestamosAdapter = PrestamosAdapter(dbHelper.obtenerPrestamos())
+        prestamosAdapter = PrestamosAdapter(dbHelper.getAllPrestamos())
         recyclerView.adapter = prestamosAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -54,10 +53,6 @@ class PrestamosActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
-    //    backButton.setOnClickListener {
-     //       finish()
-    //    }
-
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -88,36 +83,30 @@ class PrestamosActivity : AppCompatActivity() {
     }
 
     private fun actualizarListaPrestamos() {
-        prestamosAdapter.prestamos = dbHelper.obtenerPrestamos()
+        prestamosAdapter.prestamos = dbHelper.getAllPrestamos()
         prestamosAdapter.notifyDataSetChanged()
     }
 
     private fun filtrarPrestamos(query: String?) {
         val prestamosFiltrados = if (query.isNullOrEmpty()) {
-            dbHelper.obtenerPrestamos()
+            dbHelper.getAllPrestamos()
         } else {
-            dbHelper.obtenerPrestamos().filter { prestamo ->
-                // Buscar por datos del artículo
+            dbHelper.getAllPrestamos().filter { prestamo ->
                 val articulosDbHelper = ArticulosSQLite(this)
-                val articulo = articulosDbHelper.obtenerArticuloPorId(prestamo.idArticulo)
+                val articulo = articulosDbHelper.getArticuloById(prestamo.idArticulo)
                 val coincideArticulo = articulo?.nombre?.contains(query, ignoreCase = true) ?: false ||
                         articulo?.categoria?.contains(query, ignoreCase = true) ?: false ||
                         articulo?.tipo?.contains(query, ignoreCase = true) ?: false
-
-                // Buscar por datos del socio
                 val sociosDbHelper = SociosSQLite(this)
-                val socio = sociosDbHelper.obtenerSocioPorId(prestamo.idSocio)
+                val socio = sociosDbHelper.getSocioById(prestamo.idSocio)
                 val coincideSocio = socio?.nombre?.contains(query, ignoreCase = true) ?: false ||
                         socio?.apellido?.contains(query, ignoreCase = true) ?: false ||
                         socio?.numeroSocio?.toString()?.contains(query, ignoreCase = true) ?: false
-
-                // Buscar por datos del préstamo
                 val coincidePrestamo = prestamo.info?.contains(query, ignoreCase = true) ?: false ||
                         prestamo.estado.toString().contains(query, ignoreCase = true) ||
                         prestamo.fechaInicio.toString().contains(query, ignoreCase = true) ||
                         prestamo.fechaFin?.toString()?.contains(query, ignoreCase = true) ?: false
 
-                // Combinar los resultados de las búsquedas
                 coincideArticulo || coincideSocio || coincidePrestamo
             }
         }
@@ -127,9 +116,9 @@ class PrestamosActivity : AppCompatActivity() {
 
     private fun filtrarPrestamosPorEstado(estado: EstadoPrestamo?) {
         val prestamosFiltrados = if (estado == null) {
-            dbHelper.obtenerPrestamos()
+            dbHelper.getAllPrestamos()
         } else {
-            dbHelper.obtenerPrestamos().filter { prestamo -> prestamo.estado == estado }
+            dbHelper.getAllPrestamos().filter { prestamo -> prestamo.estado == estado }
         }
         prestamosAdapter.prestamos = prestamosFiltrados
         prestamosAdapter.notifyDataSetChanged()
@@ -141,10 +130,9 @@ class PrestamosActivity : AppCompatActivity() {
         if (resultCode == RESULT_OK) {
             val prestamoId = data?.getIntExtra("idPrestamo", -1) ?: -1
             if (prestamoId != -1) {
-                val prestamoActualizado = dbHelper.obtenerPrestamoPorId(prestamoId)
+                val prestamoActualizado = dbHelper.getPrestamoById(prestamoId)
                 if (prestamoActualizado != null) {
-                    // Actualizar la vista con articuloActualizado
-                    prestamosAdapter.prestamos = dbHelper.obtenerPrestamos()
+                    prestamosAdapter.prestamos = dbHelper.getAllPrestamos()
                     prestamosAdapter.notifyDataSetChanged()
                 }
             }

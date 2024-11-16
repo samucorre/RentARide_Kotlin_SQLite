@@ -53,32 +53,32 @@ class PrestamosSQLite(context: Context) :
         }
     }
 
-    fun obtenerPrestamos(): List<Prestamo> {
-        return readableDatabase.use { db -> prestamoDbHelper.obtenerPrestamos(db) }
+    fun getAllPrestamos(): List<Prestamo> {
+        return readableDatabase.use { db -> prestamoDbHelper.getAllPrestamos(db) }
     }
 
-    fun obtenerPrestamoPorId(idPrestamo: Int): Prestamo? {
-        return readableDatabase.use { db -> prestamoDbHelper.obtenerPrestamoPorId(db, idPrestamo) }
+    fun getPrestamoById(idPrestamo: Int): Prestamo? {
+        return readableDatabase.use { db -> prestamoDbHelper.getPrestamoById(db, idPrestamo) }
     }
 
-    fun insertarPrestamo(prestamo: Prestamo): Long {
-        return writableDatabase.use { db -> prestamoDbHelper.insertarPrestamo(db, prestamo) }
+    fun addrPrestamo(prestamo: Prestamo): Long {
+        return writableDatabase.use { db -> prestamoDbHelper.addPrestamo(db, prestamo) }
     }
 
-    fun actualizarPrestamo(prestamo: Prestamo) {
-        writableDatabase.use { db -> prestamoDbHelper.actualizarPrestamo(db, prestamo) }
+    fun updatePrestamo(prestamo: Prestamo) {
+        writableDatabase.use { db -> prestamoDbHelper.updatePrestamo(db, prestamo) }
     }
 
-    fun borrarPrestamo(idPrestamo: Int): Int {
-        return writableDatabase.use { db -> prestamoDbHelper.borrarPrestamo(db, idPrestamo) }
+    fun deletePrestamo(idPrestamo: Int): Int {
+        return writableDatabase.use { db -> prestamoDbHelper.deletePrestamo(db, idPrestamo) }
     }
 
-    fun obtenerPrestamosPorArticulo(idArticulo: Int): List<Prestamo> {
-        return readableDatabase.use { db -> prestamoDbHelper.obtenerPrestamosPorArticulo(db, idArticulo) }
+    fun getPrestamosByArticulo(idArticulo: Int): List<Prestamo> {
+        return readableDatabase.use { db -> prestamoDbHelper.getPrestamosByArticulo(db, idArticulo) }
     }
 
-    fun obtenerPrestamosPorSocio(idSocio: Int): List<Prestamo> {
-        return readableDatabase.use { db -> prestamoDbHelper.obtenerPrestamosPorSocio(db, idSocio) }
+    fun getPrestamosBySocio(idSocio: Int): List<Prestamo> {
+        return readableDatabase.use { db -> prestamoDbHelper.getPrestamosBySocio(db, idSocio) }
     }
 
     fun actualizarEstadoPrestamo(idPrestamo: Int, nuevoEstado: EstadoPrestamo) {
@@ -93,40 +93,39 @@ class PrestamosSQLite(context: Context) :
         return readableDatabase.use { db -> prestamoDbHelper.estaSocioEnPrestamoActivo(db, idSocio) }
     }
 
-    fun obtenerArticuloPrestamoId(idArticulo: Int): Articulo? {
-        return articulosDbHelper.obtenerArticuloPorId(idArticulo)
+    fun getPrestamoByIdArticulo(idArticulo: Int): Articulo? {
+        return articulosDbHelper.getArticuloById(idArticulo)
     }
 
-    fun obtenerSocioPrestamoId(idSocio: Int): Socio? {
-        return sociosDbHelper.obtenerSocioPorId(idSocio)
+    fun getPrestamoByIdSocio(idSocio: Int): Socio? {
+        return sociosDbHelper.getSocioById(idSocio)
     }
 
-    fun obtenerCategoriaPrestamoId(idArticulo: Int): String? {
-        val articulo = articulosDbHelper.obtenerArticuloPorId(idArticulo)
+    fun getPrestamoByCategoria(idArticulo: Int): String? {
+        val articulo = articulosDbHelper.getArticuloById(idArticulo)
         return articulo?.categoria
     }
 
     fun obtenerUltimoPrestamoPorArticulo(idArticulo: Int): Prestamo? {
-        return readableDatabase.use { db -> prestamoDbHelper.obtenerUltimoPrestamoPorArticulo(db, idArticulo) }
+        return readableDatabase.use { db -> prestamoDbHelper.getUltimoPrestamoPorArticulo(db, idArticulo) }
     }
 
-    fun obtenerIdSocioPrestamoActivo(idArticulo: Int): Int? {
+    fun getIdSocioPrestamoActivo(idArticulo: Int): Int? {
         val dbHelper = PrestamosDbHelper(this)
-        return dbHelper.obtenerIdSocioPrestamoActivo(writableDatabase, idArticulo)
+        return dbHelper.getIdSocioPrestamoActivo(writableDatabase, idArticulo)
     }
 
-    fun obtenerSociosConPrestamosActivos(context: Context): List<Socio> {
-        val sociosIds = readableDatabase.use { db -> prestamoDbHelper.obtenerSociosConPrestamosActivos(db) }
+    fun getSociosConPrestamosActivos(context: Context): List<Socio> {
+        val sociosIds = readableDatabase.use { db -> prestamoDbHelper.getSociosPrestamosActivos(db) }
         val sociosSQLite = SociosSQLite(context)
-        return sociosSQLite.obtenerSocios().filter { socio -> socio.idSocio in sociosIds }
+        return sociosSQLite.getAllSocios().filter { socio -> socio.idSocio in sociosIds }
     }
 
-    fun obtenerSociosConPrestamosCerrados(context: Context): List<Socio> {
-        val sociosIds = readableDatabase.use { db -> prestamoDbHelper.obtenerSociosConPrestamosCerrados(db) }
+    fun getSociosConPrestamosCerrados(context: Context): List<Socio> {
+        val sociosIds = readableDatabase.use { db -> prestamoDbHelper.getSociosPrestamosCerrados(db) }
         val sociosSQLite = SociosSQLite(context)
-        return sociosSQLite.obtenerSocios().filter { socio -> socio.idSocio in sociosIds }
+        return sociosSQLite.getAllSocios().filter { socio -> socio.idSocio in sociosIds }
     }
-
 
 
 

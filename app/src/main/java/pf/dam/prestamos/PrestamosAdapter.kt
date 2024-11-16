@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.compose.ui.semantics.text
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import db.PrestamosSQLite
@@ -39,13 +38,11 @@ class PrestamosAdapter(prestamos: List<Prestamo>) : RecyclerView.Adapter<Prestam
         val fechaFinTextView: TextView = itemView.findViewById(R.id.fechaFinTextView)
         val infoTextView: TextView = itemView.findViewById(R.id.infoTextView)
         val estadoTextView: TextView = itemView.findViewById(R.id.estadoTextView)
-        //val nombreArticuloTextView: TextView = itemView.findViewById(R.id.nombreArticuloTextView) // Nuevo TextView para el nombre del artículo
-      //  val datosSocioTextView: TextView = itemView.findViewById(R.id.datosSocioTextView) // Nuevo TextView para los datos del socio
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrestamoViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_prestamo, parent, false) // Asegúrate de tener este layout
+            .inflate(R.layout.item_prestamo, parent, false)
         return PrestamoViewHolder(itemView)
     }
 
@@ -58,7 +55,7 @@ class PrestamosAdapter(prestamos: List<Prestamo>) : RecyclerView.Adapter<Prestam
         val fechaFinString = if (prestamo.fechaFin != null) {
             dateFormat.format(prestamo.fechaFin)
         } else {
-            "" // O "" para dejarlo vacío
+            ""
         }
         holder.fechaFinTextView.text = "Fecha Fin: $fechaFinString"
         holder.infoTextView.text = "Info: ${prestamo.info}"
@@ -82,13 +79,11 @@ class PrestamosAdapter(prestamos: List<Prestamo>) : RecyclerView.Adapter<Prestam
             )
         )
 
-        // Obtener los datos del artículo y del socio
         val dbHelper = PrestamosSQLite(holder.itemView.context)
-        val articulo = dbHelper.obtenerArticuloPrestamoId(prestamo.idArticulo)
-        val socio = dbHelper.obtenerSocioPrestamoId(prestamo.idSocio)
+        val articulo = dbHelper.getPrestamoByIdArticulo(prestamo.idArticulo)
+        val socio = dbHelper.getPrestamoByIdSocio(prestamo.idSocio)
         val imagenBitmap = BitmapFactory.decodeFile(articulo?.rutaImagen ?: "")
 
-        // Mostrar los datos en los TextViews
         if (articulo != null) {
             holder.idArticuloTextView.text = "${articulo.nombre} "
             holder.categoriaArticuloTextView.text = "${articulo.categoria}"
@@ -99,9 +94,7 @@ class PrestamosAdapter(prestamos: List<Prestamo>) : RecyclerView.Adapter<Prestam
             holder.datosSocioTextView.text = "Socio: ${socio.nombre} ${socio.apellido} "
             holder.datos1SocioTextView.text ="Nº Socio: ${socio.numeroSocio}"
             holder.datos2SocioTextView.text = "Teléfono: ${socio.telefono}"
-            // ... (muestra los demás datos del socio si es necesario) ...
-        }
-
+                 }
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, PrestamoDetalleActivity::class.java)

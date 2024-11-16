@@ -21,6 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchView"
         android:orientation="horizontal">
+
         <RadioButton
             android:id="@+id/todosRadioButton"
             android:layout_width="wrap_content"
@@ -34,13 +35,7 @@
             android:layout_height="wrap_content"
             android:text="Usando" />
 
-<!--        <RadioButton-->
-<!--            android:id="@+id/prestadoRadioButton"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Cerrado" />-->
-
-    </RadioGroup>
+         </RadioGroup>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/sociosRecyclerView"
@@ -70,14 +65,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--        android:id="@+id/backButton"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="16dp"-->
-<!--        android:src="@drawable/ico_back"-->
-<!--        app:backgroundTint="#FFC107"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

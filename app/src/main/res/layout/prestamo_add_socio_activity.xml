@@ -34,24 +34,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/articuloAutoCompleteTextView">
 
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:orientation="vertical"-->
-<!--            android:padding="8dp">-->
-
-<!--            <EditText-->
-<!--                android:id="@+id/busquedaArticuloEditText"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:hint="Buscar artículo" />-->
-
-<!--            <Spinner-->
-<!--                android:id="@+id/articuloSpinner"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content" />-->
-
-<!--        </LinearLayout>-->
 
     </androidx.cardview.widget.CardView>
 

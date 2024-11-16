@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.semantics.text
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import db.PrestamosSQLite
@@ -21,29 +20,26 @@ class PrestamoEditActivity : AppCompatActivity() {
     private lateinit var dbHelper: PrestamosSQLite
     private lateinit var articulosDbHelper: ArticulosSQLite
     private lateinit var fechaInicioEditText: EditText
-    private lateinit var fechaFinEditText: EditText
     private lateinit var infoEditText: EditText
     private lateinit var estadoSwitch: Switch
     private lateinit var guardarButton: FloatingActionButton
     private lateinit var volverButton: FloatingActionButton
     private lateinit var homeButton: FloatingActionButton
-
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
     private val calendar = Calendar.getInstance()
-
     private var prestamoId: Int = -1
     private lateinit var prestamo: Prestamo
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_prestamo_edit)
+        setContentView(R.layout.prestamo_edit_activity)
         supportActionBar?.title = "RR - Editar préstamo"
 
         dbHelper = PrestamosSQLite(this)
         articulosDbHelper = ArticulosSQLite(this)
-        fechaInicioEditText = findViewById(R.id.fechaInicioEditText)
 
+        fechaInicioEditText = findViewById(R.id.fechaInicioEditText)
         infoEditText = findViewById(R.id.infoEditText)
         estadoSwitch = findViewById(R.id.estadoSwitch)
         guardarButton = findViewById(R.id.guardarButton)
@@ -51,10 +47,7 @@ class PrestamoEditActivity : AppCompatActivity() {
         homeButton = findViewById(R.id.homeButton)
 
         prestamoId = intent.getIntExtra("prestamoId", -1)
-        prestamo = dbHelper.obtenerPrestamoPorId(prestamoId)!!
-
-
-
+        prestamo = dbHelper.getPrestamoById(prestamoId)!!
         if (prestamo.estado == EstadoPrestamo.CERRADO) {
             fechaInicioEditText.isEnabled = false
             infoEditText.isEnabled = false
@@ -72,18 +65,15 @@ class PrestamoEditActivity : AppCompatActivity() {
             mostrarDatePicker(fechaInicioEditText)
         }
 
-
         guardarButton.setOnClickListener {
             val fechaInicio = dateFormat.parse(fechaInicioEditText.text.toString())
-            //val fechaFin = dateFormat.parse(fechaFinEditText.text.toString())
             val estadoSeleccionado = if (estadoSwitch.isChecked) EstadoPrestamo.ACTIVO else EstadoPrestamo.CERRADO
             val fechaFin = if (estadoSeleccionado == EstadoPrestamo.CERRADO) {
-                Date() // Fecha actual
+                Date()
             } else {
-                prestamo.fechaFin // Mantener la fecha de fin original si el estado no es CERRADO
+                prestamo.fechaFin
             }
             val info = infoEditText.text.toString()
-
 
             val prestamoActualizado = Prestamo(
                 prestamo.idPrestamo,
@@ -94,12 +84,11 @@ class PrestamoEditActivity : AppCompatActivity() {
                 info,
                 estadoSeleccionado
             )
-            dbHelper.actualizarPrestamo(prestamoActualizado)
+            dbHelper.updatePrestamo(prestamoActualizado)
 
             if (estadoSeleccionado == EstadoPrestamo.CERRADO) {
                 articulosDbHelper.actualizarEstadoArticulo(prestamo.idArticulo, EstadoArticulo.DISPONIBLE)
             }
-
             Toast.makeText(this, "Préstamo actualizado", Toast.LENGTH_SHORT).show()
             setResult(RESULT_OK)
             finish()

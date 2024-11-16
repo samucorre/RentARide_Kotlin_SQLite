@@ -1,4 +1,4 @@
-package pf.dam.utils
+package pf.dam.utils.exportBd
 
 import android.Manifest
 import android.content.Context
@@ -17,60 +17,9 @@ import pf.dam.MainActivity
 import pf.dam.R
 import java.io.File
 
-class ImportExportActivity : AppCompatActivity() {
+class ExportActivity : AppCompatActivity() {
 
     private val CODIGO_SOLICITUD_PERMISO = 1
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_export_import)
-
-        val exportarButton = findViewById<Button>(R.id.exportarButton)
-      //  val importarButton = findViewById<Button>(R.id.importarButton)
-        val homeButton=findViewById<FloatingActionButton>(R.id.homeButton)
-        val volverButton=findViewById<FloatingActionButton>(R.id.volverButton)
-        exportarButton.setOnClickListener {
-            if (tienePermisos()) {
-                exportarBasesDeDatos(this)
-            } else {
-                solicitarPermisos()
-            }
-        }
-
-//        importarButton.setOnClickListener {
-//            if (tienePermisos()) {
-//                importarBaseDeDatos(this)
-//            } else {
-//                solicitarPermisos()
-//            }
-//        }
-
-        homeButton.setOnClickListener {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-    }
-
-        volverButton.setOnClickListener {
-        finish()
-    }
-
-    }
-
-
-    private fun tienePermisos(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun solicitarPermisos() {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            CODIGO_SOLICITUD_PERMISO
-        )
-    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -87,6 +36,47 @@ class ImportExportActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.export_activity)
+
+        val exportarButton = findViewById<Button>(R.id.exportarButton)
+        val homeButton=findViewById<FloatingActionButton>(R.id.homeButton)
+        val volverButton=findViewById<FloatingActionButton>(R.id.volverButton)
+
+        exportarButton.setOnClickListener {
+            if (tienePermisos()) {
+                exportarBasesDeDatos(this)
+            } else {
+                solicitarPermisos()
+            }
+        }
+
+        homeButton.setOnClickListener {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+    }
+
+        volverButton.setOnClickListener {
+        finish()
+    }
+
+    }
+
+    private fun tienePermisos(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun solicitarPermisos() {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            CODIGO_SOLICITUD_PERMISO
+        )
+    }
 
     private fun exportarBasesDeDatos(context: Context) {
         val nombreCarpeta = "databases"
@@ -94,7 +84,6 @@ class ImportExportActivity : AppCompatActivity() {
         val directorioDestino = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), nombreCarpeta) // Cambia la ruta de destino
 
         try {
-            // Copia la carpeta completa al almacenamiento externo
             directorioOrigen?.copyRecursively(directorioDestino, overwrite = true)
             Toast.makeText(
                 context,
@@ -110,27 +99,4 @@ class ImportExportActivity : AppCompatActivity() {
             ).show()
         }
     }
-//
-//private fun importarBaseDeDatos(context: Context) {
-//    val nombreCarpeta = "databases" // Nombre de la carpeta a importar
-//    val directorioOrigen = File(context.getExternalFilesDir(null), nombreCarpeta) // Carpeta de origen en el almacenamiento externo
-//    val directorioDestino = context.getDatabasePath(nombreCarpeta).parentFile // Carpeta de destino en la aplicación
-//
-//    try {
-//        // Copia la carpeta de origen al destino, sobrescribiendo si ya existe
-//        directorioOrigen.copyRecursively(directorioDestino, overwrite = true)
-//        Toast.makeText(
-//            context,
-//            "Carpeta de bases de datos importada desde: ${directorioOrigen.absolutePath}",
-//            Toast.LENGTH_LONG
-//        ).show()
-//    } catch (e: Exception) {
-//        Log.e("Error", "Error al importar la carpeta de bases de datos: ${e.message}")
-//        Toast.makeText(
-//            context,
-//            "Error al importar la carpeta de bases de datos",
-//            Toast.LENGTH_SHORT
-//        ).show()
-//    }
-//}
 }

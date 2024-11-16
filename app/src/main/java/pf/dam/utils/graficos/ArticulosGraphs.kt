@@ -36,7 +36,7 @@ class ArticulosGraphs : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_articulos_graphs)
+        setContentView(R.layout.graphs_articulos_activity)
         supportActionBar?.title = "RR - Gráficos artículos"
 
         pieChart = findViewById(R.id.pieChart)
@@ -59,8 +59,8 @@ class ArticulosGraphs : AppCompatActivity() {
     }
 
     private fun configurarGraficos() {
-        val articulos = ArticulosSQLite(this).obtenerArticulos()
-        val prestamos = PrestamosSQLite(this).obtenerPrestamos()
+        val articulos = ArticulosSQLite(this).getAllArticulos()
+        val prestamos = PrestamosSQLite(this).getAllPrestamos()
 
         crearGraficoPastelCategorias(articulos, pieChart)
         crearGraficoBarrasEstados(articulos, barChart)
@@ -119,7 +119,7 @@ class ArticulosGraphs : AppCompatActivity() {
     }
     fun crearGraficoPastelCategoriasPrestamos(prestamos: List<Prestamo>) {
         val prestamosPorCategoria = prestamos.groupingBy {
-            PrestamosSQLite(this).obtenerCategoriaPrestamoId(it.idArticulo)
+            PrestamosSQLite(this).getPrestamoByCategoria(it.idArticulo)
         }.eachCount()
         val pieEntries2 = prestamosPorCategoria.entries.map { PieEntry(it.value.toFloat(), it.key) }
         val pieDataSet2 = PieDataSet(pieEntries2, "Categorías con más préstamos")
@@ -133,7 +133,7 @@ class ArticulosGraphs : AppCompatActivity() {
     }
    fun crearGraficoBarrasArticulosPrestados(prestamos: List<Prestamo>) {
         val prestamosPorArticulo = prestamos.groupingBy {
-            PrestamosSQLite(this).obtenerArticuloPrestamoId(it.idArticulo)?.nombre
+            PrestamosSQLite(this).getPrestamoByIdArticulo(it.idArticulo)?.nombre
         }.eachCount()
         val barEntries2 = prestamosPorArticulo.entries.mapIndexed { index, entry ->
             BarEntry(index.toFloat(), entry.value.toFloat())

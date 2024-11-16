@@ -8,12 +8,10 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -39,13 +37,12 @@ class ArticuloAddActivity : AppCompatActivity() {
     private lateinit var imageView: ImageView
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_IMAGE_GALLERY = 2
-    private val REQUEST_PERMISSION_CAMERA = 100
     private lateinit var estadoCheckBox: CheckBox
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_articulo_add)
+        setContentView(R.layout.articulo_add_activity)
         supportActionBar?.title = "RR - Artículo nuevo"
 
         dbHelper = ArticulosSQLite(this)
@@ -53,7 +50,6 @@ class ArticuloAddActivity : AppCompatActivity() {
         categoriaEditText = findViewById(R.id.categoriaEditText)
         tipoEditText = findViewById(R.id.tipoEditText)
         descripcionEditText = findViewById(R.id.descripcionEditText)
-
         guardarButton = findViewById(R.id.guardarButton)
         homeButton = findViewById(R.id.homeButton)
         volverButton = findViewById(R.id.volverButton)
@@ -96,7 +92,7 @@ class ArticuloAddActivity : AppCompatActivity() {
                 Toast.makeText(this, "Por favor, rellena todos los campos", Toast.LENGTH_SHORT).show()
             } else {
                 val nuevoArticulo = Articulo(categoria = categoria, tipo = tipo, nombre = nombre, descripcion = descripcion, estado = estado, rutaImagen = rutaImagen)
-                dbHelper.insertarArticulo(nuevoArticulo)
+                dbHelper.addArticulo(nuevoArticulo)
 
                 Toast.makeText(this, "Artículo añadido", Toast.LENGTH_SHORT).show()
                 setResult(Activity.RESULT_OK)
@@ -110,7 +106,6 @@ class ArticuloAddActivity : AppCompatActivity() {
         try {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
         } catch (e: ActivityNotFoundException) {
-            // Mostrar un mensaje de error si no hay aplicación de cámara
         }
     }
 

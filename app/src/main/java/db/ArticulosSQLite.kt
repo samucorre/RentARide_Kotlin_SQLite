@@ -36,59 +36,36 @@ class ArticulosSQLite(context: Context) :
         onCreate(db)
     }
 
-    fun obtenerArticulos(): List<Articulo> {
-        return readableDatabase.use { db -> articulosDbHelper.obtenerArticulos(db) }
+    fun getAllArticulos(): List<Articulo> {
+        return readableDatabase.use { db -> articulosDbHelper.getAllArticulos(db) }
     }
 
-    fun obtenerArticuloPorId(idArticulo: Int): Articulo? {
-        return readableDatabase.use { db -> articulosDbHelper.obtenerArticuloPorId(db, idArticulo) }
+    fun getArticuloById(idArticulo: Int): Articulo? {
+        return readableDatabase.use { db -> articulosDbHelper.getArticuloById(db, idArticulo) }
     }
 
-    fun obtenerIdArticuloBD(articulo: Articulo): Int {
-        return readableDatabase.use { db -> articulosDbHelper.obtenerIdArticuloBD(db, articulo) }
+    fun getIdArticuloBd(articulo: Articulo): Int {
+        return readableDatabase.use { db -> articulosDbHelper.getIdArticuloBD(db, articulo) }
     }
 
-    fun insertarArticulo(articulo: Articulo): Long {
-        return writableDatabase.use { db -> articulosDbHelper.insertarArticulo(db, articulo) }
+    fun addArticulo(articulo: Articulo): Long {
+        return writableDatabase.use { db -> articulosDbHelper.addArticulo(db, articulo) }
     }
 
-    fun actualizarArticulo(articulo: Articulo) {
-        writableDatabase.use { db -> articulosDbHelper.actualizarArticulo(db, articulo) }
+    fun updateArticulo(articulo: Articulo) {
+        writableDatabase.use { db -> articulosDbHelper.updateArticulo(db, articulo) }
     }
 
-    fun borrarArticulo(idArticulo: Int): Int {
-        return writableDatabase.use { db -> articulosDbHelper.borrarArticulo(db, idArticulo) }
+    fun deleteArticulo(idArticulo: Int): Int {
+        return writableDatabase.use { db -> articulosDbHelper.deleteArticulo(db, idArticulo) }
     }
 
     fun obtenerArticulosDisponibles(): List<Articulo> {
-        return readableDatabase.use { db -> articulosDbHelper.obtenerArticulosDisponibles(db) }
+        return readableDatabase.use { db -> articulosDbHelper.getArticulosDisponibles(db) }
     }
 
     fun actualizarEstadoArticulo(idArticulo: Int, nuevoEstado: EstadoArticulo) {
         writableDatabase.use { db -> articulosDbHelper.actualizarEstadoArticulo(db, idArticulo, nuevoEstado) }
     }
 
-
-    fun reiniciarBaseDeDatos() {
-        close() // Cierra la conexión actual a la base de datos
-        // Vuelve a abrir la conexión a la base de datos
-        // Esto forzará a la aplicación a utilizar la nueva base de datos importada
-        writableDatabase
-    }
-
-//    fun articuloEnPrestamo(idArticulo: Int): Boolean {
-//        return readableDatabase.use { db -> articuloDbHelper.articuloEnPrestamo(db, idArticulo) }
-//    }
-//
-//    fun obtenerCategorias(): List<String> {
-//        return readableDatabase.use { db -> articuloDbHelper.obtenerCategorias(db) }
-//    }
-//
-//    fun borrarTodosLosArticulos() {
-//        writableDatabase.use { db -> articuloDbHelper.borrarTodosLosArticulos(db) }
-//    }
-//
-//    fun obtenerEstadoArticulo(idArticulo: Int): EstadoArticulo? {
-//        return readableDatabase.use { db -> articuloDbHelper.obtenerEstadoArticulo(db, idArticulo) }
-//    }
 }

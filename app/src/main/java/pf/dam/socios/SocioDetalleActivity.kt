@@ -1,5 +1,6 @@
 package pf.dam.socios
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import java.util.Locale
 
@@ -21,9 +22,8 @@ import pf.dam.MainActivity
 import pf.dam.R
 import pf.dam.articulos.Articulo
 import pf.dam.prestamos.PrestamoAddSocioActivity
-import pf.dam.utils.ShowDeleteConfirmationDialog
+import pf.dam.utils.DialogoUtil
 import java.text.SimpleDateFormat
-import kotlin.text.format
 
 class SocioDetalleActivity : AppCompatActivity() {
     private lateinit var editSocioButton: FloatingActionButton
@@ -45,15 +45,12 @@ class SocioDetalleActivity : AppCompatActivity() {
     private lateinit var articulosTextView: TextView
 
     private var socioId: Int = -1
-    private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-
-
     private val editSocioLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
             val dbHelper = SociosSQLite(this)
-            val socioActualizado = dbHelper.obtenerSocioPorId(socioId)
+            val socioActualizado = dbHelper.getSocioById(socioId)
             if (socioActualizado != null) {
                 mostrarSocio(socioActualizado)
             }
@@ -62,7 +59,7 @@ class SocioDetalleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_socio_detail)
+        setContentView(R.layout.socio_detail_activity)
 
         dbHelper = SociosSQLite(this)
         prestamosDbHelper = PrestamosSQLite(this)
@@ -84,7 +81,7 @@ class SocioDetalleActivity : AppCompatActivity() {
         generoTextView = findViewById(R.id.generoTextView)
 
         socioId = intent.getIntExtra("idSocio", -1)
-        val socio = dbHelper.obtenerSocioPorId(socioId)
+        val socio = dbHelper.getSocioById(socioId)
 
         homeButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -99,14 +96,6 @@ class SocioDetalleActivity : AppCompatActivity() {
                 intent.putExtra("socioId", socioId)
                 editSocioLauncher.launch(intent)
             }
-            val editSocioLauncher = registerForActivityResult(
-                ActivityResultContracts.StartActivityForResult()
-            ) { result ->
-                if (result.resultCode == RESULT_OK) {
-                    setResult(RESULT_OK, Intent().putExtra("socioId", socioId))
-                    finish()
-                }
-            }
 
             backButton.setOnClickListener {
                 finish()
@@ -117,7 +106,6 @@ class SocioDetalleActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             deleteSocioButton.setOnClickListener {
-                // Verificar si el socio tiene algún registro en la tabla de préstamos
                 val tieneRegistrosEnPrestamos = prestamosDbHelper.estaSocioEnPrestamoActivo(socioId)
 
                 if (tieneRegistrosEnPrestamos) {
@@ -130,14 +118,11 @@ class SocioDetalleActivity : AppCompatActivity() {
                     var showDialog by remember { mutableStateOf(true) }
 
                     if (showDialog) {
-                        ShowDeleteConfirmationDialog(
+                        DialogoUtil(this).ShowDeleteConfirmationDialog(
                             title = "Eliminar socio",
                             message = "¿Estás seguro de que quieres eliminar este socio?",
                             onPositiveButtonClick = {
-                                dbHelper.borrarSocio(socioId)
-
-
-
+                                dbHelper.deleteSocio(socioId)
                                 Toast.makeText(
                                     this@SocioDetalleActivity,
                                     "Socio eliminado",
@@ -159,6 +144,7 @@ class SocioDetalleActivity : AppCompatActivity() {
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun mostrarSocio(socio: Socio) {
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
@@ -170,23 +156,19 @@ class SocioDetalleActivity : AppCompatActivity() {
         fechaIngresoSocioTextView.text = "Fecha de ingreso: ${dateFormat.format(socio.fechaIngresoSocio)}"
         generoTextView.text = "Género: ${socio.genero}"
 
-        val prestamos = socio.idSocio?.let { prestamosDbHelper.obtenerPrestamosPorSocio(it) }
+        val prestamos = socio.idSocio?.let { prestamosDbHelper.getPrestamosBySocio(it) }
 
-        // Obtén la cantidad de préstamos
         val cantidadPrestamos = prestamos?.size
-
-        // Obtén los artículos de los préstamos
         val articulos = mutableSetOf<Articulo>()
         if (prestamos != null) {
             for (prestamo in prestamos) {
-                val articulo = prestamosDbHelper.obtenerArticuloPrestamoId(prestamo.idArticulo) // Usa prestamosDbHelper para obtener el artículo
+                val articulo = prestamosDbHelper.getPrestamoByIdArticulo(prestamo.idArticulo)
                 if (articulo != null) {
                     articulos.add(articulo)
                 }
             }
         }
 
-        // Muestra la cantidad de préstamos y los artículos en los TextViews
         cantidadPrestamosTextView.text = "Cantidad de préstamos: \t$cantidadPrestamos"
         articulosTextView.text = "Últimos artículos usados:"+
                 "\n${articulos.distinctBy { it.idArticulo }.takeLast(3).joinToString (separator = "")  {"${it.nombre.toString()}\n"}}"

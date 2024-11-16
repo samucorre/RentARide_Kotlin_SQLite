@@ -19,7 +19,7 @@ import pf.dam.MainActivity
 import pf.dam.R
 import pf.dam.articulos.EstadoArticulo
 import pf.dam.socios.Socio
-import pf.dam.utils.FechaUtil
+import pf.dam.utils.FechaUtils
 import java.text.ParseException
 import java.util.Date
 
@@ -28,7 +28,7 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
     private lateinit var dbPrestamos: PrestamosSQLite
     private lateinit var dbArticulos: ArticulosSQLite
     private lateinit var dbSocios: SociosSQLite
-    private  lateinit var fechaUtil : FechaUtil
+    private  lateinit var fechaUtils : FechaUtils
     private lateinit var socioAutoCompleteTextView: AutoCompleteTextView
     private lateinit var fechaInicioButton: Button
     private lateinit var infoEditText: EditText
@@ -47,13 +47,13 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_prestamo_add_articulo)
+        setContentView(R.layout.prestamo_add_articulo_activity)
         supportActionBar?.title = "RR - Préstamo nuevo"
 
         dbPrestamos = PrestamosSQLite(this)
         dbArticulos = ArticulosSQLite(this)
         dbSocios = SociosSQLite(this)
-        fechaUtil = FechaUtil(this)
+        fechaUtils = FechaUtils(this)
 
         socioAutoCompleteTextView = findViewById(R.id.socioAutoCompleteTextView)
         fechaInicioButton = findViewById(R.id.fechaInicioButton)
@@ -65,20 +65,20 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
         val idArticuloIntent = intent.getIntExtra("idArticulo", -1)
 
         fechaInicioButton.setOnClickListener {
-            fechaUtil.mostrarDatePickerPrestamos(this,fechaInicioButton)
+            fechaUtils.mostrarDatePickerPrestamos(this,fechaInicioButton)
         }
 
         // Crear el adaptador con los nombres de los socios
         adapter = ArrayAdapter(
             this,
             android.R.layout.simple_dropdown_item_1line,
-            dbSocios.obtenerSocios().map { "${it.nombre} ${it.apellido}" })
+            dbSocios.getAllSocios().map { "${it.nombre} ${it.apellido}" })
         socioAutoCompleteTextView.setAdapter(adapter)
 
         // Manejar la selección de un socio
         socioAutoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
             val socioSeleccionado = adapter.getItem(position)
-            idSocioSeleccionado = dbSocios.obtenerSocios()
+            idSocioSeleccionado = dbSocios.getAllSocios()
                 .find { "${it.nombre} ${it.apellido}" == socioSeleccionado }?.idSocio
         }
         homeButton.setOnClickListener {
@@ -93,7 +93,7 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
             // Validar socio y fechaInicio
             if (idSocio != null && !fechaInicioString.isEmpty() && idArticuloIntent != null) {
                 try {
-                    val fechaInicio = fechaUtil.dateFormat.parse(fechaInicioString)
+                    val fechaInicio = fechaUtils.dateFormat.parse(fechaInicioString)
                     val fechaFin: Date? = null
                     val nuevoPrestamo = Prestamo(
                         null,
@@ -104,7 +104,7 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
                         info,
                         EstadoPrestamo.ACTIVO
                     )
-                    dbPrestamos.insertarPrestamo(nuevoPrestamo)
+                    dbPrestamos.addrPrestamo(nuevoPrestamo)
                     dbArticulos.actualizarEstadoArticulo(
                         idArticuloIntent,
                         EstadoArticulo.PRESTADO
@@ -136,7 +136,7 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
 
 
     private fun buscarSocio(textoBusqueda: String): Socio? {
-        val socios = dbSocios.obtenerSocios()
+        val socios = dbSocios.getAllSocios()
         return socios.find { socio ->
             val valoresSocio = listOfNotNull(
                 socio.nombre,

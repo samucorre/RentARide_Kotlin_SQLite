@@ -19,24 +19,19 @@ import pf.dam.MainActivity
 //import com.github.mikephil.charting.data.*
 //import com.github.mikephil.charting.utils.ColorTemplate
 import pf.dam.R
-import pf.dam.articulos.ArticulosActivity
 import pf.dam.articulos.EstadoArticulo
 import pf.dam.prestamos.EstadoPrestamo
-import pf.dam.prestamos.PrestamosActivity
-import pf.dam.socios.SociosActivity
-import pf.dam.utils.FechaUtil
+import pf.dam.utils.FechaUtils
 
 class GraficosActivity : AppCompatActivity() {
     private lateinit var dbArticulos: ArticulosSQLite
     private lateinit var dbSocios: SociosSQLite
     private lateinit var dbPrestamos: PrestamosSQLite
-    private lateinit var fechaUtil: FechaUtil
-        private lateinit var zona1TextView: TextView
-        private lateinit var zona2TextView: TextView
+    private lateinit var fechaUtils: FechaUtils
+    private lateinit var zona1TextView: TextView
+    private lateinit var zona2TextView: TextView
     private lateinit var zona3TextView: TextView
     private lateinit var homeButton: FloatingActionButton
-
-
 
     override fun onContentChanged() {
         super.onContentChanged()
@@ -46,39 +41,43 @@ class GraficosActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_graficos)
+        setContentView(R.layout.grahps_activity)
         supportActionBar?.title = "RR - Informes Gráficos"
         dbArticulos = ArticulosSQLite(this)
         dbSocios = SociosSQLite(this)
         dbPrestamos = PrestamosSQLite(this)
-        fechaUtil = FechaUtil(this)
+        fechaUtils = FechaUtils(this)
 
         zona1TextView = findViewById(R.id.zona1)
         zona2TextView = findViewById(R.id.zona2)
         zona3TextView = findViewById(R.id.zona3)
-        homeButton= findViewById(R.id.homeButton)
+        homeButton = findViewById(R.id.homeButton)
         val cardView1 = findViewById<CardView>(R.id.cardView1)
         val cardView2 = findViewById<CardView>(R.id.cardView2)
         val cardView3 = findViewById<CardView>(R.id.cardView3)
         val pieChartArticulos = cardView1.findViewById<PieChart>(R.id.pieChartArticulos)
         val articulosGraphs = ArticulosGraphs()
-        val articulos = ArticulosSQLite(this).obtenerArticulos()
-        articulosGraphs.crearGraficoPastelCategorias(articulos, cardView1.findViewById(R.id.pieChartArticulos))
+        val articulos = ArticulosSQLite(this).getAllArticulos()
+        articulosGraphs.crearGraficoPastelCategorias(
+            articulos,
+            cardView1.findViewById(R.id.pieChartArticulos)
+        )
         pieChartArticulos.legend.isEnabled = false
 
 
-
         val prestamosGraphs = PrestamosGraphs()
-        val lineChartPrestamosPorMes = cardView3.findViewById<LineChart>(R.id.lineChartPrestamosPorMes)
-        val pieChartPrestamosPorEstado = cardView3.findViewById<PieChart>(R.id.pieChartPrestamosPorEstado)
+        val lineChartPrestamosPorMes =
+            cardView3.findViewById<LineChart>(R.id.lineChartPrestamosPorMes)
+        val pieChartPrestamosPorEstado =
+            cardView3.findViewById<PieChart>(R.id.pieChartPrestamosPorEstado)
 
-        val prestamos = PrestamosSQLite(this).obtenerPrestamos()
-        prestamosGraphs.crearGraficoLineasPrestamosPorMes(prestamos,lineChartPrestamosPorMes)
+        val prestamos = PrestamosSQLite(this).getAllPrestamos()
+        prestamosGraphs.crearGraficoLineasPrestamosPorMes(prestamos, lineChartPrestamosPorMes)
         lineChartPrestamosPorMes.legend.isEnabled = false
         lineChartPrestamosPorMes.description.isEnabled = true
         lineChartPrestamosPorMes.description.text = ""
 
-        prestamosGraphs.crearGraficoPastelPrestamosPorEstado(prestamos,pieChartPrestamosPorEstado)
+        prestamosGraphs.crearGraficoPastelPrestamosPorEstado(prestamos, pieChartPrestamosPorEstado)
         pieChartPrestamosPorEstado.legend.isEnabled = false
         pieChartPrestamosPorEstado.description.isEnabled = true
         pieChartPrestamosPorEstado.description.text = ""
@@ -88,14 +87,8 @@ class GraficosActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
-//        val btnEjemploGraficos: Button = findViewById(R.id.btnEjemploGraficos)
-//        btnEjemploGraficos.setOnClickListener {
-//            val intent = Intent(this, EjemploGraficos::class.java)
-//            startActivity(intent)
-//
-//        }
 
-         val btnArticulosGraphs: FloatingActionButton = findViewById(R.id.btnArticulosGraphs)
+        val btnArticulosGraphs: FloatingActionButton = findViewById(R.id.btnArticulosGraphs)
         btnArticulosGraphs.setOnClickListener {
             val intent = Intent(this, ArticulosGraphs::class.java)
             startActivity(intent)
@@ -113,61 +106,36 @@ class GraficosActivity : AppCompatActivity() {
             val intent = Intent(this, SociosGraphs::class.java)
             startActivity(intent)
         }
-//        cardView1.setOnClickListener {
-//            val intent = Intent(this, ArticulosActivity::class.java)
-//            startActivity(intent)
-//        }
-//
-//        cardView2.setOnClickListener {
-//            val intent = Intent(this, SociosActivity::class.java)
-//            startActivity(intent)
-//        }
-//
-//        cardView3.setOnClickListener {
-//            val intent = Intent(this, PrestamosActivity::class.java)
-//            startActivity(intent)
-//        }
-
     }
-        override fun onResume() {
-            super.onResume()
-            actualizarInformacion() // Llama a la función para actualizar la información
-        }
+
+    override fun onResume() {
+        super.onResume()
+        actualizarInformacion()
+    }
 
 
     @SuppressLint("SetTextI18n")
     private fun actualizarInformacion() {
-        // Actualizar los TextViews con la información actualizada
-        val totalArticulos = dbArticulos.obtenerArticulos().size
+        val totalArticulos = dbArticulos.getAllArticulos().size
         val totalArticulosDispos =
-            dbArticulos.obtenerArticulos().count { it.estado == EstadoArticulo.DISPONIBLE }
+            dbArticulos.getAllArticulos().count { it.estado == EstadoArticulo.DISPONIBLE }
         val totalArticulosPrestados =
-            dbArticulos.obtenerArticulos().count { it.estado == EstadoArticulo.PRESTADO }
+            dbArticulos.getAllArticulos().count { it.estado == EstadoArticulo.PRESTADO }
         val totalArticulosNoDisponibles =
-            dbArticulos.obtenerArticulos().count { it.estado == EstadoArticulo.NO_DISPONIBLE }
-        // Actualizar los TextViews
-        val totalSocios = dbSocios.obtenerSocios().size
-        val totalSociosPrestamosActivos = dbPrestamos.obtenerPrestamos()
+            dbArticulos.getAllArticulos().count { it.estado == EstadoArticulo.NO_DISPONIBLE }
+        val totalSocios = dbSocios.getAllSocios().size
+        val totalSociosPrestamosActivos = dbPrestamos.getAllPrestamos()
             .filter { it.estado == EstadoPrestamo.ACTIVO }
             .distinctBy { it.idSocio }
             .count()
-        val sociosCumpleaneros = dbSocios.obtenerSociosCumplenAnosMesActual()
-        val ultimoSocioRegistrado = dbSocios.obtenerUltimoSocioRegistrado()
+        val sociosCumpleaneros = dbSocios.getSociosCumpleanosMes()
+        val ultimoSocioRegistrado = dbSocios.getUltimoSocioRegistrado()
 
-        // Actualizar los TextViews
-        val totalPrestamos = dbPrestamos.obtenerPrestamos().size
+        val totalPrestamos = dbPrestamos.getAllPrestamos().size
         val totalPrestamosActivos =
-            dbPrestamos.obtenerPrestamos().count { it.estado == EstadoPrestamo.ACTIVO }
+            dbPrestamos.getAllPrestamos().count { it.estado == EstadoPrestamo.ACTIVO }
         val totalCerrados =
-            dbPrestamos.obtenerPrestamos().count { it.estado == EstadoPrestamo.CERRADO }
-
-//        zona1TextView.text = "\t\tARTICULOS\n" +
-//                "Total de artículos: $totalArticulos\n" +
-//                "Disponibles: $totalArticulosDispos\n" +
-//                "Prestados: $totalArticulosPrestados\n" +
-//                "No disponibles: $totalArticulosNoDisponibles"
-//
-//
+            dbPrestamos.getAllPrestamos().count { it.estado == EstadoPrestamo.CERRADO }
 
         val totalArticulosTextView = findViewById<TextView>(R.id.totalArticulosTextView)
         totalArticulosTextView.text = "\nTotal de artículos: $totalArticulos"
@@ -176,24 +144,20 @@ class GraficosActivity : AppCompatActivity() {
         articulosDisponiblesTextView.text = "Disponibles: $totalArticulosDispos"
         val articulosPrestadosTextView = findViewById<TextView>(R.id.articulosPrestadosTextView)
         articulosPrestadosTextView.text = "Prestados: $totalArticulosPrestados"
-        val articulosNoDisponiblesTextView = findViewById<TextView>(R.id.articulosNoDisponiblesTextView)
+        val articulosNoDisponiblesTextView =
+            findViewById<TextView>(R.id.articulosNoDisponiblesTextView)
         articulosNoDisponiblesTextView.text = "No disponibles: $totalArticulosNoDisponibles"
-
-
-        // ... (establece los valores de los demás TextView de artículos) ...
-
-        // ... (establece los valores de los demás TextView de préstamos) ...
-
-
 
         val totalSociosTextView = findViewById<TextView>(R.id.totalSociosTextView)
         totalSociosTextView.text = "\nNúmero total de Socios: $totalSocios"
         val cumpleanerosTextView = findViewById<TextView>(R.id.cumpleanerosTextView)
-        cumpleanerosTextView.text = "\nCumpleañer@s del mes: \n${sociosCumpleaneros.joinToString("\n") { it.first }}"
+        cumpleanerosTextView.text =
+            "\nCumpleañer@s del mes: \n${sociosCumpleaneros.joinToString("\n") { it.first }}"
         val ultimoRegistroTextView = findViewById<TextView>(R.id.ultimoRegistroTextView)
-        ultimoRegistroTextView.text = "\nUltimo registro: ${ultimoSocioRegistrado?.nombre} ${ultimoSocioRegistrado?.apellido}  ${fechaUtil.dateFormat.format(ultimoSocioRegistrado?.fechaIngresoSocio)}"
-
-
+        ultimoRegistroTextView.text =
+            "\nUltimo registro: ${ultimoSocioRegistrado?.nombre} ${ultimoSocioRegistrado?.apellido}  ${
+                fechaUtils.dateFormat.format(ultimoSocioRegistrado?.fechaIngresoSocio)
+            }"
 
         val totalPrestamosTextView = findViewById<TextView>(R.id.totalPrestamosTextView)
         totalPrestamosTextView.text = "\nPréstamos totales: $totalPrestamos"
@@ -202,11 +166,6 @@ class GraficosActivity : AppCompatActivity() {
         prestamosActivosTextView.text = "Préstamos activos: $totalPrestamosActivos"
         val prestamosCerradosTextView = findViewById<TextView>(R.id.prestamosCerradosTextView)
         prestamosCerradosTextView.text = "Préstamos cerrados: $totalCerrados"
-
-//        zona3TextView.text ="\t\tPRESTAMOS\n" +
-//            "Préstamos totales: $totalPrestamos\n" +
-//                "Préstamos activos: $totalPrestamosActivos\n" +
-//                "Préstamos Cerrados: $totalCerrados\n"
     }
 
 }

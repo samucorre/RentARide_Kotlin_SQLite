@@ -38,32 +38,32 @@ class SociosSQLite(context: Context) :
         onCreate(db)
     }
 
-    fun obtenerSocios(): List<Socio> {
-        return readableDatabase.use { db -> socioDbHelper.obtenerSocios(db) }
+    fun getAllSocios(): List<Socio> {
+        return readableDatabase.use { db -> socioDbHelper.getAllSocios(db) }
     }
 
-    fun obtenerSocioPorId(idSocio: Int): Socio? {
-        return readableDatabase.use { db -> socioDbHelper.obtenerSocioPorId(db, idSocio) }
+    fun getSocioById(idSocio: Int): Socio? {
+        return readableDatabase.use { db -> socioDbHelper.getSocioById(db, idSocio) }
     }
 
-    fun insertarSocio(socio: Socio): Long {
-        return writableDatabase.use { db -> socioDbHelper.insertarSocio(db, socio) }
+    fun addSocio(socio: Socio): Long {
+        return writableDatabase.use { db -> socioDbHelper.addSocio(db, socio) }
     }
 
-    fun actualizarSocio(socio: Socio) {
-        writableDatabase.use { db -> socioDbHelper.actualizarSocio(db, socio) }
+    fun updateSocio(socio: Socio) {
+        writableDatabase.use { db -> socioDbHelper.updateSocio(db, socio) }
     }
 
-    fun borrarSocio(idSocio: Int): Int {
-        return writableDatabase.use { db -> socioDbHelper.borrarSocio(db, idSocio) }
+    fun deleteSocio(idSocio: Int): Int {
+        return writableDatabase.use { db -> socioDbHelper.deleteSocio(db, idSocio) }
     }
 
-    fun obtenerSociosCumplenAnosMesActual(): List<Pair<String, Date>> {
-        return readableDatabase.use { db -> socioDbHelper.obtenerSociosCumplenAnosMesActual(db) }
+    fun getSociosCumpleanosMes(): List<Pair<String, Date>> {
+        return readableDatabase.use { db -> socioDbHelper.getSociosCumpleanosMes(db) }
     }
 
-    fun obtenerUltimoSocioRegistrado(): Socio? {
-        return readableDatabase.use { db -> socioDbHelper.obtenerUltimoSocioRegistrado(db) }
+    fun getUltimoSocioRegistrado(): Socio? {
+        return readableDatabase.use { db -> socioDbHelper.getUltimoSocioRegistrado(db) }
     }
 
 

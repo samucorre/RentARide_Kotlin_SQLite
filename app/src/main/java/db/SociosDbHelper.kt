@@ -5,21 +5,19 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.icu.util.Calendar
 import android.util.Log
-import pf.dam.prestamos.EstadoPrestamo
 
 import pf.dam.socios.Genero
 import pf.dam.socios.Socio
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.text.format
 
 class SociosDbHelper(private val dbHelper: SociosSQLite) {
 
 
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
-    fun obtenerSocios(db: SQLiteDatabase): List<Socio> {
+    fun getAllSocios(db: SQLiteDatabase): List<Socio> {
         val listaSocios = mutableListOf<Socio>()
         db.rawQuery("SELECT * FROM socios", null).use { cursor ->
             if (cursor.moveToFirst()) {
@@ -31,7 +29,7 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
         return listaSocios
     }
 
-    fun obtenerSocioPorId(db: SQLiteDatabase, idSocio: Int): Socio? {
+    fun getSocioById(db: SQLiteDatabase, idSocio: Int): Socio? {
         return db.query(
             "socios", null, "idSocio = ?", arrayOf(idSocio.toString()),
             null, null, null
@@ -40,7 +38,7 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
         }
     }
 
-    fun insertarSocio(db: SQLiteDatabase, socio: Socio): Long {
+    fun addSocio(db: SQLiteDatabase, socio: Socio): Long {
         val values = ContentValues().apply {
             put("nombre", socio.nombre)
             put("apellido", socio.apellido)
@@ -57,7 +55,7 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
         return idSocio
     }
 
-    fun actualizarSocio(db: SQLiteDatabase, socio: Socio) {
+    fun updateSocio(db: SQLiteDatabase, socio: Socio) {
         val values = ContentValues().apply {
             put("nombre", socio.nombre)
             put("apellido", socio.apellido)
@@ -71,7 +69,7 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
         db.update("socios", values, "idSocio = ?", arrayOf(socio.idSocio.toString()))
     }
 
-    fun borrarSocio(db: SQLiteDatabase, idSocio: Int): Int {
+    fun deleteSocio(db: SQLiteDatabase, idSocio: Int): Int {
         return db.delete("socios", "idSocio = ?", arrayOf(idSocio.toString()))
     }
 
@@ -85,11 +83,10 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
             getString(getColumnIndexOrThrow("email")) ?: "",
             dateFormat.parse(getString(getColumnIndexOrThrow("fechaNacimiento")))!!, // Nuevo campo
             dateFormat.parse(getString(getColumnIndexOrThrow("fechaIngresoSocio")))!!, // Nuevo campo
-            obtenerGenero(getString(getColumnIndexOrThrow("genero"))) // Nuevo campo
+            getGenero(getString(getColumnIndexOrThrow("genero"))) // Nuevo campo
         )
     }
 
-    // Funciones auxiliares para formatear y parsear fechas
     private fun formatearFecha(fecha: Date?): String? {
         return if (fecha != null) {
             SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(fecha)
@@ -106,8 +103,7 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
         }
     }
 
-    // Función auxiliar para obtener el género desde el nombre del enum
-    private fun obtenerGenero(generoString: String?): Genero? {
+    private fun getGenero(generoString: String?): Genero? {
         return if (generoString != null) {
             Genero.valueOf(generoString)
         } else {
@@ -115,8 +111,7 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
         }
     }
 
-    //Función auxliar para obtener los socios que cumplen años en el mes actual
-    fun obtenerSociosCumplenAnosMesActual(db: SQLiteDatabase): List<Pair<String, Date>> {
+    fun getSociosCumpleanosMes(db: SQLiteDatabase): List<Pair<String, Date>> {
         val listaSociosCumpleaneros = mutableListOf<Pair<String, Date>>()
         val mesActual = Calendar.getInstance().get(Calendar.MONTH) + 1 // Mes actual (1-12)
 
@@ -139,8 +134,7 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
         return listaSociosCumpleaneros
     }
 
-    //Función auxiliar para obtener el último socio registrado
-    fun obtenerUltimoSocioRegistrado(db: SQLiteDatabase): Socio? {
+    fun getUltimoSocioRegistrado(db: SQLiteDatabase): Socio? {
         return db.rawQuery("SELECT * FROM socios ORDER BY idSocio DESC LIMIT 1", null).use { cursor ->
             if (cursor.moveToFirst()) {
                 cursor.toSocio()

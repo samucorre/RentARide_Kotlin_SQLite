@@ -4,13 +4,8 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.tooling.data.position
-import androidx.core.text.color
 import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.charts.BubbleChart
-import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.charts.ScatterChart
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
@@ -38,7 +33,7 @@ class SociosGraphs : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_socios_graphs)
+        setContentView(R.layout.graphs_socios_activity)
         supportActionBar?.title = "RR - Gráficos socios"
 
         pieChart = findViewById(R.id.pieChartSocios)
@@ -64,7 +59,7 @@ class SociosGraphs : AppCompatActivity() {
     }
 
     private fun configurarGraficos() {
-        val socios = SociosSQLite(this).obtenerSocios()
+        val socios = SociosSQLite(this).getAllSocios()
         crearGraficoPastelGenero(socios)
         //   crearGraficoBurbujasAnoNacimiento(socios)
         crearGraficoBarrasSociosPorAno(socios, barChart)

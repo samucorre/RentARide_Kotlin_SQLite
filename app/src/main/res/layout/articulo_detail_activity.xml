@@ -6,83 +6,6 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-<!--    <TextView-->
-<!--        android:id="@+id/nombreTextView"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Nombre del artículo"-->
-<!--        android:textSize="18sp"-->
-<!--        android:textStyle="bold"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/imagenImageView"-->
-<!--        app:layout_constraintHorizontal_bias="0" />-->
-
-
-<!--    <TextView-->
-<!--        android:id="@+id/categoriaTextView"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Categoría"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/nombreTextView"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/imagenImageView"-->
-<!--        app:layout_constraintHorizontal_bias="0" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/tipoTextView"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Tipo"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/categoriaTextView"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/imagenImageView"-->
-<!--        app:layout_constraintHorizontal_bias="0" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/descripcionTextView"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Descripción"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/tipoTextView"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/imagenImageView"-->
-<!--        app:layout_constraintHorizontal_bias="0" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/estadoTextView"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Estado"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/descripcionTextView"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/imagenImageView"-->
-<!--        app:layout_constraintHorizontal_bias="0" />-->
-
-<!--    <ImageView-->
-<!--        android:id="@+id/imagenImageView"-->
-<!--        android:layout_width="200dp"-->
-<!--        android:layout_height="200dp"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--    <Button-->
-<!--        android:id="@+id/addPrestamoButton"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="16dp"-->
-<!--        android:layout_marginTop="56dp"-->
-<!--        android:drawableStart="@drawable/ico_add_prestamo"-->
-<!--        android:gravity="center"-->
-<!--        android:text="Añadir préstamo"-->
-<!--        app:backgroundTint="#FFC107"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.497"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/imagenImageView" />-->
-
-
     <View
         android:id="@+id/divider1"
         android:layout_width="0dp"
@@ -209,8 +132,6 @@
             android:text="Socios: "
             android:textSize="18sp"
             android:gravity="center"/>
-
-
 
     </LinearLayout>
     </ScrollView>

@@ -15,10 +15,10 @@ import androidx.compose.ui.unit.dp
 class DialogoUtil( context: Context) {
 
     @Composable
-    fun ShowEditConfirmationDialog(
+    fun ShowDeleteConfirmationDialog(
         title: String,
         message: String,
-        positiveButtonText: String = "Editar",
+        positiveButtonText: String = "Eliminar",
         negativeButtonText: String = "Cancelar",
         onPositiveButtonClick: () -> Unit,
         onDismissRequest: () -> Unit
@@ -28,7 +28,14 @@ class DialogoUtil( context: Context) {
             title = { Text(text = title) },
             text = { Text(text = message) },
             confirmButton = {
-                TextButton(onClick = onPositiveButtonClick) {
+                TextButton(
+                    onClick = onPositiveButtonClick,
+                    modifier = Modifier,
+                    colors = ButtonDefaults.textButtonColors(
+                        containerColor = Color.Red, // Color de fondo rojo
+                        contentColor = MaterialTheme.colorScheme.onError  // Color del texto en contraste
+                    )
+                ) {
                     Text(text = positiveButtonText)
                 }
             },
@@ -36,42 +43,9 @@ class DialogoUtil( context: Context) {
                 TextButton(onClick = onDismissRequest) {
                     Text(text = negativeButtonText)
                 }
-            }
+            },
+            shape = RoundedCornerShape(8.dp), // Forma redondeada (opcional)
+            containerColor = Color(0xFFFFF2CC)// Color de fondo del diálogo
         )
     }
-}
-
-@Composable
-fun ShowDeleteConfirmationDialog(
-    title: String,
-    message: String,
-    positiveButtonText: String = "Eliminar",
-    negativeButtonText: String = "Cancelar",
-    onPositiveButtonClick: () -> Unit,
-    onDismissRequest: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        title = { Text(text = title) },
-        text = { Text(text = message) },
-        confirmButton = {
-            TextButton(
-                onClick = onPositiveButtonClick,
-                modifier = Modifier,
-                colors = ButtonDefaults.textButtonColors(
-                    containerColor = Color.Red, // Color de fondo rojo
-                    contentColor = MaterialTheme.colorScheme.onError  // Color del texto en contraste
-                )
-            ) {
-                Text(text = positiveButtonText)
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismissRequest) {
-                Text(text = negativeButtonText)
-            }
-        },
-        shape = RoundedCornerShape(8.dp), // Forma redondeada (opcional)
-        containerColor =  Color(0xFFFFF2CC)// Color de fondo del diálogo
-    )
 }

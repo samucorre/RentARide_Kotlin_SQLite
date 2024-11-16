@@ -37,23 +37,21 @@ class ArticuloEditActivity : AppCompatActivity() {
     private lateinit var guardarButton: FloatingActionButton
     private lateinit var volverButton: FloatingActionButton
     private lateinit var homeButton: FloatingActionButton
-
     private lateinit var botonCamara: Button
     private lateinit var botonGaleria: Button
     private lateinit var estadoSwitch: Switch
-
     private var articuloId: Int = -1
     private lateinit var articulo: Articulo
     private var imagenArticulo: Bitmap? = null
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_IMAGE_GALLERY = 2
     private val REQUEST_PERMISSION_CAMERA = 100
-    private lateinit var prestamosDbHelper: PrestamosSQLite // Instancia de PrestamosSQLite
+    private lateinit var prestamosDbHelper: PrestamosSQLite
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_articulo_edit)
+        setContentView(R.layout.articulo_edit_activity)
         supportActionBar?.title = "RR - Editar artículo"
 
         dbHelper = ArticulosSQLite(this)
@@ -70,9 +68,7 @@ class ArticuloEditActivity : AppCompatActivity() {
         homeButton = findViewById(R.id.homeButton)
 
         articuloId = intent.getIntExtra("articuloId", -1)
-        articulo = dbHelper.obtenerArticuloPorId(articuloId)!!
-
-
+        articulo = dbHelper.getArticuloById(articuloId)!!
 
         if (articulo.rutaImagen != null) {
             try {
@@ -80,7 +76,6 @@ class ArticuloEditActivity : AppCompatActivity() {
                 imagenImageView.setImageBitmap(imagenBitmap)
             } catch (e: Exception) {
                 Log.e("ArticuloEditActivity", "Error al cargar la imagen", e)
-                // Mostrar una imagen por defecto si hay un error
             }
         }
 
@@ -88,10 +83,9 @@ class ArticuloEditActivity : AppCompatActivity() {
         categoriaEditText.setText(articulo.categoria)
         tipoEditText.setText(articulo.tipo)
         descripcionEditText.setText(articulo.descripcion)
-
         estadoSwitch.isChecked = articulo.estado  == EstadoArticulo.DISPONIBLE
-
         prestamosDbHelper = PrestamosSQLite(this)
+
         guardarButton.setOnClickListener {
             val nuevaRutaImagen = imagenArticulo?.let {
                 val nombreArchivo = "articulo_${UUID.randomUUID()}"
@@ -102,10 +96,8 @@ class ArticuloEditActivity : AppCompatActivity() {
 
             try {
                 if (articulo.idArticulo?.let { prestamosDbHelper.estaArticuloEnPrestamoActivo(it) } ?: false) {
-                    // Mostrar un mensaje de error al usuario
                     Toast.makeText(this, "No se puede editar el artículo. Está presente en un préstamo activo.", Toast.LENGTH_SHORT).show()
                 } else {
-                    // --- Condición agregada ---
                     val categoria = categoriaEditText.text.toString()
                     val tipo = tipoEditText.text.toString()
                     val nombre = nombreEditText.text.toString()
@@ -113,26 +105,24 @@ class ArticuloEditActivity : AppCompatActivity() {
 
                     if (categoria.isBlank() || tipo.isBlank() || nombre.isBlank() || descripcion.isBlank()) {
                         Toast.makeText(this, "Por favor, rellena todos los campos", Toast.LENGTH_SHORT).show()
-                        return@setOnClickListener // Salir del listener si los campos están vacíos
+                        return@setOnClickListener
                     }
-                    // --- Fin de la condición agregada ---
 
                     val articuloActualizado = Articulo(
                         articulo.idArticulo,
-                        categoria, // Usar la variable categoria
-                        tipo, // Usar la variable tipo
-                        nombre, // Usar la variable nombre
-                        descripcion, // Usar la variable descripcion
+                        categoria,
+                        tipo,
+                        nombre,
+                        descripcion,
                         estadoSeleccionado,
                         nuevaRutaImagen
                     )
-                    dbHelper.actualizarArticulo(articuloActualizado)
+                    dbHelper.updateArticulo(articuloActualizado)
                     Toast.makeText(this, "Artículo actualizado", Toast.LENGTH_SHORT).show()
                     setResult(RESULT_OK)
                     finish()
                 }
             } catch (e: SQLiteException) {
-                // Manejar la excepción, por ejemplo, mostrar un mensaje de error al usuario
                 Log.e("ArticuloEditActivity", "Error al acceder a la base de datos: ${e.message}")
                 Toast.makeText(this, "Artículo en préstamo activo. No editable", Toast.LENGTH_SHORT).show()
             }
@@ -154,9 +144,7 @@ class ArticuloEditActivity : AppCompatActivity() {
                     arrayOf(Manifest.permission.CAMERA),
                     REQUEST_PERMISSION_CAMERA
                 )
-            } else {
-                dispatchTakePictureIntent()
-            }
+            } else {dispatchTakePictureIntent()}
         }
 
         botonGaleria.setOnClickListener {

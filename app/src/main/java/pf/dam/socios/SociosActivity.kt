@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.compose.ui.test.filter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -25,7 +24,6 @@ class SociosActivity : AppCompatActivity() {
     private lateinit var dbSocios: SociosSQLite
     private lateinit var dbPrestamos: PrestamosSQLite
     private lateinit var addSocioButton: FloatingActionButton
-    private lateinit var backButton: FloatingActionButton
     private lateinit var homeButton: FloatingActionButton
     private lateinit var estadoRadioGroup: RadioGroup
 
@@ -33,7 +31,7 @@ class SociosActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_socios)
+        setContentView(R.layout.socios_activity)
 
         dbSocios = SociosSQLite(this)
         dbPrestamos = PrestamosSQLite(this)
@@ -41,11 +39,10 @@ class SociosActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.sociosRecyclerView)
         searchView = findViewById(R.id.searchView)
         addSocioButton = findViewById(R.id.addSocioButton)
-      //  backButton = findViewById(R.id.backButton)
         homeButton = findViewById(R.id.homeButton)
         estadoRadioGroup = findViewById(R.id.estadoRadioGroup)
 
-        sociosAdapter = SociosAdapter(dbSocios.obtenerSocios())
+        sociosAdapter = SociosAdapter(dbSocios.getAllSocios())
         recyclerView.adapter = sociosAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         supportActionBar?.title = "RR - Socios"
@@ -65,7 +62,6 @@ class SociosActivity : AppCompatActivity() {
                 R.id.prestadoRadioButton -> EstadoPrestamo.CERRADO
                 else -> null
             }
-
             filtrarSociosPorPrestamosActivos(estadoSeleccionado)
         }
 
@@ -86,7 +82,7 @@ class SociosActivity : AppCompatActivity() {
     }
 
     private fun actualizarListaSocios() {
-        sociosAdapter.socios = dbSocios.obtenerSocios()
+        sociosAdapter.socios = dbSocios.getAllSocios()
         sociosAdapter.notifyDataSetChanged()
     }
 
@@ -95,10 +91,9 @@ class SociosActivity : AppCompatActivity() {
         if (resultCode == RESULT_OK) {
             val socioId = data?.getIntExtra("idSocio", -1) ?: -1
             if (socioId != -1) {
-                val socioActualizado = dbSocios.obtenerSocioPorId(socioId)
+                val socioActualizado = dbSocios.getSocioById(socioId)
                 if (socioActualizado != null) {
-                    // Actualizar la vista con articuloActualizado
-                    sociosAdapter.socios = dbSocios.obtenerSocios()
+                    sociosAdapter.socios = dbSocios.getAllSocios()
                     sociosAdapter.notifyDataSetChanged()
                 }
             }
@@ -106,9 +101,9 @@ class SociosActivity : AppCompatActivity() {
     }
     private fun filtrarSociosConPrestamos(query: String?) {
         val sociosFiltrados = if (query.isNullOrEmpty()) {
-            dbSocios.obtenerSocios()
+            dbSocios.getAllSocios()
         } else {
-            dbSocios.obtenerSocios().filter { socio ->
+            dbSocios.getAllSocios().filter { socio ->
                 socio.nombre?.contains(query, ignoreCase = true) ?: false ||
                         socio.apellido?.contains(query, ignoreCase = true) ?: false ||
                         socio.numeroSocio.toString().contains(query, ignoreCase = true) ||
@@ -124,11 +119,11 @@ class SociosActivity : AppCompatActivity() {
     }
         private fun filtrarSociosPorPrestamosActivos(estadoSeleccionado: EstadoPrestamo?) {
             val sociosFiltrados = when (estadoSeleccionado) {
-                EstadoPrestamo.ACTIVO -> dbPrestamos.obtenerSociosConPrestamosActivos(this)
-                EstadoPrestamo.CERRADO -> dbPrestamos.obtenerSociosConPrestamosCerrados(this)
-                else -> dbSocios.obtenerSocios() // Todos los socios
+                EstadoPrestamo.ACTIVO -> dbPrestamos.getSociosConPrestamosActivos(this)
+                EstadoPrestamo.CERRADO -> dbPrestamos.getSociosConPrestamosCerrados(this)
+                else -> dbSocios.getAllSocios()
             }
-            sociosAdapter.socios = sociosFiltrados as List<Socio>
+            sociosAdapter.socios = sociosFiltrados
             sociosAdapter.notifyDataSetChanged()
         }
     }

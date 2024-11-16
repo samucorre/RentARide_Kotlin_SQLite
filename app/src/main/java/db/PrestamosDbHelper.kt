@@ -5,20 +5,16 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import androidx.compose.foundation.layout.size
-import pf.dam.articulos.Articulo
 import pf.dam.prestamos.EstadoPrestamo
 import pf.dam.prestamos.Prestamo
-import pf.dam.socios.Socio
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
 
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
-    fun obtenerPrestamos(db: SQLiteDatabase): List<Prestamo> {
+    fun getAllPrestamos(db: SQLiteDatabase): List<Prestamo> {
         val listaPrestamos = mutableListOf<Prestamo>()
         db.rawQuery("SELECT * FROM prestamos", null).use { cursor ->
             if (cursor.moveToFirst()) {
@@ -31,7 +27,7 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
         return listaPrestamos
     }
 
-    fun obtenerPrestamoPorId(db: SQLiteDatabase, idPrestamo: Int): Prestamo? {
+    fun getPrestamoById(db: SQLiteDatabase, idPrestamo: Int): Prestamo? {
         return db.query(
             "prestamos", null, "idPrestamo = ?", arrayOf(idPrestamo.toString()),
             null, null, null
@@ -47,7 +43,7 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
         }
     }
 
-    fun insertarPrestamo(db: SQLiteDatabase, prestamo: Prestamo): Long {
+    fun addPrestamo(db: SQLiteDatabase, prestamo: Prestamo): Long {
         val values = ContentValues().apply {
             put("idArticulo", prestamo.idArticulo)
             put("idSocio", prestamo.idSocio)
@@ -62,7 +58,7 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
         return idPrestamo
     }
 
-    fun actualizarPrestamo(db: SQLiteDatabase, prestamo: Prestamo) {
+    fun updatePrestamo(db: SQLiteDatabase, prestamo: Prestamo) {
         val values = ContentValues().apply {
             put("idArticulo", prestamo.idArticulo)
             put("idSocio", prestamo.idSocio)
@@ -81,7 +77,7 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
         }
     }
 
-    fun borrarPrestamo(db: SQLiteDatabase, idPrestamo: Int): Int {
+    fun deletePrestamo(db: SQLiteDatabase, idPrestamo: Int): Int {
         val affectedRows = db.delete("prestamos", "idPrestamo = ?", arrayOf(idPrestamo.toString()))
         if (affectedRows > 0) {
             Log.d("PrestamosSQLite", "Préstamo eliminado con ID: $idPrestamo")
@@ -90,8 +86,8 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
         }
         return affectedRows
     }
-
-    fun obtenerPrestamosPorArticulo(db: SQLiteDatabase, idArticulo: Int): List<Prestamo> {
+//--------------------------------------------------------------------------------------------------------------
+    fun getPrestamosByArticulo(db: SQLiteDatabase, idArticulo: Int): List<Prestamo> {
         val listaPrestamos = mutableListOf<Prestamo>()
         db.rawQuery("SELECT * FROM prestamos WHERE idArticulo = ?", arrayOf(idArticulo.toString()))
             .use { cursor ->
@@ -108,7 +104,7 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
         return listaPrestamos
     }
 
-    fun obtenerPrestamosPorSocio(db: SQLiteDatabase, idSocio: Int): List<Prestamo> {
+    fun getPrestamosBySocio(db: SQLiteDatabase, idSocio: Int): List<Prestamo> {
         val listaPrestamos = mutableListOf<Prestamo>()
         db.rawQuery("SELECT * FROM prestamos WHERE idSocio = ?", arrayOf(idSocio.toString()))
             .use { cursor ->
@@ -153,7 +149,7 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
         ).use { cursor -> cursor.count > 0 }
     }
 
-    fun obtenerIdSocioPrestamoActivo(db: SQLiteDatabase, idArticulo: Int): Int? {
+    fun getIdSocioPrestamoActivo(db: SQLiteDatabase, idArticulo: Int): Int? {
         return db.rawQuery(
             "SELECT idSocio FROM prestamos " +
                     "WHERE idArticulo = ? AND estado = ?",
@@ -167,7 +163,7 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
         }
     }
 
-    fun obtenerUltimoPrestamoPorArticulo(db: SQLiteDatabase, idArticulo: Int): Prestamo? {
+    fun getUltimoPrestamoPorArticulo(db: SQLiteDatabase, idArticulo: Int): Prestamo? {
         return db.rawQuery(
             "SELECT * FROM prestamos WHERE idArticulo = ? ORDER BY fechaInicio DESC LIMIT 1",
             arrayOf(idArticulo.toString())
@@ -180,7 +176,7 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
         }
     }
 
-    fun obtenerSociosConPrestamosActivos(db: SQLiteDatabase): List<Int> {
+    fun getSociosPrestamosActivos(db: SQLiteDatabase): List<Int> {
         val sociosConPrestamosActivosIds = mutableListOf<Int>()
         val cursor = db.rawQuery(
             "SELECT DISTINCT idSocio FROM prestamos WHERE estado = ?",
@@ -195,7 +191,7 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
         return sociosConPrestamosActivosIds
     }
 
-    fun obtenerSociosConPrestamosCerrados(db: SQLiteDatabase): List<Int> {
+    fun getSociosPrestamosCerrados(db: SQLiteDatabase): List<Int> {
         val sociosConPrestamosCerradosIds = mutableListOf<Int>()
         val cursor = db.rawQuery(
             "SELECT DISTINCT idSocio FROM prestamos WHERE estado = ?",

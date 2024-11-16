@@ -2,20 +2,15 @@ package pf.dam.articulos
 
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
-
-
 import androidx.recyclerview.widget.RecyclerView
 import db.ArticulosSQLite
-import db.SociosSQLite
 import pf.dam.R
 
 class ArticulosAdapter(articulos: List<Articulo>) :
@@ -31,13 +26,12 @@ class ArticulosAdapter(articulos: List<Articulo>) :
         val categoriaTextView: TextView = itemView.findViewById(R.id.categoriaTextView)
         val tipoTextView: TextView = itemView.findViewById(R.id.tipoTextView)
         val descripcionTextView: TextView = itemView.findViewById(R.id.descripcionTextView)
-        //val estadoTextView: TextView = itemView.findViewById(R.id.estadoTextView)
         val imagenImageView: ImageView = itemView.findViewById(R.id.imagenImageView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticuloViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_articulo, parent, false)
+            .inflate(R.layout.articulo_item, parent, false)
         return ArticuloViewHolder(itemView)
     }
 
@@ -47,11 +41,9 @@ class ArticulosAdapter(articulos: List<Articulo>) :
         holder.categoriaTextView.text = articulo.categoria ?: ""
         holder.tipoTextView.text = articulo.tipo ?: ""
         holder.descripcionTextView.text = articulo.descripcion ?: ""
-      //  holder.estadoTextView.text = articulo.estado?.name ?: ""
         if (articulo.rutaImagen.isNullOrEmpty()) {
             holder.imagenImageView.setImageResource(R.drawable.ico_imagen)
         } else {
-            // Mostrar una imagen por defecto si no hay rutaImagen
             val imagenBitmap = BitmapFactory.decodeFile(articulo.rutaImagen)
             holder.imagenImageView.setImageBitmap(imagenBitmap)
         }
@@ -84,13 +76,10 @@ class ArticulosAdapter(articulos: List<Articulo>) :
             }
         }
 
-
-
-
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context
             val dbHelper = ArticulosSQLite(context)
-            val idArticulo = dbHelper.obtenerIdArticuloBD(articulo)
+            val idArticulo = dbHelper.getIdArticuloBd(articulo)
             val intent = Intent(context, ArticuloDetalleActivity::class.java)
             intent.putExtra("idArticulo", idArticulo)
             context.startActivity(intent)
