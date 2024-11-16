@@ -57,15 +57,15 @@ class MainActivity : AppCompatActivity() {
         dbSocios = SociosSQLite(this)
         dbPrestamos = PrestamosSQLite(this)
 
-//            if (dbSocios.obtenerSocios().isEmpty()) {
-//             InsertarDatosIniciales().insertarSociosIniciales(dbSocios)
-//             }
-//        if (dbArticulos.obtenerArticulos().isEmpty()) {
-//            InsertarDatosIniciales().insertarArticulosIniciales(dbArticulos)
-//            }
-//        if (dbPrestamos.obtenerPrestamos().isEmpty()) {
-//            InsertarDatosIniciales().insertarPrestamosIniciales(dbPrestamos)
-//        }
+            if (dbSocios.obtenerSocios().isEmpty()) {
+             InsertarDatosIniciales().insertarSociosIniciales(dbSocios)
+             }
+        if (dbArticulos.obtenerArticulos().isEmpty()) {
+            InsertarDatosIniciales().insertarArticulosIniciales(dbArticulos)
+            }
+        if (dbPrestamos.obtenerPrestamos().isEmpty()) {
+            InsertarDatosIniciales().insertarPrestamosIniciales(dbPrestamos)
+        }
 
 
         // Inicializar botones

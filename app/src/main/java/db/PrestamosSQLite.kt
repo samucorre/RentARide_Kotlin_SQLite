@@ -114,6 +114,7 @@ class PrestamosSQLite(context: Context) :
         val dbHelper = PrestamosDbHelper(this)
         return dbHelper.obtenerIdSocioPrestamoActivo(writableDatabase, idArticulo)
     }
+
     fun obtenerSociosConPrestamosActivos(context: Context): List<Socio> {
         val sociosIds = readableDatabase.use { db -> prestamoDbHelper.obtenerSociosConPrestamosActivos(db) }
         val sociosSQLite = SociosSQLite(context)
@@ -126,7 +127,7 @@ class PrestamosSQLite(context: Context) :
         return sociosSQLite.obtenerSocios().filter { socio -> socio.idSocio in sociosIds }
     }
 
-//
+
 
 
 }

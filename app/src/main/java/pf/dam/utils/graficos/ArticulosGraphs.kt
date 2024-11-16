@@ -63,7 +63,7 @@ class ArticulosGraphs : AppCompatActivity() {
         val prestamos = PrestamosSQLite(this).obtenerPrestamos()
 
         crearGraficoPastelCategorias(articulos, pieChart)
-        crearGraficoBarrasEstados(articulos)
+        crearGraficoBarrasEstados(articulos, barChart)
         crearGraficoPastelCategoriasPrestamos(prestamos)
         crearGraficoBarrasArticulosPrestados(prestamos)
     }
@@ -79,7 +79,7 @@ class ArticulosGraphs : AppCompatActivity() {
         pieChart.description.isEnabled = true
         pieChart.description.text = "Gráfico de categorías"
     }
-    fun crearGraficoBarrasEstados(articulos: List<Articulo>) {
+    fun crearGraficoBarrasEstados(articulos: List<Articulo>, barChart: BarChart) {
         val articulosPorEstado = articulos.groupingBy { it.estado }.eachCount()
         val barEntries = articulosPorEstado.entries.mapIndexed { index, entry ->
             BarEntry(index.toFloat(), entry.value.toFloat())
