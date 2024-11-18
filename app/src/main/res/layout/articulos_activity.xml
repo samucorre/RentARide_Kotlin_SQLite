@@ -31,24 +31,28 @@
             android:id="@+id/todosRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/yellowRRR"
             android:text="Todos" />
 
         <RadioButton
             android:id="@+id/disponibleRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/yellowRRR"
             android:text="Disponible" />
 
         <RadioButton
             android:id="@+id/prestadoRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/yellowRRR"
             android:text="Prestado" />
 
         <RadioButton
             android:id="@+id/noDisponibleRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/yellowRRR"
             android:text="No disponible" />
 
     </RadioGroup>
