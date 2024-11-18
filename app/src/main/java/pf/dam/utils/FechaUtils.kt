@@ -16,7 +16,7 @@ class FechaUtils (context: Context){
 
     fun mostrarDatePickerEditText(context: Context, editText: EditText) {
         val datePicker = DatePickerDialog(
-            context, // Usa el contexto pasado como parámetro
+            context,
             R.style.MyDatePickerDialogTheme,
             { _, year, month, dayOfMonth ->
                 calendar.set(java.util.Calendar.YEAR, year)
@@ -33,7 +33,7 @@ class FechaUtils (context: Context){
 
     fun mostrarDatePicker(context: Context, editText: Button) {
         val datePicker = DatePickerDialog(
-            context, // Usa el contexto pasado como parámetro
+            context,
             R.style.MyDatePickerDialogTheme,
             { _, year, month, dayOfMonth ->
                 calendar.set(java.util.Calendar.YEAR, year)
@@ -66,7 +66,6 @@ class FechaUtils (context: Context){
                     set(Calendar.MONTH, month)
                     set(Calendar.DAY_OF_MONTH, dayOfMonth)
                 }.time
-                // Formatear la fecha seleccionada y establecerla en el botón
                 button.text = dateFormat.format(selectedDate)
             },
             year,
@@ -74,7 +73,6 @@ class FechaUtils (context: Context){
             day
         )
 
-        // Restringir las fechas seleccionables
         val fechaActual = System.currentTimeMillis()
         datePickerDialog.datePicker.minDate = fechaActual
         datePickerDialog.datePicker.maxDate = fechaActual + (7 * 24 * 60 * 60 * 1000)

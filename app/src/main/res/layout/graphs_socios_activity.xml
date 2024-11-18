@@ -30,6 +30,7 @@
                 android:id="@+id/pieChartSocios"
                 android:layout_width="match_parent"
                 android:layout_height="300dp" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -37,8 +38,6 @@
                 android:paddingTop="20dp"
                 android:textSize="9sp"
                 android:textColor="@color/black"/>
-
-
 
             <com.github.mikephil.charting.charts.HorizontalBarChart
                             android:id="@+id/barChartHorizontal"
@@ -57,64 +56,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:paddingTop="20dp"/>
-            <!--            <com.github.mikephil.charting.charts.BubbleChart-->
-            <!--                android:id="@+id/bubbleChartSocios"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="300dp" />-->
-            <!--            <com.github.mikephil.charting.charts.LineChart-->
-            <!--                android:id="@+id/lineChartSocios"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="300dp" />-->
-            <!--                        <com.github.mikephil.charting.charts.ScatterChart-->
-            <!--                            android:id="@+id/scatterChartSocios"-->
-            <!--                            android:layout_width="match_parent"-->
-            <!--                            android:layout_height="300dp" />-->
-<!--            <com.github.mikephil.charting.charts.LineChart-->
-<!--                android:id="@+id/lineChartSocios"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="300dp" />-->
-
-<!--            <TextView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="Socios por año ingreso:"-->
-<!--                android:paddingTop="20dp"-->
-<!--                android:textSize="9sp"-->
-<!--                android:textColor="@color/black"/>-->
-
-<!--            <com.github.mikephil.charting.charts.BarChart-->
-<!--                android:id="@+id/barChartSocios"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="300dp"-->
-<!--                android:paddingTop="20dp"/>-->
-<!--            <TextView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="Socios por año de ingreso??:"-->
-<!--                android:paddingTop="20dp"-->
-<!--                android:textSize="9sp"-->
-<!--                android:textColor="@color/black"/>-->
-
-<!--            <com.github.mikephil.charting.charts.BarChart-->
-<!--                android:id="@+id/barChartSociosPorAno"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="300dp"-->
-<!--                android:paddingTop="20dp"/>-->
-<!--            <TextView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="Dispersión por edad:"-->
-<!--                android:paddingTop="20dp"-->
-<!--                android:textSize="9sp"-->
-<!--                android:textColor="@color/black"/>-->
-<!--            -->
-<!--            <com.github.mikephil.charting.charts.ScatterChart-->
-<!--                android:id="@+id/scatterChartSocios"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="300dp"-->
-<!--                android:paddingTop="20dp"/>-->
-
-
         </LinearLayout>
 
     </ScrollView>

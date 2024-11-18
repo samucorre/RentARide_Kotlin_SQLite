@@ -32,8 +32,8 @@ class DialogoUtil( context: Context) {
                     onClick = onPositiveButtonClick,
                     modifier = Modifier,
                     colors = ButtonDefaults.textButtonColors(
-                        containerColor = Color.Red, // Color de fondo rojo
-                        contentColor = MaterialTheme.colorScheme.onError  // Color del texto en contraste
+                        containerColor = Color.Red,
+                        contentColor = MaterialTheme.colorScheme.onError
                     )
                 ) {
                     Text(text = positiveButtonText)
@@ -44,8 +44,8 @@ class DialogoUtil( context: Context) {
                     Text(text = negativeButtonText)
                 }
             },
-            shape = RoundedCornerShape(8.dp), // Forma redondeada (opcional)
-            containerColor = Color(0xFFFFF2CC)// Color de fondo del diálogo
+            shape = RoundedCornerShape(8.dp),
+            containerColor = Color(0xFFFFF2CC)
         )
     }
 }

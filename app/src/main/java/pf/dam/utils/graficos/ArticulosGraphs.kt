@@ -74,7 +74,7 @@ class ArticulosGraphs : AppCompatActivity() {
         val pieDataSet = PieDataSet(pieEntries, "Categorías de artículos")
         pieDataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
         val pieData = PieData(pieDataSet)
-        pieChart.data = pieData // Asignar los datos al PieChart recibido como argumento
+        pieChart.data = pieData
         pieChart.invalidate()
         pieChart.description.isEnabled = true
         pieChart.description.text = "Gráfico de categorías"
@@ -86,9 +86,8 @@ class ArticulosGraphs : AppCompatActivity() {
         }
         val barDataSet = BarDataSet(barEntries, "Estados de artículos")
         barDataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
-        barDataSet.setDrawValues(false) // Mostrar valores en las barras
-
-        barDataSet.setValueTextColors(listOf(Color.TRANSPARENT)) // Ocultar etiquetas numéricas
+        barDataSet.setDrawValues(false)
+        barDataSet.setValueTextColors(listOf(Color.TRANSPARENT))
 
         val barData = BarData(barDataSet)
         barChart.data = barData
@@ -96,19 +95,17 @@ class ArticulosGraphs : AppCompatActivity() {
         barChart.description.isEnabled = false
         barChart.description.text = "Gráfico de estados"
 
-        // Configurar el formateador de valores del eje X
         val xAxis = barChart.xAxis
         xAxis.valueFormatter = object : IndexAxisValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 val index = value.toInt()
-                // Obtener el estado correspondiente al índice
                 val estado = articulosPorEstado.keys.toList()[index]
-                // Personalizar el valor de la leyenda
+
                 return when (estado) {
                     EstadoArticulo.DISPONIBLE -> "Disponible"
                     EstadoArticulo.PRESTADO -> "Prestado"
                     EstadoArticulo.NO_DISPONIBLE -> "No disponible"
-                    else -> estado.toString() // Valor por defecto
+                    else -> estado.toString()
                 }
             }
         }
@@ -141,15 +138,13 @@ class ArticulosGraphs : AppCompatActivity() {
         val barDataSet2 = BarDataSet(barEntries2, "Artículos más prestados")
         barDataSet2.colors = ColorTemplate.MATERIAL_COLORS.toList()
         val barData2 = BarData(barDataSet2)
-        barChart2.data = barData2    // Configurar el formateador de valores del eje X
+        barChart2.data = barData2
        val xAxis = barChart2.xAxis
        xAxis.valueFormatter = object : IndexAxisValueFormatter() {
            override fun getFormattedValue(value: Float): String {
                val index = value.toInt()
-               // Obtener el nombre del artículo correspondiente al índice
                val nombreArticulo = prestamosPorArticulo.keys.toList()[index]
-               // Personalizar el valor de la leyenda (opcional)
-               return nombreArticulo ?: "" // Mostrar el nombre del artículo o una cadena vacía si es nulo
+               return nombreArticulo ?: ""
            }
        }
        xAxis.granularity = 1f

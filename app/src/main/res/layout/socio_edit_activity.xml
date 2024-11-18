@@ -170,12 +170,14 @@
             android:id="@+id/hombreRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/yellowRRR"
             android:text="Hombre" />
 
         <RadioButton
             android:id="@+id/mujerRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/yellowRRR"
             android:text="Mujer" />
 
     </RadioGroup>

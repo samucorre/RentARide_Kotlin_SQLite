@@ -52,9 +52,10 @@ class PrestamosGraphs : AppCompatActivity() {
         pieChartPrestamosPorEstado = findViewById(R.id.pieChartPrestamosPorEstado)
         textViewPrestamosPorSocio = findViewById(R.id.textViewPrestamosPorSocio)
 
-
         homeButton = findViewById(R.id.homeButton)
+
         volverButton = findViewById(R.id.volverButton)
+
         homeButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
@@ -72,7 +73,7 @@ class PrestamosGraphs : AppCompatActivity() {
 
         val textoPrestamosPorSocio = StringBuilder()
         prestamosPorSocio.forEach { entry ->
-            val socio = sociosSQLite.getSocioById(entry.key) // Obtener el socio por ID
+            val socio = sociosSQLite.getSocioById(entry.key)
             textoPrestamosPorSocio.append("Socio: \t${socio?.numeroSocio} ${socio?.nombre} ${socio?.apellido}: \t${entry.value} préstamos\n")
         }
 
@@ -85,8 +86,6 @@ class PrestamosGraphs : AppCompatActivity() {
         crearGraficoLineasPrestamosPorMes(prestamos, lineChartPrestamosPorMes)
         crearGraficoPastelPrestamosPorEstado(prestamos, pieChartPrestamosPorEstado)
         crearGraficoBarrasApiladasPrestamosPorMesYEstado(prestamos, barChartPrestamosPorMes)
-
-
     }
 
     fun crearGraficoLineasPrestamosPorMes(prestamos: List<Prestamo>, lineChart: LineChart) {
@@ -164,6 +163,4 @@ class PrestamosGraphs : AppCompatActivity() {
         barChart.legend.isEnabled = true
         barChart.invalidate()
     }
-
-
 }

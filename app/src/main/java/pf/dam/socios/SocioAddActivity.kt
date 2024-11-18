@@ -69,8 +69,8 @@ class SocioAddActivity : AppCompatActivity() {
 
         val validacionUtils = ValidacionUtils()
         val db = dbSocios.writableDatabase
-        validacionUtils.validateEmail(emailEditText)
-        validacionUtils.validateNumeroSocio(numeroSocioEditText, db)
+        validacionUtils.validacionEmail(emailEditText)
+        validacionUtils.validarNumeroSocio(numeroSocioEditText, db)
 
         guardarButton.setOnClickListener {
 

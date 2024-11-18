@@ -8,19 +8,17 @@ import android.util.Patterns
 
 open class ValidacionUtils {
 
-    fun isEmailValid(email: String): Boolean {
+    fun emailValido(email: String): Boolean {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
-    fun validateEmail(editText: EditText) {
+    fun validacionEmail(editText: EditText) {
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
             override fun afterTextChanged(s: Editable?) {
                 val email = s.toString()
-                if (!isEmailValid(email)) {
+                if (!emailValido(email)) {
                     editText.error = "Email inválido"
                 } else {
                     editText.error = null
@@ -29,7 +27,7 @@ open class ValidacionUtils {
         })
     }
 
-    fun isNumeroSocioUnique(db: SQLiteDatabase, numeroSocio: Int, socioId: Int? = null): Boolean {
+    fun numeroSocioUnique(db: SQLiteDatabase, numeroSocio: Int, socioId: Int? = null): Boolean {
         val cursor = db.rawQuery(
             "SELECT COUNT(*) FROM socios WHERE numeroSocio = ? AND idSocio != ?",
             arrayOf(numeroSocio.toString(), socioId?.toString() ?: "-1")
@@ -40,7 +38,7 @@ open class ValidacionUtils {
         return count == 0
     }
 
-    fun validateNumeroSocio(editText: EditText, db: SQLiteDatabase, socioId: Int? = null) {
+    fun validarNumeroSocio(editText: EditText, db: SQLiteDatabase, socioId: Int? = null) {
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -48,7 +46,7 @@ open class ValidacionUtils {
 
             override fun afterTextChanged(s: Editable?) {
                 val numeroSocio = s.toString().toIntOrNull() ?: 0
-                if (!isNumeroSocioUnique(db, numeroSocio, socioId)) {
+                if (!numeroSocioUnique(db, numeroSocio, socioId)) {
                     editText.error = "El número de socio ya existe"
                 } else {
                     editText.error = null
