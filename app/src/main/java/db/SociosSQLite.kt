@@ -3,6 +3,7 @@ package db
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import pf.dam.socios.Socio
 import java.util.Date
 
@@ -11,7 +12,8 @@ class SociosSQLite(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "socios.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 3
+        private const val TAG = "SociosSQLite"
     }
 
     private val socioDbHelper = SociosDbHelper(this)
@@ -27,15 +29,21 @@ class SociosSQLite(context: Context) :
                 email TEXT,
                 fechaNacimiento TEXT,  
                 fechaIngresoSocio TEXT,
-                genero TEXT
+                genero TEXT,
+                softDeletedSocio INTEGER DEFAULT 0
             )
         """.trimIndent()
         db.execSQL(crearTablaSocios)
+        db.execSQL("PRAGMA foreign_keys = ON;")
+        Log.d(TAG, "Tabla socios creada")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        if (oldVersion < 2) {
         db.execSQL("DROP TABLE IF EXISTS socios")
         onCreate(db)
+        Log.d(TAG, "Tabla articulos actualizada")
+    }
     }
 
     fun getAllSocios(): List<Socio> {

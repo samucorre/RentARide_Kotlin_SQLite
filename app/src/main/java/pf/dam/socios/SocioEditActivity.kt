@@ -5,7 +5,6 @@ import android.content.Intent
 import android.database.sqlite.SQLiteException
 import android.os.Bundle
 import android.text.Editable
-import android.util.Log
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
@@ -143,10 +142,6 @@ class SocioEditActivity : AppCompatActivity() {
                             finish()
                         }
                     } catch (e: SQLiteException) {
-                        Log.e(
-                            "SocioEditActivity",
-                            "Error al acceder a la base de datos: ${e.message}"
-                        )
                         Toast.makeText(
                             this,
                             "Error al acceder a la base de datos",

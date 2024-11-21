@@ -3,7 +3,6 @@ package pf.dam.prestamos
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -116,8 +115,7 @@ class PrestamoAddActivity : AppCompatActivity() {
                     Toast.makeText(this, "Artículo o socio no encontrado", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: ParseException) {
-                Log.e("Error", "Error al analizar la fecha: ${e.message}")
-                Toast.makeText(this, "Formato de fecha incorrecto", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Formato de fecha incorrecto", Toast.LENGTH_SHORT).show()
             }
         }
     }

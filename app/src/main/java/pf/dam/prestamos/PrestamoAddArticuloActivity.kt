@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
@@ -68,15 +67,13 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
             fechaUtils.mostrarDatePickerPrestamos(this,fechaInicioButton)
         }
 
-        // Crear el adaptador con los nombres de los socios
         adapter = ArrayAdapter(
             this,
             android.R.layout.simple_dropdown_item_1line,
             dbSocios.getAllSocios().map { "${it.nombre} ${it.apellido}" })
         socioAutoCompleteTextView.setAdapter(adapter)
 
-        // Manejar la selección de un socio
-        socioAutoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
+         socioAutoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
             val socioSeleccionado = adapter.getItem(position)
             idSocioSeleccionado = dbSocios.getAllSocios()
                 .find { "${it.nombre} ${it.apellido}" == socioSeleccionado }?.idSocio
@@ -90,7 +87,6 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
             val info = infoEditText.text.toString()
             val idSocio = idSocioSeleccionado
 
-            // Validar socio y fechaInicio
             if (idSocio != null && !fechaInicioString.isEmpty() && idArticuloIntent != null) {
                 try {
                     val fechaInicio = fechaUtils.dateFormat.parse(fechaInicioString)
@@ -114,8 +110,6 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
                     setResult(Activity.RESULT_OK)
                     finish()
                 } catch (e: ParseException) {
-                    // Manejar la excepción, por ejemplo, mostrando un mensaje de error al usuario
-                    Log.e("Error", "Error al analizar la fecha: ${e.message}")
                     Toast.makeText(this, "Formato de fecha incorrecto", Toast.LENGTH_SHORT)
                         .show()
                 }
@@ -131,9 +125,7 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
         volverButton.setOnClickListener {
             finish()
         }
-
     }
-
 
     private fun buscarSocio(textoBusqueda: String): Socio? {
         val socios = dbSocios.getAllSocios()
@@ -144,7 +136,7 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
                 socio.numeroSocio,
                 socio.email,
                 socio.telefono
-            ).map { it.toString() } // <-- Aquí se convierten todos los valores a String
+            ).map { it.toString() }
             valoresSocio.any { valor ->
                 return@any valor.contains(textoBusqueda, ignoreCase = true)
             }

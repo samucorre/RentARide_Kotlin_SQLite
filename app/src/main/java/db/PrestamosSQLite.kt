@@ -14,7 +14,7 @@ class PrestamosSQLite(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "prestamos.db"
-        private const val DATABASE_VERSION = 2 // Incrementa la versión de la base de datos
+        private const val DATABASE_VERSION = 3
         private const val TAG = "PrestamosSQLite"
     }
 
@@ -43,6 +43,8 @@ class PrestamosSQLite(context: Context) :
             )
         """.trimIndent()
         db.execSQL(crearTablaPrestamos)
+        db.execSQL("PRAGMA foreign_keys = ON;")
+        Log.d(TAG, "Tabla prestamos creada")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

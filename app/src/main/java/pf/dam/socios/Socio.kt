@@ -13,7 +13,8 @@ open class Socio(
     val email: String? = null,
     val fechaNacimiento: Date ,
     val fechaIngresoSocio: Date,
-    val genero: Genero? = null
+    val genero: Genero? = null,
+    var softDeletedSocio: Boolean = false
 
 ) : Serializable
 

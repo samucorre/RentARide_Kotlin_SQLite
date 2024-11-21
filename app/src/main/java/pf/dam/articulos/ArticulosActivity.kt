@@ -73,7 +73,7 @@ class ArticulosActivity : AppCompatActivity() {
             articulosAdapter.articulos = db.articulosDbHelper.filtrarArticulosPorEstado(
                 db.readableDatabase,
                 estadoSeleccionado
-            ) // Llamada a la función
+            )
             articulosAdapter.notifyDataSetChanged()
         }
     }

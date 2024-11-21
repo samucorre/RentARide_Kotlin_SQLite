@@ -2,7 +2,9 @@ package pf.dam
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -68,6 +70,15 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ExportActivity::class.java)
             startActivity(intent)
         }
+
+        val db = SQLiteDatabase.openOrCreateDatabase(":memory:", null)
+        val cursor = db.rawQuery("SELECT sqlite_version()", null)
+        if (cursor.moveToFirst()) {
+            val version = cursor.getString(0)
+            Log.d("SQLite Version", version)
+        }
+        cursor.close()
+        db.close()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -81,6 +92,7 @@ class MainActivity : AppCompatActivity() {
                 finishAffinity()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

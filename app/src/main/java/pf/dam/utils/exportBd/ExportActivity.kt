@@ -41,8 +41,8 @@ class ExportActivity : AppCompatActivity() {
         setContentView(R.layout.export_activity)
 
         val exportarButton = findViewById<Button>(R.id.exportarButton)
-        val homeButton=findViewById<FloatingActionButton>(R.id.homeButton)
-        val volverButton=findViewById<FloatingActionButton>(R.id.volverButton)
+        val homeButton = findViewById<FloatingActionButton>(R.id.homeButton)
+        val volverButton = findViewById<FloatingActionButton>(R.id.volverButton)
 
         exportarButton.setOnClickListener {
             if (tienePermisos()) {
@@ -53,14 +53,12 @@ class ExportActivity : AppCompatActivity() {
         }
 
         homeButton.setOnClickListener {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-    }
-
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
         volverButton.setOnClickListener {
-        finish()
-    }
-
+            finish()
+        }
     }
 
     private fun tienePermisos(): Boolean {
@@ -81,7 +79,10 @@ class ExportActivity : AppCompatActivity() {
     private fun exportarBasesDeDatos(context: Context) {
         val nombreCarpeta = "databases"
         val directorioOrigen = context.getDatabasePath(nombreCarpeta).parentFile
-        val directorioDestino = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), nombreCarpeta) // Cambia la ruta de destino
+        val directorioDestino = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+            nombreCarpeta
+        )
 
         try {
             directorioOrigen?.copyRecursively(directorioDestino, overwrite = true)

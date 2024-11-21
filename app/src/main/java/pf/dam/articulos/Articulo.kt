@@ -10,7 +10,9 @@ open class Articulo (
     val nombre: String? = null,
     val descripcion: String? = null,
     val estado : EstadoArticulo? = null,
-    val rutaImagen: String? = null
+    val rutaImagen: String? = null,
+    var softDeletedArticulo: Boolean = false
+
     ): Serializable
 
 enum class EstadoArticulo {

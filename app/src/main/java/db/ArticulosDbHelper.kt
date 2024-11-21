@@ -14,18 +14,19 @@ class ArticulosDbHelper(private val dbHelper: ArticulosSQLite) {
     private fun Cursor.toArticulo(): Articulo {
         return Articulo(
             getInt(getColumnIndexOrThrow("idArticulo")),
-            getString(getColumnIndex("categoria")) ?: "", // Manejar NULL en categoria
-            getString(getColumnIndex("tipo")) ?: "", // Manejar NULL en tipo
-            getString(getColumnIndex("nombre")) ?: "", // Manejar NULL en nombre
-            getString(getColumnIndex("descripcion")) ?: "", // Manejar NULL en descripcion
-            getString(getColumnIndex("estado"))?.let { EstadoArticulo.valueOf(it) }, // Manejar NULL en estado
-            getString(getColumnIndex("rutaImagen")) ?: "" // Manejar NULL en rutaImagen
+            getString(getColumnIndex("categoria")) ?: "",
+            getString(getColumnIndex("tipo")) ?: "",
+            getString(getColumnIndex("nombre")) ?: "",
+            getString(getColumnIndex("descripcion")) ?: "",
+            getString(getColumnIndex("estado"))?.let { EstadoArticulo.valueOf(it) },
+            getString(getColumnIndex("rutaImagen")) ?: "",
+            getInt(getColumnIndexOrThrow("softDeletedArticulo")) == 1 // Mapear softDeletedArticulo
         )
     }
 
     fun getAllArticulos(db: SQLiteDatabase): List<Articulo> {
         val listaArticulos = mutableListOf<Articulo>()
-        db.rawQuery("SELECT * FROM articulos", null).use { cursor ->
+        db.rawQuery("SELECT * FROM articulos WHERE softDeletedArticulo = 0", null).use { cursor ->
             if (cursor.moveToFirst()) {
                 do {
                     listaArticulos.add(cursor.toArticulo())
@@ -53,7 +54,8 @@ class ArticulosDbHelper(private val dbHelper: ArticulosSQLite) {
             (categoria = ? OR categoria IS NULL) AND 
             (tipo = ? OR tipo IS NULL) AND 
             (descripcion = ? OR descripcion IS NULL) AND 
-            (estado = ? OR estado IS NULL) 
+            (estado = ? OR estado IS NULL) AND
+            softDeletedArticulo = 0 
         """
             val parametros = arrayOf(
                 articulo.nombre,
@@ -82,6 +84,7 @@ class ArticulosDbHelper(private val dbHelper: ArticulosSQLite) {
         values.put("descripcion", articulo.descripcion)
         values.put("estado", articulo.estado?.name)
         values.put("rutaImagen", articulo.rutaImagen)
+        values.put("softDeletedArticulo", 0)
 
         val idArticulo = db.insert("articulos", null, values)
         if (idArticulo != -1L) {
@@ -99,16 +102,17 @@ class ArticulosDbHelper(private val dbHelper: ArticulosSQLite) {
             put("estado", articulo.estado?.name)
             put("rutaImagen", articulo.rutaImagen)
         }
-        db.update("articulos", values, "idArticulo = ?", arrayOf(articulo.idArticulo.toString()))
+        db.update("articulos", values, "idArticulo = ? AND softDeletedArticulo = 0", arrayOf(articulo.idArticulo.toString()))
     }
 
     fun deleteArticulo(db: SQLiteDatabase, idArticulo: Int): Int {
-        return db.delete("articulos", "idArticulo = ?", arrayOf(idArticulo.toString()))
+        val values = ContentValues().apply { put("softDeletedArticulo", 1) }
+        return db.update("articulos", values, "idArticulo = ?", arrayOf(idArticulo.toString()))
     }
 
     fun getArticulosDisponibles(db: SQLiteDatabase): List<Articulo> {
         val articulos = mutableListOf<Articulo>()
-        db.rawQuery("SELECT * FROM articulos WHERE estado = 'DISPONIBLE'", null).use { cursor ->
+        db.rawQuery("SELECT * FROM articulos WHERE estado = 'DISPONIBLE' AND softDeletedArticulo = 0", null).use { cursor ->
             if (cursor.moveToFirst()) {
                 do {
                     articulos.add(cursor.toArticulo())
@@ -121,7 +125,7 @@ class ArticulosDbHelper(private val dbHelper: ArticulosSQLite) {
     fun actualizarEstadoArticulo(db: SQLiteDatabase, idArticulo: Int, nuevoEstado: EstadoArticulo) {
         val values = ContentValues().apply { put("estado", nuevoEstado.toString()) }
         val affectedRows =
-            db.update("articulos", values, "idArticulo = ?", arrayOf(idArticulo.toString()))
+            db.update("articulos", values, "idArticulo = ? AND softDeletedArticulo = 0", arrayOf(idArticulo.toString()))
         if (affectedRows > 0) {
             Log.d(ContentValues.TAG, "Estado del artículo actualizado con ID: $idArticulo")
         } else {
@@ -134,9 +138,9 @@ class ArticulosDbHelper(private val dbHelper: ArticulosSQLite) {
 
     fun filtrarArticulos(db: SQLiteDatabase, query: String?): List<Articulo> {
         return if (query.isNullOrEmpty()) {
-            getAllArticulos(db) // Pasar db como argumento
+            getAllArticulos(db)
         } else {
-            getAllArticulos(db).filter { articulo -> // Pasar db como argumento
+            getAllArticulos(db).filter { articulo ->
                 articulo.nombre?.contains(query, ignoreCase = true) ?: false ||
                         articulo.categoria?.contains(query, ignoreCase = true) ?: false ||
                         articulo.tipo?.contains(query, ignoreCase = true) ?: false
@@ -146,9 +150,9 @@ class ArticulosDbHelper(private val dbHelper: ArticulosSQLite) {
 
     fun filtrarArticulosPorEstado(db: SQLiteDatabase, estado: EstadoArticulo?): List<Articulo> {
         return if (estado == null) {
-            getAllArticulos(db) // Pasar db como argumento
+            getAllArticulos(db)
         } else {
-            getAllArticulos(db).filter { articulo -> articulo.estado == estado } // Pasar db como argumento
+            getAllArticulos(db).filter { articulo -> articulo.estado == estado }
         }
     }
 }

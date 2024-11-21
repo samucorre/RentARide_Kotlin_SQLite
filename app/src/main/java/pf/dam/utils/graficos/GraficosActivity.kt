@@ -2,7 +2,6 @@ package pf.dam.utils.graficos
 
 import android.annotation.SuppressLint
 import android.content.Intent
-//import android.graphics.Color
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -14,10 +13,6 @@ import db.ArticulosSQLite
 import db.PrestamosSQLite
 import db.SociosSQLite
 import pf.dam.MainActivity
-//import androidx.core.text.color
-//import com.github.mikephil.charting.charts.*
-//import com.github.mikephil.charting.data.*
-//import com.github.mikephil.charting.utils.ColorTemplate
 import pf.dam.R
 import pf.dam.articulos.EstadoArticulo
 import pf.dam.prestamos.EstadoPrestamo

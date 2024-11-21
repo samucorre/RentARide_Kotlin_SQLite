@@ -54,16 +54,6 @@ class PrestamoDetalleActivity : AppCompatActivity() {
     private var prestamoId: Int = -1
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
-//    private val editPrestamoLauncher = registerForActivityResult(
-//        ActivityResultContracts.StartActivityForResult()
-//    ) { result ->
-//        if (result.resultCode == RESULT_OK) {
-//            val prestamoActualizado = prestamosDbHelper.getPrestamoById(prestamoId)
-//            if (prestamoActualizado != null) {
-//                mostrarPrestamo(prestamoActualizado)
-//            }
-//        }
-//    }
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {

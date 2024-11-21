@@ -5,7 +5,6 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.icu.util.Calendar
 import android.util.Log
-
 import pf.dam.socios.Genero
 import pf.dam.socios.Socio
 import java.text.SimpleDateFormat
@@ -14,12 +13,11 @@ import java.util.Locale
 
 class SociosDbHelper(private val dbHelper: SociosSQLite) {
 
-
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
     fun getAllSocios(db: SQLiteDatabase): List<Socio> {
         val listaSocios = mutableListOf<Socio>()
-        db.rawQuery("SELECT * FROM socios", null).use { cursor ->
+        db.rawQuery("SELECT * FROM socios WHERE softDeletedSocio = 0", null).use { cursor ->
             if (cursor.moveToFirst()) {
                 do {
                     listaSocios.add(cursor.toSocio())
@@ -31,7 +29,7 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
 
     fun getSocioById(db: SQLiteDatabase, idSocio: Int): Socio? {
         return db.query(
-            "socios", null, "idSocio = ?", arrayOf(idSocio.toString()),
+            "socios", null, "idSocio = ? ", arrayOf(idSocio.toString()),
             null, null, null
         ).use { cursor ->
             if (cursor.moveToFirst()) cursor.toSocio() else null
@@ -45,9 +43,10 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
             put("numeroSocio", socio.numeroSocio)
             put("telefono", socio.telefono)
             put("email", socio.email)
-            put("fechaNacimiento",dateFormat.format(socio.fechaNacimiento))
-            put("fechaIngresoSocio",dateFormat.format(socio.fechaIngresoSocio))
-            put("genero", socio.genero?.name) // Nuevo campo
+            put("fechaNacimiento", dateFormat.format(socio.fechaNacimiento))
+            put("fechaIngresoSocio", dateFormat.format(socio.fechaIngresoSocio))
+            put("genero", socio.genero?.name)
+            put("softDeletedSocio", 0)
         }
         val idSocio = db.insert("socios", null, values)
         socio.idSocio = idSocio.toInt()
@@ -62,15 +61,16 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
             put("numeroSocio", socio.numeroSocio)
             put("telefono", socio.telefono)
             put("email", socio.email)
-            put("fechaNacimiento", socio.fechaNacimiento?.let { dateFormat.format(it) }) // Nuevo campo
-            put("fechaIngresoSocio", socio.fechaIngresoSocio?.let { dateFormat.format(it) }) // Nuevo campo
-            put("genero", socio.genero?.name) // Nuevo campo
+            put("fechaNacimiento", socio.fechaNacimiento?.let { dateFormat.format(it) })
+            put("fechaIngresoSocio", socio.fechaIngresoSocio?.let { dateFormat.format(it) })
+            put("genero", socio.genero?.name)
         }
-        db.update("socios", values, "idSocio = ?", arrayOf(socio.idSocio.toString()))
+        db.update("socios", values, "idSocio = ? AND softDeletedSocio = 0", arrayOf(socio.idSocio.toString()))
     }
 
     fun deleteSocio(db: SQLiteDatabase, idSocio: Int): Int {
-        return db.delete("socios", "idSocio = ?", arrayOf(idSocio.toString()))
+        val values = ContentValues().apply { put("softDeletedSocio", 1) }
+        return db.update("socios", values, "idSocio = ?", arrayOf(idSocio.toString()))
     }
 
     private fun Cursor.toSocio(): Socio {
@@ -81,9 +81,10 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
             getInt(getColumnIndexOrThrow("numeroSocio")),
             getInt(getColumnIndexOrThrow("telefono")),
             getString(getColumnIndexOrThrow("email")) ?: "",
-            dateFormat.parse(getString(getColumnIndexOrThrow("fechaNacimiento")))!!, // Nuevo campo
-            dateFormat.parse(getString(getColumnIndexOrThrow("fechaIngresoSocio")))!!, // Nuevo campo
-            getGenero(getString(getColumnIndexOrThrow("genero"))) // Nuevo campo
+            dateFormat.parse(getString(getColumnIndexOrThrow("fechaNacimiento")))!!,
+            dateFormat.parse(getString(getColumnIndexOrThrow("fechaIngresoSocio")))!!,
+            getGenero(getString(getColumnIndexOrThrow("genero"))),
+            getInt(getColumnIndexOrThrow("softDeletedSocio")) == 1 // Mapear softDeletedSocio
         )
     }
 
@@ -111,11 +112,12 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
         }
     }
 
+
     fun getSociosCumpleanosMes(db: SQLiteDatabase): List<Pair<String, Date>> {
         val listaSociosCumpleaneros = mutableListOf<Pair<String, Date>>()
         val mesActual = Calendar.getInstance().get(Calendar.MONTH) + 1 // Mes actual (1-12)
 
-        db.rawQuery("SELECT nombre, apellido, fechaNacimiento FROM socios", null).use { cursor ->
+        db.rawQuery("SELECT nombre, apellido, fechaNacimiento FROM socios WHERE softDeletedSocio = 0", null).use { cursor ->
             if (cursor.moveToFirst()) {
                 do {
                     val fechaNacimiento = parsearFecha(cursor.getString(cursor.getColumnIndexOrThrow("fechaNacimiento")))
@@ -135,7 +137,7 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
     }
 
     fun getUltimoSocioRegistrado(db: SQLiteDatabase): Socio? {
-        return db.rawQuery("SELECT * FROM socios ORDER BY idSocio DESC LIMIT 1", null).use { cursor ->
+        return db.rawQuery("SELECT * FROM socios WHERE softDeletedSocio = 0 ORDER BY idSocio DESC LIMIT 1", null).use { cursor ->
             if (cursor.moveToFirst()) {
                 cursor.toSocio()
             } else {
@@ -143,5 +145,4 @@ class SociosDbHelper(private val dbHelper: SociosSQLite) {
             }
         }
     }
-
 }

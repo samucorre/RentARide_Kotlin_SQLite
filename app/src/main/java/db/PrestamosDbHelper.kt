@@ -23,7 +23,6 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
                 } while (cursor.moveToNext())
             }
         }
-        Log.d("PrestamosSQLite", "Se obtuvieron ${listaPrestamos.size} préstamos")
         return listaPrestamos
     }
 
@@ -34,10 +33,8 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
         ).use { cursor ->
             if (cursor.moveToFirst()) {
                 val prestamo = cursor.toPrestamo()
-                Log.d("PrestamosSQLite", "Préstamo obtenido con ID: $idPrestamo")
                 prestamo
             } else {
-                Log.d("PrestamosSQLite", "No se encontró préstamo con ID: $idPrestamo")
                 null
             }
         }
@@ -54,7 +51,6 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
         }
         val idPrestamo = db.insert("prestamos", null, values)
         prestamo.idPrestamo = idPrestamo.toInt()
-        Log.d("PrestamosSQLite", "Préstamo insertado con ID: $idPrestamo")
         return idPrestamo
     }
 
@@ -73,20 +69,19 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
         if (affectedRows > 0) {
             Log.d("PrestamosSQLite", "Préstamo actualizado con ID: ${prestamo.idPrestamo}")
         } else {
-            Log.d("PrestamosSQLite", "No se pudo actualizar el préstamo con ID: ${prestamo.idPrestamo}")
+            Log.d(
+                "PrestamosSQLite",
+                "No se pudo actualizar el préstamo con ID: ${prestamo.idPrestamo}"
+            )
         }
     }
 
     fun deletePrestamo(db: SQLiteDatabase, idPrestamo: Int): Int {
         val affectedRows = db.delete("prestamos", "idPrestamo = ?", arrayOf(idPrestamo.toString()))
-        if (affectedRows > 0) {
-            Log.d("PrestamosSQLite", "Préstamo eliminado con ID: $idPrestamo")
-        } else {
-            Log.d("PrestamosSQLite", "No se pudo eliminar el préstamo con ID: $idPrestamo")
-        }
         return affectedRows
     }
-//--------------------------------------------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------------------------------------------
     fun getPrestamosByArticulo(db: SQLiteDatabase, idArticulo: Int): List<Prestamo> {
         val listaPrestamos = mutableListOf<Prestamo>()
         db.rawQuery("SELECT * FROM prestamos WHERE idArticulo = ?", arrayOf(idArticulo.toString()))
@@ -97,10 +92,6 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
                     } while (cursor.moveToNext())
                 }
             }
-        Log.d(
-            "PrestamosSQLite",
-            "Se obtuvieron ${listaPrestamos.size} préstamos para el artículo con ID: $idArticulo"
-        )
         return listaPrestamos
     }
 
@@ -114,25 +105,12 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
                     } while (cursor.moveToNext())
                 }
             }
-        Log.d(
-            "PrestamosSQLite",
-            "Se obtuvieron ${listaPrestamos.size} préstamos para el socio con ID: $idSocio"
-        )
         return listaPrestamos
     }
 
     fun actualizarEstadoPrestamo(db: SQLiteDatabase, idPrestamo: Int, nuevoEstado: EstadoPrestamo) {
         val values = ContentValues().apply { put("estado", nuevoEstado.toString()) }
-        val affectedRows =
-            db.update("prestamos", values, "idPrestamo = ?", arrayOf(idPrestamo.toString()))
-        if (affectedRows > 0) {
-            Log.d(
-                "PrestamosSQLite",
-                "Estado del préstamo actualizado con ID: $idPrestamo a $nuevoEstado"
-            )
-        } else {
-            Log.d("PrestamosSQLite", "No se pudo actualizar el estado del préstamo con ID: $idPrestamo")
-        }
+        db.update("prestamos", values, "idPrestamo = ?", arrayOf(idPrestamo.toString()))
     }
 
     fun estaArticuloEnPrestamoActivo(db: SQLiteDatabase, idArticulo: Int): Boolean {
@@ -182,11 +160,9 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
             "SELECT DISTINCT idSocio FROM prestamos WHERE estado = ?",
             arrayOf(EstadoPrestamo.ACTIVO.toString())
         )
-
         while (cursor.moveToNext()) {
             sociosConPrestamosActivosIds.add(cursor.getInt(cursor.getColumnIndexOrThrow("idSocio")))
         }
-
         cursor.close()
         return sociosConPrestamosActivosIds
     }
@@ -197,11 +173,9 @@ class PrestamosDbHelper(private val dbHelper: PrestamosSQLite) {
             "SELECT DISTINCT idSocio FROM prestamos WHERE estado = ?",
             arrayOf(EstadoPrestamo.CERRADO.toString())
         )
-
         while (cursor.moveToNext()) {
             sociosConPrestamosCerradosIds.add(cursor.getInt(cursor.getColumnIndexOrThrow("idSocio")))
         }
-
         cursor.close()
         return sociosConPrestamosCerradosIds
     }

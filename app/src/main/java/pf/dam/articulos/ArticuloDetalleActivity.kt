@@ -67,7 +67,6 @@ class ArticuloDetalleActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            // Actualiza la vista del artículo
             val articuloActualizado = dbArticulos.getArticuloById(articuloId)
             if (articuloActualizado != null) {
                 mostrarArticulo(articuloActualizado)
@@ -220,12 +219,6 @@ class ArticuloDetalleActivity : AppCompatActivity() {
         cantidadPrestamosTextView.text = "Cantidad de préstamos: \t$cantidadPrestamos"
         if (articulo.estado == EstadoArticulo.PRESTADO) {
             val idSocio = articulo.idArticulo?.let { dbPrestamos.getIdSocioPrestamoActivo(it) }
-            if (idSocio != null) {
-                Log.d(
-                    "ArticuloDetalleActivity",
-                    "ID del socio que tiene el artículo prestado: $idSocio"
-                )
-            }
             val socio = idSocio?.let { dbPrestamos.getPrestamoByIdSocio(it) }
             val nombreSocio = socio?.nombre ?: "Socio no encontrado"
             val apellidoSocio = socio?.apellido ?: ""

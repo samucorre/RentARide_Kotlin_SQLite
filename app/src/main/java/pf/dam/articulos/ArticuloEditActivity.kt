@@ -123,7 +123,6 @@ class ArticuloEditActivity : AppCompatActivity() {
                     finish()
                 }
             } catch (e: SQLiteException) {
-                Log.e("ArticuloEditActivity", "Error al acceder a la base de datos: ${e.message}")
                 Toast.makeText(this, "Artículo en préstamo activo. No editable", Toast.LENGTH_SHORT).show()
             }
         }
@@ -157,8 +156,7 @@ class ArticuloEditActivity : AppCompatActivity() {
         try {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
         } catch (e: ActivityNotFoundException) {
-            Log.e("ArticuloEditActivity", "No se encontró la aplicación de cámara", e)
-            Toast.makeText(this, "No se encontró la aplicación de cámara", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Fallo en la cámara", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -178,7 +176,6 @@ class ArticuloEditActivity : AppCompatActivity() {
             outputStream.close()
             archivo.absolutePath
         } catch (e: Exception) {
-            Log.e("ArticuloEditActivity", "Error al guardar la imagen", e)
             Toast.makeText(this, "Error al guardar la imagen", Toast.LENGTH_SHORT).show()
             null
         }

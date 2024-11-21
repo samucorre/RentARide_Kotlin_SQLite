@@ -3,7 +3,6 @@ package pf.dam.socios
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioGroup
@@ -113,7 +112,6 @@ class SocioAddActivity : AppCompatActivity() {
                 Toast.makeText(this, "Socio añadido", Toast.LENGTH_SHORT).show()
                 finish()
             } catch (e: ParseException) {
-                Log.e("Error", "Error al analizar la fecha: ${e.message}")
                 Toast.makeText(this, "Formato de fecha incorrecto", Toast.LENGTH_SHORT).show()
 
             }
