@@ -115,7 +115,7 @@ class PrestamoAddActivity : AppCompatActivity() {
                     Toast.makeText(this, "Artículo o socio no encontrado", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: ParseException) {
-                        Toast.makeText(this, "Formato de fecha incorrecto", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "La fecha de inicio es obligatoria", Toast.LENGTH_SHORT).show()
             }
         }
     }
