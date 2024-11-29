@@ -1,4 +1,3 @@
-
 package pf.dam.articulos
 
 import android.Manifest
@@ -15,6 +14,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.semantics.text
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -45,7 +45,7 @@ class ArticuloEditActivity : AppCompatActivity() {
     private var imagenArticulo: Bitmap? = null
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_IMAGE_GALLERY = 2
-    private val REQUEST_PERMISSION_CAMERA = 100
+    private val CODIGO_SOLICITUD_PERMISOS = 1
     private lateinit var prestamosDbHelper: PrestamosSQLite
 
     @SuppressLint("MissingInflatedId")
@@ -66,9 +66,9 @@ class ArticuloEditActivity : AppCompatActivity() {
         botonGaleria = findViewById(R.id.botonGaleria)
         estadoSwitch = findViewById(R.id.estadoSwitch)
         homeButton = findViewById(R.id.homeButton)
-
         articuloId = intent.getIntExtra("articuloId", -1)
         articulo = dbHelper.getArticuloById(articuloId)!!
+        prestamosDbHelper = PrestamosSQLite(this)
 
         if (articulo.rutaImagen != null) {
             try {
@@ -83,31 +83,52 @@ class ArticuloEditActivity : AppCompatActivity() {
         categoriaEditText.setText(articulo.categoria)
         tipoEditText.setText(articulo.tipo)
         descripcionEditText.setText(articulo.descripcion)
-        estadoSwitch.isChecked = articulo.estado  == EstadoArticulo.DISPONIBLE
-        prestamosDbHelper = PrestamosSQLite(this)
+        estadoSwitch.isChecked = articulo.estado == EstadoArticulo.DISPONIBLE
+
+        // Listeners para botones
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        volverButton.setOnClickListener { finish() }
+
+        botonCamara.setOnClickListener {
+            if (tienePermisosCamaraAlmacenamiento()) {
+                tomarFoto()
+            } else {
+                solicitarPermisosCamaraAlmacenamiento()
+            }
+        }
+
+        botonGaleria.setOnClickListener {
+            if (tienePermisosCamaraAlmacenamiento()) {
+                abrirGaleria()
+            } else {
+                solicitarPermisosCamaraAlmacenamiento()
+            }
+        }
 
         guardarButton.setOnClickListener {
-            val nuevaRutaImagen = imagenArticulo?.let {
+               val nuevaRutaImagen = imagenArticulo?.let {
                 val nombreArchivo = "articulo_${UUID.randomUUID()}"
                 guardarImagenEnAlmacenamiento(it, nombreArchivo)
             } ?: articulo.rutaImagen
+            val estadoSeleccionado = if (estadoSwitch.isChecked) EstadoArticulo.DISPONIBLE else EstadoArticulo.NO_DISPONIBLE
+            val categoria = categoriaEditText.text.toString()
+            val tipo = tipoEditText.text.toString()
+            val nombre = nombreEditText.text.toString()
+            val descripcion = descripcionEditText.text.toString()
 
-            val estadoSeleccionado = if(estadoSwitch.isChecked) EstadoArticulo.DISPONIBLE else EstadoArticulo.NO_DISPONIBLE
+                 if (categoria.isBlank() || tipo.isBlank() || nombre.isBlank() || descripcion.isBlank()) {
+                Toast.makeText(this, "Por favor, rellena todos los campos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             try {
                 if (articulo.idArticulo?.let { prestamosDbHelper.estaArticuloEnPrestamoActivo(it) } ?: false) {
                     Toast.makeText(this, "No se puede editar el artículo. Está presente en un préstamo activo.", Toast.LENGTH_SHORT).show()
                 } else {
-                    val categoria = categoriaEditText.text.toString()
-                    val tipo = tipoEditText.text.toString()
-                    val nombre = nombreEditText.text.toString()
-                    val descripcion = descripcionEditText.text.toString()
-
-                    if (categoria.isBlank() || tipo.isBlank() || nombre.isBlank() || descripcion.isBlank()) {
-                        Toast.makeText(this, "Por favor, rellena todos los campos", Toast.LENGTH_SHORT).show()
-                        return@setOnClickListener
-                    }
-
                     val articuloActualizado = Articulo(
                         articulo.idArticulo,
                         categoria,
@@ -126,32 +147,9 @@ class ArticuloEditActivity : AppCompatActivity() {
                 Toast.makeText(this, "Artículo en préstamo activo. No editable", Toast.LENGTH_SHORT).show()
             }
         }
-
-        volverButton.setOnClickListener { finish() }
-
-        homeButton.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
-
-        botonCamara.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.CAMERA),
-                    REQUEST_PERMISSION_CAMERA
-                )
-            } else {dispatchTakePictureIntent()}
-        }
-
-        botonGaleria.setOnClickListener {
-            openGallery()
-        }
     }
 
-    private fun dispatchTakePictureIntent() {
+    private fun tomarFoto() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         try {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
@@ -160,7 +158,7 @@ class ArticuloEditActivity : AppCompatActivity() {
         }
     }
 
-    private fun openGallery() {
+    private fun abrirGaleria() {
         val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(galleryIntent, REQUEST_IMAGE_GALLERY)
     }
@@ -194,6 +192,41 @@ class ArticuloEditActivity : AppCompatActivity() {
                     imagenArticulo = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
                     imagenImageView.setImageBitmap(imagenArticulo)
                 }
+            }
+        }
+    }
+
+    private fun tienePermisosCamaraAlmacenamiento(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun solicitarPermisosCamaraAlmacenamiento() {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            CODIGO_SOLICITUD_PERMISOS
+        )
+    }
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == CODIGO_SOLICITUD_PERMISOS) {
+            if (grantResults.isNotEmpty() &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permisos concedidos", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Permisos denegados", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -60,6 +60,7 @@ class SocioDetalleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.socio_detail_activity)
+        supportActionBar?.title = "RR - Socio detalle"
 
         dbHelper = SociosSQLite(this)
         prestamosDbHelper = PrestamosSQLite(this)

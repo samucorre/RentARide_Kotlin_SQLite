@@ -1,9 +1,11 @@
 package pf.dam.articulos
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Environment
@@ -14,6 +16,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import db.ArticulosSQLite
 import pf.dam.MainActivity
@@ -38,6 +42,7 @@ class ArticuloAddActivity : AppCompatActivity() {
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_IMAGE_GALLERY = 2
     private lateinit var estadoCheckBox: CheckBox
+    private val CODIGO_SOLICITUD_PERMISOS = 1
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +65,6 @@ class ArticuloAddActivity : AppCompatActivity() {
 
         if (estadoCheckBox.isChecked) EstadoArticulo.DISPONIBLE else EstadoArticulo.NO_DISPONIBLE
 
-
         homeButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
@@ -69,11 +73,19 @@ class ArticuloAddActivity : AppCompatActivity() {
         volverButton.setOnClickListener { finish() }
 
         botonCamara.setOnClickListener {
-            dispatchTakePictureIntent()
+            if (tienePermisos()) {
+                tomarFoto()
+            } else {
+                solicitarPermisos()
+            }
         }
 
         botonGaleria.setOnClickListener {
-            openGallery()
+            if (tienePermisos()) {
+                abrirGaleria()
+            } else {
+                solicitarPermisos()
+            }
         }
 
         guardarButton.setOnClickListener {
@@ -85,10 +97,10 @@ class ArticuloAddActivity : AppCompatActivity() {
 
             val rutaImagen = imagenArticulo?.let {
                 val nombreArchivo = "articulo_${UUID.randomUUID()}"
-                guardarImagenEnAlmacenamiento(it, nombreArchivo)
+                guardarImagen(it, nombreArchivo)
             }
 
-            if (categoria.isBlank() || tipo.isBlank() || nombre.isBlank() || descripcion.isBlank() ) {
+            if (categoria.isBlank() || tipo.isBlank() || nombre.isBlank() || descripcion.isBlank()) {
                 Toast.makeText(this, "Por favor, rellena todos los campos", Toast.LENGTH_SHORT).show()
             } else {
                 val nuevoArticulo = Articulo(categoria = categoria, tipo = tipo, nombre = nombre, descripcion = descripcion, estado = estado, rutaImagen = rutaImagen)
@@ -101,20 +113,21 @@ class ArticuloAddActivity : AppCompatActivity() {
         }
     }
 
-    private fun dispatchTakePictureIntent() {
+    private fun tomarFoto() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         try {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
         } catch (e: ActivityNotFoundException) {
+            // Manejar el caso en que no haya una actividad de cámara disponible
         }
     }
 
-    private fun openGallery() {
+    private fun abrirGaleria() {
         val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(galleryIntent, REQUEST_IMAGE_GALLERY)
     }
 
-    private fun guardarImagenEnAlmacenamiento(imagen: Bitmap, nombreArchivo: String): String? {
+    private fun guardarImagen(imagen: Bitmap, nombreArchivo: String): String? {
         val directorio = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         val archivo = File(directorio, "$nombreArchivo.jpg")
 
@@ -144,6 +157,42 @@ class ArticuloAddActivity : AppCompatActivity() {
                     imagenArticulo = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
                     imageView.setImageBitmap(imagenArticulo)
                 }
+            }
+        }
+    }
+
+    private fun tienePermisos(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun solicitarPermisos() {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            CODIGO_SOLICITUD_PERMISOS
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == CODIGO_SOLICITUD_PERMISOS) {
+            if (grantResults.isNotEmpty() &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permisos concedidos", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Permisos denegados", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -41,6 +41,7 @@ class SocioEditActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.socio_edit_activity)
+        supportActionBar?.title = "RR - Editar socio"
 
         dbSocios = SociosSQLite(this)
         dbPrestamos = PrestamosSQLite(this)

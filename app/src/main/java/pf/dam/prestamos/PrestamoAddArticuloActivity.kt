@@ -70,13 +70,13 @@ class PrestamoAddArticuloActivity : AppCompatActivity() {
         adapter = ArrayAdapter(
             this,
             android.R.layout.simple_dropdown_item_1line,
-            dbSocios.getAllSocios().map { "${it.nombre} ${it.apellido}" })
+            dbSocios.getAllSocios().map { "${it.nombre} ${it.apellido} - ${it.numeroSocio}" })
         socioAutoCompleteTextView.setAdapter(adapter)
 
          socioAutoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
             val socioSeleccionado = adapter.getItem(position)
             idSocioSeleccionado = dbSocios.getAllSocios()
-                .find { "${it.nombre} ${it.apellido}" == socioSeleccionado }?.idSocio
+                .find { "${it.nombre} ${it.apellido} - ${it.numeroSocio}" == socioSeleccionado }?.idSocio
         }
         homeButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)

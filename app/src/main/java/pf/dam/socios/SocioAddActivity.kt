@@ -35,6 +35,7 @@ class SocioAddActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.socio_add_activity)
+        supportActionBar?.title = "RR - Socio nuevo"
 
         dbSocios = SociosSQLite(this)
         fechaUtils = FechaUtils(this)
