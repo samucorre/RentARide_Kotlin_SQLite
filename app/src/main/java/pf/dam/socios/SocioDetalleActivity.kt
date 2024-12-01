@@ -31,8 +31,8 @@ class SocioDetalleActivity : AppCompatActivity() {
     private lateinit var backButton: FloatingActionButton
     private lateinit var homeButton: FloatingActionButton
     private lateinit var addPrestamoButton: Button
-    private lateinit var dbHelper: SociosSQLite
-    private lateinit var prestamosDbHelper:PrestamosSQLite
+    private lateinit var sociosDb: SociosSQLite
+    private lateinit var prestamosDb:PrestamosSQLite
 
     private lateinit var nombreTextView: TextView
     private lateinit var numeroSocioTextView: TextView
@@ -62,8 +62,8 @@ class SocioDetalleActivity : AppCompatActivity() {
         setContentView(R.layout.socio_detail_activity)
         supportActionBar?.title = "RR - Socio detalle"
 
-        dbHelper = SociosSQLite(this)
-        prestamosDbHelper = PrestamosSQLite(this)
+        sociosDb = SociosSQLite(this)
+        prestamosDb = PrestamosSQLite(this)
 
         editSocioButton = findViewById(R.id.editSocioButton)
         addPrestamoButton = findViewById(R.id.addPrestamoButton)
@@ -82,7 +82,7 @@ class SocioDetalleActivity : AppCompatActivity() {
         generoTextView = findViewById(R.id.generoTextView)
 
         socioId = intent.getIntExtra("idSocio", -1)
-        val socio = dbHelper.getSocioById(socioId)
+        val socio = sociosDb.getSocioById(socioId)
 
         homeButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -91,12 +91,29 @@ class SocioDetalleActivity : AppCompatActivity() {
 
         if (socio != null) {
             mostrarSocio(socio)
+//
+//            editSocioButton.setOnClickListener {
+//                val intent = Intent(this, SocioEditActivity::class.java)
+//                intent.putExtra("socioId", socioId)
+//                editSocioLauncher.launch(intent)
+//            }
 
-            editSocioButton.setOnClickListener {
+        editSocioButton.setOnClickListener {
+            // Verificar si el socio tiene préstamos activos
+            val tienePrestamosActivos = prestamosDb.estaSocioEnPrestamoActivo(socioId)
+
+            if (tienePrestamosActivos) {
+                Toast.makeText(
+                    this,
+                    "No se puede editar el socio. Está presente en un préstamo activo.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
                 val intent = Intent(this, SocioEditActivity::class.java)
                 intent.putExtra("socioId", socioId)
                 editSocioLauncher.launch(intent)
             }
+        }
 
             backButton.setOnClickListener {
                 finish()
@@ -107,12 +124,12 @@ class SocioDetalleActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             deleteSocioButton.setOnClickListener {
-                val tieneRegistrosEnPrestamos = prestamosDbHelper.estaSocioEnPrestamoActivo(socioId)
+                val tieneRegistrosEnPrestamos = prestamosDb.estaSocioEnPrestamoActivo(socioId)
 
                 if (tieneRegistrosEnPrestamos) {
                     Toast.makeText(
                         this,
-                        "No se puede eliminar el socio porque tiene registros en préstamos",
+                        "No se puede eliminar el socio porque tiene registros con préstamos activos",
                         Toast.LENGTH_SHORT
                     ).show()
                 }else setContent {
@@ -123,7 +140,7 @@ class SocioDetalleActivity : AppCompatActivity() {
                             title = "Eliminar socio",
                             message = "¿Estás seguro de que quieres eliminar este socio?",
                             onPositiveButtonClick = {
-                                dbHelper.deleteSocio(socioId)
+                                sociosDb.deleteSocio(socioId)
                                 Toast.makeText(
                                     this@SocioDetalleActivity,
                                     "Socio eliminado",
@@ -157,13 +174,13 @@ class SocioDetalleActivity : AppCompatActivity() {
         fechaIngresoSocioTextView.text = "Fecha de ingreso: ${dateFormat.format(socio.fechaIngresoSocio)}"
         generoTextView.text = "Género: ${socio.genero}"
 
-        val prestamos = socio.idSocio?.let { prestamosDbHelper.getPrestamosBySocio(it) }
+        val prestamos = socio.idSocio?.let { prestamosDb.getPrestamosBySocio(it) }
 
         val cantidadPrestamos = prestamos?.size
         val articulos = mutableSetOf<Articulo>()
         if (prestamos != null) {
             for (prestamo in prestamos) {
-                val articulo = prestamosDbHelper.getPrestamoByIdArticulo(prestamo.idArticulo)
+                val articulo = prestamosDb.getPrestamoByIdArticulo(prestamo.idArticulo)
                 if (articulo != null) {
                     articulos.add(articulo)
                 }

@@ -48,7 +48,7 @@ class ArticuloEditActivity : AppCompatActivity() {
     private val CODIGO_SOLICITUD_PERMISOS = 1
     private lateinit var prestamosDbHelper: PrestamosSQLite
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId", "SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.articulo_edit_activity)

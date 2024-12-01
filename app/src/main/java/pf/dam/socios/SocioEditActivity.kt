@@ -15,6 +15,7 @@ import db.SociosSQLite
 import pf.dam.MainActivity
 import pf.dam.R
 import pf.dam.utils.FechaUtils
+import pf.dam.utils.ValidacionUtils
 import java.text.ParseException
 
 
@@ -97,7 +98,14 @@ class SocioEditActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
+
+            val validacionUtils = ValidacionUtils()
+            val db = dbSocios.writableDatabase
+            validacionUtils.validacionEmail(emailEditText)
+            validacionUtils.validarNumeroSocio(numeroSocioEditText, db)
             guardarButton.setOnClickListener {
+
+
                 val nombre = nombreEditText.text.toString()
                 val apellido = apellidoEditText.text.toString()
                 val numeroSocio = numeroSocioEditText.text.toString().toIntOrNull()
@@ -113,6 +121,11 @@ class SocioEditActivity : AppCompatActivity() {
                 if (nombre.isBlank() || apellido.isBlank() || numeroSocio == null || telefono == null || email.isBlank() || fechaNacimientoString.isBlank() || fechaIngresoSocioString.isBlank() || genero == null) {
                     Toast.makeText(this, "Por favor, rellena todos los campos", Toast.LENGTH_SHORT)
                         .show()
+                    return@setOnClickListener
+                }
+                // **Nueva validación: Verifica si hay errores en los EditText**
+                if (emailEditText.error != null || numeroSocioEditText.error != null) {
+                    Toast.makeText(this, "Corrige los errores en los campos", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
                 try {
