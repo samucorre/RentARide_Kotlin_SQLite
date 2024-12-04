@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="yellowRRR">#FFC107</color>
+    <color name="yellowRRRbackCard">#47FFC107</color>
+    <color name="yellowRRRbackGround">#fff2cc</color>
+    <color name="dispo">#4199F27B</color>
+    <color name="no_dispo">#41EB463A</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="grey">#41474545</color>
+
+</resources>
+
