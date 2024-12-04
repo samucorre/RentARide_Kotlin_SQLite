@@ -1,9 +1,10 @@
 
-![play_store_512-removebg-preview](https://github.com/user-attachments/assets/ce7c473a-b2b2-43c3-9218-d571cd38c91f)
+![image](https://github.com/user-attachments/assets/0b1b66d1-063b-44d0-8b7b-31633876d545)
+
 
 # RentARide 
 
-RentARide es una aplicación Android sencilla diseñada para la gestión eficiente de artículos, socios y préstamos. 
+RentARide es una aplicación Android sencilla diseñada para la gestión eficiente de préstamos gratuítos, artículos y socios de un club o asociación. 
 Permite registrar, editar y visualizar datos, además de generar gráficos estadísticos y gestionar préstamos de manera dinámica.
 
 ## Características
